@@ -78,6 +78,8 @@ window.addEventListener('load', function () {
             }
         })
 
+        console.log(data.length)
+
         //console.log(data)
 
 
