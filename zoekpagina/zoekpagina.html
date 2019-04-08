@@ -2,5 +2,74 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>JS PF Eindoefening</title>
-<link rel="stylesheet" href="JS_PF_fotolab.css" />
+<title>zoekpagina | formulier | kenmerken</title>
+<link rel="stylesheet" href="" />
+<script>
+window.onload = function() {
+var rooturl = "https://scrumserver.tenobe.org/scrum/api";
+
+ document.getElementById('zoekKnop').addEventListener('click', function (e) {
+				e.preventDefault;
+/*zoeken op grootte*/				
+                let grootte =  document.getElementsByName('zGrootte')[0].value;
+				console.log(grootte);
+				let grootteOperator = 'gt';
+				if (grootte != null){
+                let orderby =  'grootte'
+
+                let url=rooturl+'/profiel/search.php?grootte='+ grootte + '&grootteOperator='+ grootteOperator + '&orderBy='+ orderby ;
+				fetch(url)
+                    .then(function (resp)   { return resp.json(); })
+                    .then(function (data)   { console.log(data);  })
+                    .catch(function (error) { console.log(error); });
+				}
+				else {}
+/*zoeken op geslacht*/
+				let geslacht  =  document.getElementsByName('zSexe')[0].value;
+
+                url=rooturl+'/profiel/search.php?sexe='+ geslacht + '/profiel/search.php?grootte=' + grootte + '&grootteOperator='+ grootteOperator;
+				console.log(geslacht);
+                fetch(url)
+                    .then(function (resp)   { return resp.json(); })
+                    .then(function (data)   { console.log(data);  })
+                    .catch(function (error) { console.log(error); });
+				
+});
+}
+</script>
+</head>
+<body>
+<!-- hoofding-->
+<header>
+datingsite
+</header>
+<!--titel-->
+<div>
+<h1>zoek een date</h1>
+</div>
+<!--de zoekopties-->
+<div>
+<form>
+<table>
+<tr><td><label>familienaam</label></td><td><input type="text" name="zFamilienaam"></input></td></tr>
+<tr><td><label>voornaam</label></td><td><input type="text" name="zVoornaam"></input></td></tr>
+<tr><td><label>geboortedatum</label></td><td><input type="text" name="zGeboortedatum"></input></td></tr>
+<tr><td><label>email</label></td><td><input type="email" name="zFamilienaam"></input></td></tr>
+<tr><td><label>nickname</label></td><td><input type="text" name="zNickname"></input></td></tr>
+<tr><td><label>beroep</label></td><td><input type="text" name="zBeroep"></input></td></tr>
+<tr><td><label>sexe</label></td><td><input type="radio" name="zSexe" value="m">m</input>
+									<input type="radio" name="zSexe" value="v">v</input></td></tr>
+<tr><td><label>haarkleur</label></td><td><input type="text" name="zHaarkleur"></input></td></tr>
+<tr><td><label>oogkleur</label></td><td><input type="text" name="zOogkleur"></input></td></tr>
+<tr><td><label>grootte (=groter dan in cm)</label></td><td><input type="number" name="zGrootte"></input></td></tr>
+<tr><td><label>gewicht</label></td><td><input type="text" name="zGewicht"></input></td></tr>
+</table>
+
+<input id="zoekKnop"type="button" value="Zoek"></input>
+</form>
+</div>
+
+<footer>
+</footer>
+</body>
+</html>
