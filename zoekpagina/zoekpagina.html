@@ -8,7 +8,7 @@
 window.onload = function() {
 var rooturl = "https://scrumserver.tenobe.org/scrum/api";
 
- document.getElementById('zoekKnop').addEventListener('click', function (e) {
+	document.getElementById('zoekKnop').addEventListener('click', function (e) {
 				e.preventDefault;
 /*zoeken op grootte*/				
                 let grootte =  document.getElementsByName('zGrootte')[0].value;
@@ -25,16 +25,48 @@ var rooturl = "https://scrumserver.tenobe.org/scrum/api";
 				}
 				else {}
 /*zoeken op geslacht*/
-				let geslacht  =  document.getElementsByName('zSexe')[0].value;
+			let geslacht = '';
+				if ((document.getElementsByName('zSexe')[0].checked == true) || (document.getElementsByName('zSexe')[1].checked == true)){
+					if (document.getElementsByName('zSexe')[0].checked == true){
+					geslacht  =  document.getElementsByName('zSexe')[0].value;
+					console.log(geslacht);
+					}
+					else if (document.getElementsByName('zSexe')[1].checked == true){
+					geslacht  =  document.getElementsByName('zSexe')[1].value; 
+					console.log(geslacht);
+					}
+					url=rooturl+'/profiel/search.php?sexe='+ geslacht + '&grootte=' + grootte + '&grootteOperator='+ grootteOperator;
+					fetch(url)
+						.then(function (resp)   { return resp.json(); })
+						.then(function (data)   { console.log(data);  })
+						.catch(function (error) { console.log(error); });
+				}
 
-                url=rooturl+'/profiel/search.php?sexe='+ geslacht + '/profiel/search.php?grootte=' + grootte + '&grootteOperator='+ grootteOperator;
-				console.log(geslacht);
+/*zoeken op familinaam*/
+			let familienaam  =  document.getElementsByName('zFamilienaam')[0].value;
+				if (familienaam != ''){
+                let url=rooturl+'/profiel/search.php?sexe='+ geslacht + '&grootte=' + grootte + '&grootteOperator='+ grootteOperator + '&familienaam='+ familienaam ;
+                console.log(familienaam);
                 fetch(url)
                     .then(function (resp)   { return resp.json(); })
                     .then(function (data)   { console.log(data);  })
                     .catch(function (error) { console.log(error); });
-				
-});
+					}
+					
+/*zoeken op voornaam*/
+			let voornaam  =  document.getElementsByName('zVoornaam')[0].value;
+				if (voornaam != ''){
+                let url=rooturl+'/profiel/search.php?sexe='+ geslacht + '&grootte=' + grootte + '&grootteOperator='+ grootteOperator + '&voornaam='+ voornaam ;
+                console.log(voornaam);
+                fetch(url)
+                    .then(function (resp)   { return resp.json(); })
+                    .then(function (data)   { console.log(data);  })
+                    .catch(function (error) { console.log(error); });
+					}
+			
+/*zoeken op geboortedatum*/
+
+	});
 }
 </script>
 </head>
@@ -51,10 +83,6 @@ datingsite
 <div>
 <form>
 <table>
-<tr><td><label>familienaam</label></td><td><input type="text" name="zFamilienaam"></input></td></tr>
-<tr><td><label>voornaam</label></td><td><input type="text" name="zVoornaam"></input></td></tr>
-<tr><td><label>geboortedatum</label></td><td><input type="text" name="zGeboortedatum"></input></td></tr>
-<tr><td><label>email</label></td><td><input type="email" name="zFamilienaam"></input></td></tr>
 <tr><td><label>nickname</label></td><td><input type="text" name="zNickname"></input></td></tr>
 <tr><td><label>beroep</label></td><td><input type="text" name="zBeroep"></input></td></tr>
 <tr><td><label>sexe</label></td><td><input type="radio" name="zSexe" value="m">m</input>
