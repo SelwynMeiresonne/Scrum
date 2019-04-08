@@ -66,10 +66,12 @@ window.addEventListener('load', function () {
     function OnRegisterClick() {
         evt.preventDefault();
 
-        let nickname = document.getElementsByName('r-username')[0].value;
-        let wachtwoord = document.getElementsByName('r-password')[0].value;
-        let email = document.getElementsByName('r-email')[0].value;
+        let data = document.getElementsByName('register')
 
+        console.log(data)
+
+
+        /*
         let url = ROOT_URL + '/profiel/authenticate.php';
 
         let data = {
@@ -90,5 +92,7 @@ window.addEventListener('load', function () {
             .then(function (response){return response.json();})
             .then(function (data){console.log(data);})
         .catch(function (error){console.log(error);});
+        */
     }
+
 })
