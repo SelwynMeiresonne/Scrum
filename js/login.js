@@ -66,6 +66,8 @@ window.addEventListener('load', function () {
     function OnRegisterClick() {
         evt.preventDefault();
 
+        console.log("CALLED!!!")
+
         let data = document.getElementsByName('register')
 
         console.log(data)
