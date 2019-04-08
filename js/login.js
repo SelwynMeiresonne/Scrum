@@ -3,19 +3,17 @@ window.addEventListener('load', function() {
 
     // Gebruiker is ingelogd, naar profiel
     if (IsIngelogd()) {
-        window.location.replace('profiel.html');
-        return;
+        //window.location.replace('profiel.html');
+        //return;
     }
 
     var eLogin = document.querySelector('#login')
     eLogin.addEventListener('click', OnLoginClick);
 
     function OnLoginClick(evt) {
-        console.log("click")
         evt.preventDefault();
         let nickname =  document.getElementById('username').value; 
         let wachtwoord =  document.getElementById('password').value;
-
             let url = ROOT_URL + '/profiel/authenticate.php';
 
             let data = {
@@ -45,12 +43,17 @@ window.addEventListener('load', function() {
             })
     }
 
+    // Login niet gelukt
     function OnLoginFail() {
         console.log("Kan niet inloggen")
     }
 
+    // Login gelukt
     function OnLoginSuccess(data) {
         // Local storage
         localStorage.setItem('user_id', data.id)
+
+        // Redirect
+        Redirect('profiel.html');
     }
 })
