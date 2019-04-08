@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Date</title>
-    <script src="js/utility.js"></script>
-    <script src="js/login.js"></script>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <script src="js/utility.js"></script>
+    <script src="js/login.js"></script>
 </head>
 <body>
     <!-- Navigation -->
@@ -23,33 +24,24 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="#">Home
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Zoeken</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Profiel</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Berichten</a>
-                    </li>
+                <ul class="navbar-nav ml-auto" id="navigationElements">
                 </ul>
             </div>
         </div>
     </nav>
 
     <div class="container pt-5 mb-5">
+        <div class="alert alert-danger" role="alert" id="errormessage">
+            This is a danger alert—check it out!
+        </div>
+
         <h2>Login</h2>
 
         <!-- LOGIN LOGIN LOGIN -->
         <form>
             <div class="form-group">
-                <label>Email address</label>
-                <input type="email" name="l-username" class="form-control" placeholder="Geef uw gebruikersnaam">
+                <label>Gebruikersnaam</label>
+                <input type="text" name="l-username" class="form-control" placeholder="Geef uw gebruikersnaam">
             </div>
 
             <div class="form-group">
@@ -63,69 +55,79 @@
         <!-- REGISTER REGISTER REGISTER -->
         <h2 class="mt-5">Registreer</h2>
 
-        <form>
-            <h5 class="mt-5">Basis gegevens</h5>
-            <div class="form-group">
-                <label>Email address</label>
-                <input type="email" name="register" class="form-control" placeholder="Enter email">
-                <small id="emailHelp" class="form-text text-muted">Deze is en blijf ook privé</small>
+        <form class="row">
+            <div class="col-sm-6">
+                <h5 class="mt-5">Basis gegevens</h5>
+
+                <div class="form-group">
+                    <label>Gebruikersnaam</label>
+                    <input type="text" name="r-username" class="form-control" placeholder="Enter email">
+                </div>
+
+                <div class="form-group">
+                    <label>Email address</label>
+                    <input type="email" name="r-email" class="form-control" placeholder="Enter email">
+                    <small class="form-text text-muted">Deze is en blijf ook privé</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Wachtwoord</label>
+                    <input type="password" name="r-password" class="form-control" placeholder="Wachtwoord">
+                    <small class="form-text text-muted">Kies een veilig en lang wachtwoord</small>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label>Wachtwoord</label>
-                <input type="password" name="register"  class="form-control" placeholder="Wachtwoord">
-                <small class="form-text text-muted">Kies een veilig en lang wachtwoord</small>
+            <div class="col-sm-6 mt-4">
+                <h5 class="mt-4">Jouw profiel</h5>
+
+                <div class="form-group">
+                    <label>Naam</label>
+                    <input type="text" name="r-naam" class="form-control" placeholder="Bv. Jansens">
+                </div>
+
+                <div class="form-group">
+                    <label>Voornaam</label>
+                    <input type="text" name="r-voornaam" class="form-control" placeholder="Bv. Jan">
+                </div>
+
+                <div class="form-group">
+                    <label>Geboortedatum</label>
+                    <input type="date" name="r-birthday" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label>Beroep</label>
+                    <input type="text" name="r-work" class="form-control" placeholder="Developer, winkelbediende, ...">
+                </div>
+
+                <div class="form-group">
+                    <label>Geslacht</label><br>
+                    <label class="checkbox-inline"><input type="checkbox" name="r-man" value="">Man</label><br>
+                    <label class="checkbox-inline"><input type="checkbox" name="r-woman" value="">Vrouw</label>
+                </div>
+
+                <div class="form-group">
+                    <label>Haarkleur</label><br>
+                    <input name="r-hair" type="text" class="form-control" placeholder="Bv. Bruin, Blond, Zwart, ...">
+                </div>
+
+                <div class="form-group">
+                    <label>Oog kleur</label><br>
+                    <input name="r-eye" type="text" class="form-control" placeholder="Bv. Groen, Blauw, Bruin, ...">
+                </div>
+
+                <div class="form-group">
+                    <label>Grootte</label><br>
+                    <input name="r-height" type="number" class="form-control" placeholder="Bv. 179">
+                </div>
+
+                <div class="form-group">
+                    <label>Gewicht</label><br>
+                    <input name="r-weight" type="number" class="form-control" placeholder="Bv. 80kg">
+                </div>
+
+                <button type="submit" id="register" class="btn btn-primary">Registeren</button>
             </div>
-
-            <h3 class="mt-4">Jouw profiel</h3>
-
-            <div class="form-group">
-                <label>Naam</label>
-                <input type="text" name="register" class="form-control" placeholder="Bv. Jansens">
-            </div>
-
-            <div class="form-group">
-                <label>Voornaam</label>
-                <input type="text" name="register" class="form-control" placeholder="Bv. Jan">
-            </div>
-
-            <div class="form-group">
-                <label>Geboortedatum</label>
-                <input type="date" name="register" class="form-control" placeholder="dd/mm/yyyy">
-            </div>
-
-            <div class="form-group">
-                <label>Beroep</label>
-                <input type="text" name="register" class="form-control" placeholder="Developer, winkelbediende, ...">
-            </div>
-
-            <div class="form-group">
-                <label>Geslacht</label><br>
-                <label name="register" class="checkbox-inline"><input type="checkbox" value="">Man</label><br>
-                <label name="register" class="checkbox-inline"><input type="checkbox" value="">Vrouw</label>
-            </div>
-
-            <div class="form-group">
-                <label>Haarkleur</label><br>
-                <input name="register" type="text" class="form-control" placeholder="Bv. Bruin, Blond, Zwart, ...">
-            </div>
-
-            <div class="form-group">
-                <label>Oog kleur</label><br>
-                <input name="register" type="text" class="form-control" placeholder="Bv. Groen, Blauw, Bruin, ...">
-            </div>
-
-            <div class="form-group">
-                <label>Grootte</label><br>
-                <input name="register" type="number" class="form-control" placeholder="Bv. 179">
-            </div>
-
-            <div class="form-group">
-                <label>Gewicht</label><br>
-                <input name="register" type="number" class="form-control" placeholder="Bv. 80kg">
-            </div>
-
-            <button type="submit" id="register" class="btn btn-primary">Registeren</button>
         </form>
     </div>
 </body>

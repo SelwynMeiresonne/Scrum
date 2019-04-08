@@ -1,11 +1,14 @@
 // Initialize
-window.addEventListener('load', function () {
+$(document).ready(function() {
 
     // Gebruiker is ingelogd, naar profiel
     if (IsIngelogd()) {
-        //window.location.replace('profiel.html');
-        //return;
+       // window.location.replace('profiel.html');
+
+       // return;
     }
+
+    $('#errormessage').hide()
 
     // Login
     var eLogin = document.querySelector('#login')
@@ -45,13 +48,12 @@ window.addEventListener('load', function () {
                 } else {
                     OnLoginFail()
                 }
-
             })
     }
 
     // Login niet gelukt
     function OnLoginFail() {
-        console.log("Kan niet inloggen")
+        $('#errormessage').show().text("De gegevens die je hebt ingevoert zijn niet juist!")
     }
 
     // Login gelukt
@@ -66,30 +68,25 @@ window.addEventListener('load', function () {
     function OnRegisterClick(evt) {
         evt.preventDefault();
 
-        console.log("CALLED!!!")
-
-        let data = document.getElementsByName('register')
-
-        data.forEach(element => {
-            if (element.name === "" || element.value === "undefined") {
-                
-            } else {
-                console.log( element.value == "" ? "" : element.value)
-            }
-        })
-
-        console.log(data.length)
-
-        //console.log(data)
-
-
-        /*
-        let url = ROOT_URL + '/profiel/authenticate.php';
+        let url = ROOT_URL + '/profiel/create.php';
 
         let data = {
-            nickname: nickname,
-            email: email,
-            wachtwoord: wachtwoord
+            familienaam: $('input[name="r-naam"]').val(),
+            voornaam: $('input[name="r-voornaam"]').val(),
+            geboortedatum: $('input[name="r-birthday"]').val(),
+            email: $('input[name="r-email"]').val(),
+            nickname: $('input[name="r-username"]').val(),
+            foto: 'no_picture.jpg',
+            beroep: $('input[name="r-work"]').val(),
+            sexe: $('input[name="r-man"]').checked ? 'm' : 'v',
+            haarkleur: $('input[name="r-hair"]').val(),
+            oogkleur: $('input[name="r-eye"]').val(),
+            grootte: $('input[name="r-height"]').val(),
+            gewicht: $('input[name="r-weight"]').val(),
+            wachtwoord: $('input[name="r-password"]').val(),
+
+            // Moet > 0 anders fout
+            lovecoins: "1"
         }
 
         var request = new Request(url, {
@@ -102,9 +99,27 @@ window.addEventListener('load', function () {
 
         fetch(request)
             .then(function (response){return response.json();})
-            .then(function (data){console.log(data);})
+            .then(function (data){
+                 if (data.id) {
+                    OnRegisterSuccess(data)
+                } else {
+                    OnRegisterFail()
+                }
+            })
         .catch(function (error){console.log(error);});
-        */
     }
 
+        // Login niet gelukt
+        function OnRegisterFail() {
+            $('#errormessage').show().text("Controleer of je alles juist hebt ingevuld en als je niets vergeten bent!")
+        }
+    
+        // Login gelukt
+        function OnRegisterSuccess(data) {
+            // Local storage
+            localStorage.setItem('user_id', data.id)
+    
+            // Redirect
+            Redirect('paginas/profiel.html');
+        }
 })
