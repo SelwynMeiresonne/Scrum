@@ -15,7 +15,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
         <div class="container">
-            <a class="navbar-brand" href="#">Start Bootstrap</a>
+            <a class="navbar-brand" href="#">Scrum Project</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
                 aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -40,30 +40,91 @@
         </div>
     </nav>
 
-    <div class="container pt-4">
-        <p>Login</p>
-        <form>
-            Gebruikersnaam<br>
-            <input type="text" id="username" name="username"><br>
+    <div class="container pt-5">
+        <h2>Login</h2>
 
-            Passwoord<br>
-            <input type="text" id="password" name="password">
-            <input type="submit" id="login" value="Submit">
+        <!-- LOGIN LOGIN LOGIN -->
+        <form>
+            <div class="form-group">
+                <label>Email address</label>
+                <input type="email" name="l-username" class="form-control" placeholder="Geef uw gebruikersnaam">
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input name="l-password" type="password" class="form-control" placeholder="Wachtwoord">
+            </div>
+
+            <button type="submit" id="login" class="btn btn-primary">Submit</button>
         </form>
 
-        <p>Registreer</p>
-        <form action='#'>
-            Email<br>
-            <input type="text" name="email"><br>
+        <!-- REGISTER REGISTER REGISTER -->
+        <h2 class="mt-5">Registreer</h2>
 
-            Gebruikersnaam<br>
-            <input type="text" name="username"><br>
+        <form>
+            <h5 class="mt-5">Basis gegevens</h5>
+            <div class="form-group">
+                <label for="exampleInputEmail1">Email address</label>
+                <input type="email" name="username" class="form-control" placeholder="Enter email">
+                <small id="emailHelp" class="form-text text-muted">Deze is en blijf ook privé</small>
+            </div>
 
-            Passwoord<br>
-            <input type="text" name="password">
-            <input type="submit" id="register" value="Submit">
+            <div class="form-group">
+                <label>Wachtwoord</label>
+                <input type="password" class="form-control" placeholder="Wachtwoord">
+                <small class="form-text text-muted">Kies een veilig en lang wachtwoord</small>
+            </div>
+
+            <h3 class="mt-4">Jouw profiel</h3>
+
+            <div class="form-group">
+                <label>Naam</label>
+                <input type="text" class="form-control" placeholder="Bv. Jansens">
+            </div>
+
+            <div class="form-group">
+                <label>Voornaam</label>
+                <input type="text" class="form-control" placeholder="Bv. Jan">
+            </div>
+
+            <div class="form-group">
+                <label>Geboortedatum</label>
+                <input type="date" class="form-control" placeholder="dd/mm/yyyy">
+            </div>
+
+            <div class="form-group">
+                <label>Beroep</label>
+                <input type="text" class="form-control" placeholder="Developer, winkelbediende, ...">
+            </div>
+
+            <div class="form-group">
+                <label>Geslacht</label><br>
+                <label class="checkbox-inline"><input type="checkbox" value="">Man</label><br>
+                <label class="checkbox-inline"><input type="checkbox" value="">Vrouw</label>
+            </div>
+
+            <div class="form-group">
+                <label>Haarkleur</label><br>
+                <input type="text" class="form-control" placeholder="Bv. Bruin, Blond, Zwart, ...">
+            </div>
+
+            <div class="form-group">
+                <label>Oog kleur</label><br>
+                <input type="text" class="form-control" placeholder="Bv. Groen, Blauw, Bruin, ...">
+            </div>
+
+            <div class="form-group">
+                <label>Grootte</label><br>
+                <input type="number" class="form-control" placeholder="Bv. 179">
+            </div>
+
+            <div class="form-group">
+                <label>Gewicht</label><br>
+                <input type="number" class="form-control" placeholder="Bv. 80kg">
+            </div>
+
+            <button type="submit" id="register" class="btn btn-primary">Submit</button>
         </form>
     </div>
-
 </body>
 </html>
