@@ -71,7 +71,9 @@ window.addEventListener('load', function () {
         let data = document.getElementsByName('register')
 
         data.forEach(element => {
-            if (element.name != "" || element.value != "undefined") {
+            if (element.name === "" || element.value === "undefined") {
+                
+            } else {
                 console.log( element.value == "" ? "" : element.value)
             }
         })
