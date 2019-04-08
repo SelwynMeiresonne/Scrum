@@ -5,20 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Date</title>
+    <script src="js/util.js"></script>
     <script src="js/login.js"></script>
 </head>
 <body>
     <p>Login</p>
     <form>
         Gebruikersnaam<br>
-        <input type="text" name="username"><br>
+        <input type="text" id="username" name="username"><br>
 
         Passwoord<br>
-        <input type="text" name="password">
+        <input type="text" id="password" name="password">
+        <input type="submit" id="login" value="Submit">
     </form>
 
     <p>Registreer</p>
-    <form>
+    <form action='#'>
         Email<br>
         <input type="text" name="email"><br>
 
@@ -27,6 +29,7 @@
 
         Passwoord<br>
         <input type="text" name="password">
+        <input type="submit" id="register" value="Submit">
     </form>
 
 </body>
