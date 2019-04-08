@@ -17,6 +17,6 @@ function Logout() {
 
 // Forceer een gebruiker naar een andere pagina
 function Redirect(url) {
-    window.href.replace(url)
+    window.location.replace(url)
 }
 
