@@ -62,7 +62,7 @@ $(document).ready(function() {
         localStorage.setItem('user_id', data.id)
 
         // Redirect
-        Redirect('profiel.html');
+        Redirect('paginas/profiel.html');
     }
 
     function OnRegisterClick(evt) {

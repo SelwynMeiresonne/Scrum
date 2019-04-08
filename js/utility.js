@@ -4,6 +4,7 @@ ROOT_URL = "https://scrumserver.tenobe.org/scrum/api";
 // Navigation
 var NAVIGATION = [
     {Naam: "Zoeken", Pagina: "paginas/zoeken.html"},
+    {Naam: "Profiel", Pagina: "paginas/profiel.html"},
     {Naam: "Berichten", Pagina: "paginas/berichten.html"},
     {Naam: "Logout", Pagina: "index.html"}
 ]
