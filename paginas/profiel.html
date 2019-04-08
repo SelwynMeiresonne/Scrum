@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Mijn profiel</title>
+    <link rel="stylesheet" type="text/css" href="profiel.css">
+</head>
+
+<script type="text/javascript">
+
+	window.onload = function(){
+
+		let rooturl = 'https://scrumserver.tenobe.org/scrum/api/';
+		/* todo get actual profileId from localstorage */
+		let profielId =  '1';
+		let url=rooturl+'/profiel/read_one.php?id='+profielId;
+
+        fetch(url)
+            .then(function (resp)   { return resp.json(); })
+            .then(function (data)   { 
+            							fillUpProfile(data);
+            							console.log(data);
+            						})
+            .catch(function (error) { console.log(error); });
+	}
+
+
+	function fillUpProfile(profile) {
+		/*
+			nickname 		String 	max 100 karakters uniek 	unieke roepnaam van de persoon. Wordt ook gebruikt om in te loggen. 								publiek
+			foto 			String 	max 1000 karakters 	Bestandsnaam van de foto. Je vindt alle foto's in de map https://scrumserver.tenobe.org/scrum/img 			publiek
+			beroep 			String 	max 1000 karakters 	beroep van de persoon 																						publiek
+			sexe 			String 	1 karakter ==> "m","v","x",... 	geslacht van de persoon 																		publiek
+			oogkleur 		String 	max 50 karakters 	omschrijving van de oogkleur 																				publiek
+			haarkleur 		String 	max 50 karakters 	omschrijving van de haarkleur 																				publiek
+			gewicht 		Integer 		gewicht in kg 																											publiek
+			grootte 		Integer 		lengte in cm 																											publiek
+			
+
+			id 	Bigint 		Autoincrement 	Primary key van het profiel 																							hidden
+			familienaam 	String 	max 1000 karakters 	familienaam van de persoon 																					verborgen
+			voornaam 		String 	max 1000 karakters 	voornaam van de persoon 																					verborgen
+			geboortedatum 	String 	max 10 karakters 	verkorte ISO String van de geboortedatum.
+														Verwerkingen van deze datum zoals de leeftijd kunnen publiek zijn 											verborgen
+			email 			String 	max 1000 karakters 	emailadres van de persoon 																					verborgen
+			wachtwoord 		String 	max 1000 karakters 	eigen wachtwoord van de gebruiker (standaardprofielen "vdab") 												verborgen
+			lovecoins 		Integer de lovecoins waarover een gebruiker beschikt 																					verborgen
+		*/
+
+		var defaultHiddenFieldsUser;
+		if(localStorage && localStorage.getItem("defaultHiddenFieldsUser")) {
+			defaultHiddenFieldsUser = localStorage.getItem("defaultHiddenFieldsUser");
+		} else {
+			defaultHiddenFieldsUser = ["id","familienaam","voornaam","geboortedatum","email","wachtwoord","lovecoins"];			
+		}
+
+		for (var key in profile) {
+			if (profile.hasOwnProperty(key)) {
+				//console.log(key + ": " + profile[key]);
+
+				/* Todo show actual foto as img */
+				if(key === "foto") {
+					console.log(foto + ": " + profile[key]);
+				}
+
+				/* Add css .hideItem to those elements that are not supposed to be shown for this user */
+				for(var str in defaultHiddenFieldsUser) {
+					//console.log(defaultHiddenFieldsUser[str]);
+					if(key === defaultHiddenFieldsUser[str]){
+						var elemToFill = document.getElementById(key);
+						elemToFill.classList.add("hideItem");
+						elemToFill.innerHTML += " " + profile[key];						
+					}	
+				}
+
+			}
+		}
+    }
+
+
+
+</script>
+
+	<body>
+
+		<p id = "id" class = "">Id :</p>
+		<p id ="familienaam">Familienaam :</p>
+		<p id ="voornaam">Voornaam :</p>
+		<p id ="geboortedatum">Geboortedatum :</p>
+		<p id ="email">Email :</p>
+		<p id ="nickname">Nickname :</p>
+		<p id ="foto">Foto :</p>
+		<p id ="beroep">Beroep :</p>
+		<p id ="sexe">Sexe :</p>
+		<p id ="oogkleur">Oogkleur :</p>
+		<p id ="haarkleur">Haarkleur :</p>
+		<p id ="gewicht">Gewicht :</p>
+		<p id ="grootte">Grootte :</p>
+		<p id ="wachtwoord">Wachtwoord :</p>
+		<p id ="lovecoins">Lovecoins :</p>
+
+	</body>
+</html>
