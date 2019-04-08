@@ -63,14 +63,20 @@ window.addEventListener('load', function () {
         Redirect('profiel.html');
     }
 
-    function OnRegisterClick() {
+    function OnRegisterClick(evt) {
         evt.preventDefault();
 
         console.log("CALLED!!!")
 
         let data = document.getElementsByName('register')
 
-        console.log(data)
+        data.forEach(element => {
+            if (element.name != "" || element.value != "undefined") {
+                console.log( element.value == "" ? "" : element.value)
+            }
+        })
+
+        //console.log(data)
 
 
         /*
