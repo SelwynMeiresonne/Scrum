@@ -78,9 +78,18 @@
 			defaultHiddenFieldsUser = ["id","familienaam","voornaam","geboortedatum","email","wachtwoord","lovecoins"];			
 		}
 
-		for (var key in profile) {
+		for (var index in profile) {
+			var key = index
+			var value = profile[index]
+
+			console.log(key, value)
+
+			if (typeof PRIVATE_ELEMENTS[key] !== "undefined") {
+				$('#displayElement').append("<p>" + key + ": " + value + "</p>")
+			}
 			if (profile.hasOwnProperty(key)) {
 				//console.log(key + ": " + profile[key]);
+				
 
 				/* Todo show actual foto as img */
 				if(key === "foto") {
@@ -91,9 +100,7 @@
 				for(var str in defaultHiddenFieldsUser) {
 					//console.log(defaultHiddenFieldsUser[str]);
 					if(key === defaultHiddenFieldsUser[str]){
-						var elemToFill = document.getElementById(key);
-						elemToFill.classList.add("hideItem");
-						elemToFill.innerHTML += " " + profile[key];						
+					
 					}	
 				}
 
@@ -104,24 +111,8 @@
 
 
 </script>
-
-	<body>
-		<div class="container mt-4">
-			<p id = "id" class = "">Id :</p>
-			<p id ="familienaam">Familienaam :</p>
-			<p id ="voornaam">Voornaam :</p>
-			<p id ="geboortedatum">Geboortedatum :</p>
-			<p id ="email">Email :</p>
-			<p id ="nickname">Nickname :</p>
-			<p id ="foto">Foto :</p>
-			<p id ="beroep">Beroep :</p>
-			<p id ="sexe">Sexe :</p>
-			<p id ="oogkleur">Oogkleur :</p>
-			<p id ="haarkleur">Haarkleur :</p>
-			<p id ="gewicht">Gewicht :</p>
-			<p id ="grootte">Grootte :</p>
-			<p id ="wachtwoord">Wachtwoord :</p>
-			<p id ="lovecoins">Lovecoins :</p>
-		</div>
-	</body>
+<body>
+	<div class="container mt-4" id="displayElement">
+	</div>
+</body>
 </html>

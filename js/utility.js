@@ -9,6 +9,16 @@ var NAVIGATION = [
     {Naam: "Logout", Pagina: "index.html"}
 ]
 
+// Niet zichbare elementen
+var PRIVATE_ELEMENTS = {}
+PRIVATE_ELEMENTS["familienaam"] = true;
+PRIVATE_ELEMENTS["id"] = true;
+PRIVATE_ELEMENTS['voornaam'] = true;
+PRIVATE_ELEMENTS['geboortedatum'] = true;
+PRIVATE_ELEMENTS['email'] = true;
+PRIVATE_ELEMENTS['wachtwoord'] = true;
+PRIVATE_ELEMENTS['lovecoins'] = true;
+
 function GetBasePath() {
     return window.location.href.substr(0, window.location.href.lastIndexOf('/')) + "/"
 }
