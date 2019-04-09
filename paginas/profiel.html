@@ -33,12 +33,10 @@
 <script type="text/javascript">
 
 	window.onload = function(){
-
-		let rooturl = 'https://scrumserver.tenobe.org/scrum/api/';
 		/* todo get actual profileId from localstorage */
 		//let profielId =  '1';
 		let profielId = GeefGebruikerID();
-		let url=rooturl+'/profiel/read_one.php?id='+profielId;
+		let url = ROOT_URL + '/profiel/read_one.php?id='+profielId;
 
         fetch(url)
             .then(function (resp)   { return resp.json(); })
@@ -72,13 +70,15 @@
 			lovecoins 		Integer de lovecoins waarover een gebruiker beschikt 																					verborgen
 		*/
 
+		let c = 0;
 		for (var index in profile) {
 			var key = index
 			var value = profile[index]
-
+			if (key === "id") {continue}
+	
 			// Dingen die WEL geblacklist zijn
 			if (typeof PRIVATE_ELEMENTS[key] !== "undefined" && GeefGebruikerID() === profile.id) {
-				$('#displayElement').append("<li class='list-group-item'><span class='glyphicon glyphicon-eye-close'> " + key + ": " + value + "</span></li>")
+				$('#displayElement').append("<li class='list-group-item'><p><span class='glyphicon glyphicon-eye-close'> " + key + ": " + value + "</span></p></li>")
 			} else {
 				// NIET GEBLACKLIST
 				if (typeof PRIVATE_ELEMENTS[key] === "undefined") {
@@ -89,6 +89,8 @@
 					}
 				}
 			}
+
+		
 	
 		}
     }
@@ -96,9 +98,7 @@
 <body>
 	<div class="container mt-4">
 		<h3>Profiel</h3>
-		<ul class="list-group mt-4" id="displayElement">
-
-		</ul>
+			<ul class="list-group mt-4" id='displayElement'></ul>
 	</div>
 </body>
 </html>

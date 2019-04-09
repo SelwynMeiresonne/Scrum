@@ -92,6 +92,7 @@ $(document).ready(function() {
             grootte: $('input[name="r-height"]').val(),
             gewicht: $('input[name="r-weight"]').val(),
             wachtwoord: $('input[name="r-password"]').val(),
+            sterrenbeeld: 'Kip',
 
             // Moet > 0 anders fout
             lovecoins: "1"
