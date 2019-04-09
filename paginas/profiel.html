@@ -48,6 +48,8 @@
 					return;
 				}
 
+				console.log(window.location)
+
 				// profiel.html?id=2 => 2
 				let profielId = parseInt($_GET('id'))
 
@@ -61,9 +63,12 @@
 
 				let url = ROOT_URL + '/profiel/read_one.php?id=' + profielId;
 
+				console.log(url)
+
 				fetch(url)
 					.then(function (resp) { return resp.json(); })
 					.then(function (data) {
+						console.log(data)
 						fillUpProfile(data);
 					})
 					.catch(function (error) { console.log("ERROR " + error); });
@@ -112,10 +117,12 @@
 					}
 				}
 
-				// Sterrenbeeld
-				let day = profile.geboortedatum.substring(profile.geboortedatum.lastIndexOf('-') + 1, profile.geboortedatum.length)
-				let month = profile.geboortedatum.substring(profile.geboortedatum.indexOf('-', 2) + 1, profile.geboortedatum.lastIndexOf('-'))
-				$('#zodic').text("Sterrenbeeld: " + GeefSterrenBeeld(day, month))
+				if (typeof profile.geboortedatum != 'undefined') {
+					// Sterrenbeeld
+					let day = profile.geboortedatum.substring(profile.geboortedatum.lastIndexOf('-') + 1, profile.geboortedatum.length)
+					let month = profile.geboortedatum.substring(profile.geboortedatum.indexOf('-', 2) + 1, profile.geboortedatum.lastIndexOf('-'))
+					$('#zodic').text("Sterrenbeeld: " + GeefSterrenBeeld(day, month))
+				}
 			}
 		</script>
 
