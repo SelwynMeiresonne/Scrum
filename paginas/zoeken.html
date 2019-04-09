@@ -95,30 +95,27 @@ var rooturl = "https://scrumserver.tenobe.org/scrum/api";
 </script>
 </head>
 <body>
-<!-- hoofding-->
-<header>
-datingsite
-</header>
 <!--titel-->
-<div>
-<h1>zoek een date</h1>
-</div>
-<!--de zoekopties-->
-<div>
-<form>
-<table>
-<tr><td><label>nickname</label></td><td><input type="text" name="zNickname"></input></td></tr>
-<tr><td><label>beroep</label></td><td><input type="text" name="zBeroep"></input></td></tr>
-<tr><td><label>sexe</label></td><td><input type="radio" name="zSexe" value="m">m</input>
-									<input type="radio" name="zSexe" value="v">v</input></td></tr>
-<tr><td><label>haarkleur</label></td><td><input type="text" name="zHaarkleur"></input></td></tr>
-<tr><td><label>oogkleur</label></td><td><input type="text" name="zOogkleur"></input></td></tr>
-<tr><td><label>grootte (=groter dan in cm)</label></td><td><input type="number" name="zGrootte"></input></td></tr>
-<tr><td><label>gewicht</label></td><td><input type="text" name="zGewicht"></input></td></tr>
-</table>
+<div class="container mt-4">
+    <h1>zoek een date</h1>
 
-<input id="zoekKnop"type="button" value="Zoek"></input>
-</form>
+    <div class="mt-4">
+        <!--de zoekopties-->
+        <form>
+            <table>
+                <tr><td><label>nickname</label></td><td><input type="text" name="zNickname"></input></td></tr>
+                <tr><td><label>beroep</label></td><td><input type="text" name="zBeroep"></input></td></tr>
+                <tr><td><label>sexe</label></td><td><input type="radio" name="zSexe" value="m">m</input>
+                                                    <input type="radio" name="zSexe" value="v">v</input></td></tr>
+                <tr><td><label>haarkleur</label></td><td><input type="text" name="zHaarkleur"></input></td></tr>
+                <tr><td><label>oogkleur</label></td><td><input type="text" name="zOogkleur"></input></td></tr>
+                <tr><td><label>grootte (=groter dan in cm)</label></td><td><input type="number" name="zGrootte"></input></td></tr>
+                <tr><td><label>gewicht</label></td><td><input type="text" name="zGewicht"></input></td></tr>
+            </table>
+
+            <button type="submit" id="zoekKnop" class="btn btn-primary mt-4">Zoek</button>
+        </form>
+    </div>
 </div>
 
 <footer>

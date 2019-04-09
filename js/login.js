@@ -3,7 +3,7 @@ $(document).ready(function() {
 
     // Gebruiker is ingelogd, naar profiel
     if (IsIngelogd()) {
-       // window.location.replace('profiel.html');
+       //window.location.replace('profiel.html');
 
        // return;
     }
@@ -17,6 +17,14 @@ $(document).ready(function() {
     // Registreer
     var eRegister = document.querySelector('#register')
     eRegister.addEventListener('click', OnRegisterClick)
+
+    $('input[name=r-man').change(function() {
+        $('input[name=r-woman]').prop('checked', false)
+    })
+
+    $('input[name=r-woman').change(function() {
+        $('input[name=r-man]').prop('checked', false)
+    })
 
     // Login knop
     function OnLoginClick(evt) {
