@@ -160,11 +160,12 @@ let url=rooturl + tijdelijkeZoekUrl;
 /*toon titels*/		
 						var titels =  document.createElement('p');
 						titels.setAttribute('class','titels');
+						titels.setAttribute('style','float:left ; display: inline-block ');
 						var teller3 = 5;
 						for (teller=0 ; teller <= 7-1; teller++){
 						var titelPlaats = document.createElement('span');
 						titelPlaats.setAttribute('class','titel'+[teller]);
-						titelPlaats.setAttribute('style','margin:10px ; width:80px ; text-align:center ; display:inline-block');
+						titelPlaats.setAttribute('style','margin:10px ; width:114px ; text-align:center ; display:inline-block ; text-decoration:underline; font-weight:bold');
 						var titelTekst = document.createTextNode(titel[teller3]);
 						titelPlaats.appendChild(titelTekst);
 						titels.appendChild(titelPlaats);
@@ -180,11 +181,13 @@ let url=rooturl + tijdelijkeZoekUrl;
 /*toon leden*/			
 						var lijst = document.createElement('div');
 						lijst.setAttribute('id','lijst');
-						lijst.setAttribute('style','width: 800px; height:300px; overflow:auto ; background-color:rgb(195,207,91,0.75) ; border: 2px solid black ; border-radius:6px ; padding:20px ; margin:20px ; box-shadow: 4px 4px 4px rgb(0,0,0,0.75)');
+						lijst.setAttribute('style','width: 1000px; height:300px; overflow:auto ; background-color:rgb(195,207,91,0.75) ; border: 2px solid black ; border-radius:6px ; padding:20px ; margin:20px ; box-shadow: 4px 4px 4px rgb(0,0,0,0.75)');
 						lijst.appendChild(titels);
 						for (teller = 0 ; teller<= sGegevens.length-1 ; teller++){
 							var zoekResultaten = document.createElement('p');
 							zoekResultaten.setAttribute('class','zoekResultaten');
+							zoekResultaten.setAttribute('style','float:left ; display: inline-block ');
+							
 							sGegeven = sGegevens[teller];
 							
 							teller1=0;
@@ -192,8 +195,8 @@ let url=rooturl + tijdelijkeZoekUrl;
 							if (sGegeven.hasOwnProperty(property)) {
 								if (teller1 == 5) {
 								var link = document.createElement('a');
-								
 								link.setAttribute('href','profiel.html?id=' + sGegeven.id);
+								link.setAttribute('style','margin:10px ; width:135px ; text-align:center ; display:inline-block');
 								var sTekst = document.createTextNode(sGegeven[property]);
 								link.appendChild(sTekst);
 								zoekResultaten.appendChild(link);
@@ -205,9 +208,10 @@ let url=rooturl + tijdelijkeZoekUrl;
 								if ((teller1 != 7) && (teller1 != 8) && (teller1 != 9) && (teller1 != 10) && (teller1 != 11) && (teller1 != 12)){
 								zoekResultaat.setAttribute('style','display:none');
 								}
+								else if ((teller1 == 8) || (teller1 == 11) || (teller1==12)){
+								zoekResultaat.setAttribute('style','margin:10px ; width:100px; text-align:center ; display:inline-block');}
 								else {
-								zoekResultaat.setAttribute('style','margin:10px ; width:80px; text-align:center ; display:inline-block');}
-								
+								zoekResultaat.setAttribute('style','margin:10px ; width:114px; text-align:center ; display:inline-block');}
 								var sTekst = document.createTextNode(sGegeven[property]);
 								
 								zoekResultaat.appendChild(sTekst);
@@ -221,6 +225,7 @@ let url=rooturl + tijdelijkeZoekUrl;
 						
 						var formulier = document.getElementsByTagName('div')[2];
 						formulier.appendChild(lijst);
+						
 					})
 						
                     .catch(function (error) { console.log(error); });
