@@ -1,268 +1,307 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Date</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Date</title>
 
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+		integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+		integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+		crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+		crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    <script src="../js/utility.js"></script>
+	<script src="../js/utility.js"></script>
 </head>
+
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
-        <div class="container">
-            <a class="navbar-brand" href="#">Scrum Project</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
-                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav ml-auto" id="navigationElements">
-                </ul>
-            </div>
-        </div>
-    </nav>
-<script>
-window.onload = function() {
-var rooturl = "https://scrumserver.tenobe.org/scrum/api";
-var tijdelijkeZoekUrl = '/profiel/search.php?';
-	document.getElementById('zoekKnop').addEventListener('click', function (e) {
+	<!-- Navigation -->
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+		<div class="container">
+			<a class="navbar-brand" href="#">Scrum Project</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+				aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarResponsive">
+				<ul class="navbar-nav ml-auto" id="navigationElements">
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<script>
+		window.onload = function () {
+			// Gebruiker is ingelogd, naar profiel
+			if (!IsIngelogd()) {
+				Redirect('../index.html')
+				return;
+			}
+			var rooturl = "https://scrumserver.tenobe.org/scrum/api";
+			var tijdelijkeZoekUrl = '/profiel/search.php?';
+			document.getElementById('zoekKnop').addEventListener('click', function (e) {
 				e.preventDefault();
 				tijdelijkeZoekUrl = '/profiel/search.php?';
-				
-/*zoeken op grootte*/				
-                let grootte =  document.getElementsByName('zGrootte')[0].value;
+
+				/*zoeken op grootte*/
+				let grootte = document.getElementsByName('zGrootte')[0].value;
 				console.log(grootte);
-				if (grootte != ''){
-				tijdelijkeZoekUrl = tijdelijkeZoekUrl + 'grootteOperator=range&rangeMinGrootte=' + grootte + '&rangeMaxGrootte=2000'
-                let url=rooturl+tijdelijkeZoekUrl;
+				if (grootte != '') {
+					tijdelijkeZoekUrl = tijdelijkeZoekUrl + 'grootteOperator=range&rangeMinGrootte=' + grootte + '&rangeMaxGrootte=2000'
+					let url = rooturl + tijdelijkeZoekUrl;
 				}
-				else {}
-/*zoeken op geslacht*/
-			let geslacht = '';
-				if ((document.getElementsByName('zSexe')[0].checked == true) || (document.getElementsByName('zSexe')[1].checked == true)){
-					if (document.getElementsByName('zSexe')[0].checked == true){
-					geslacht  =  document.getElementsByName('zSexe')[0].value;
-					console.log(geslacht);
+				else { }
+				/*zoeken op geslacht*/
+				let geslacht = '';
+				if ((document.getElementsByName('zSexe')[0].checked == true) || (document.getElementsByName('zSexe')[1].checked == true)) {
+					if (document.getElementsByName('zSexe')[0].checked == true) {
+						geslacht = document.getElementsByName('zSexe')[0].value;
+						console.log(geslacht);
 					}
-					else if (document.getElementsByName('zSexe')[1].checked == true){
-					geslacht  =  document.getElementsByName('zSexe')[1].value; 
-					console.log(geslacht);
+					else if (document.getElementsByName('zSexe')[1].checked == true) {
+						geslacht = document.getElementsByName('zSexe')[1].value;
+						console.log(geslacht);
 					}
-					
-					if (tijdelijkeZoekUrl == '/profiel/search.php?'){
-					tijdelijkeZoekUrl = tijdelijkeZoekUrl + 'sexe=' + geslacht;
+
+					if (tijdelijkeZoekUrl == '/profiel/search.php?') {
+						tijdelijkeZoekUrl = tijdelijkeZoekUrl + 'sexe=' + geslacht;
 					}
-					else{
-					tijdelijkeZoekUrl = tijdelijkeZoekUrl + '&sexe=' + geslacht;
+					else {
+						tijdelijkeZoekUrl = tijdelijkeZoekUrl + '&sexe=' + geslacht;
 					}
-				let url=rooturl+tijdelijkeZoekUrl;
+					let url = rooturl + tijdelijkeZoekUrl;
 				}
-					else {}
-/*zoeken op nickname*/
-			let nickname  =  document.getElementsByName('zNickname')[0].value;
-				if (nickname != ''){
-					if (tijdelijkeZoekUrl == '/profiel/search.php?'){
-					tijdelijkeZoekUrl = tijdelijkeZoekUrl + 'nickname=' + '%' + nickname + '%' ;
+				else { }
+				/*zoeken op nickname*/
+				let nickname = document.getElementsByName('zNickname')[0].value;
+				if (nickname != '') {
+					if (tijdelijkeZoekUrl == '/profiel/search.php?') {
+						tijdelijkeZoekUrl = tijdelijkeZoekUrl + 'nickname=' + '%' + nickname + '%';
 					}
-					else{
-					tijdelijkeZoekUrl = tijdelijkeZoekUrl + '&nickname=' + '%' + nickname + '%' ;
+					else {
+						tijdelijkeZoekUrl = tijdelijkeZoekUrl + '&nickname=' + '%' + nickname + '%';
 					}
-                let url=rooturl + tijdelijkeZoekUrl;
-                console.log(nickname);
+					let url = rooturl + tijdelijkeZoekUrl;
+					console.log(nickname);
 				}
-					else {}
-					
-/*zoeken op beroep*/
-			let beroep  =  document.getElementsByName('zBeroep')[0].value;
-				if (beroep != ''){
-					if (tijdelijkeZoekUrl == '/profiel/search.php?'){
-					tijdelijkeZoekUrl = tijdelijkeZoekUrl + 'beroep=' + '%' + beroep + '%';
+				else { }
+
+				/*zoeken op beroep*/
+				let beroep = document.getElementsByName('zBeroep')[0].value;
+				if (beroep != '') {
+					if (tijdelijkeZoekUrl == '/profiel/search.php?') {
+						tijdelijkeZoekUrl = tijdelijkeZoekUrl + 'beroep=' + '%' + beroep + '%';
 					}
-					else{
-					tijdelijkeZoekUrl = tijdelijkeZoekUrl + '&beroep=' + '%' + beroep + '%';
+					else {
+						tijdelijkeZoekUrl = tijdelijkeZoekUrl + '&beroep=' + '%' + beroep + '%';
 					}
-                let url=rooturl + tijdelijkeZoekUrl;
-                console.log(beroep);
-                }
-				else {}
-			
-/*zoeken op haarkleur*/
-			let haarkleur  =  document.getElementsByName('zHaarkleur')[0].value;
-				if (haarkleur != ''){
-					if (tijdelijkeZoekUrl == '/profiel/search.php?'){
-					tijdelijkeZoekUrl = tijdelijkeZoekUrl + 'haarkleur=' + haarkleur;
-					}
-					else{
-					tijdelijkeZoekUrl = tijdelijkeZoekUrl + '&haarkleur=' + haarkleur;
-					}
-                let url=rooturl + tijdelijkeZoekUrl;
-                console.log(haarkleur);
+					let url = rooturl + tijdelijkeZoekUrl;
+					console.log(beroep);
 				}
-				else {}
-/*zoeken op oogkleur*/
-			let oogkleur  =  document.getElementsByName('zOogkleur')[0].value;
-				if (oogkleur != ''){
-					if (tijdelijkeZoekUrl == '/profiel/search.php?'){
-					tijdelijkeZoekUrl = tijdelijkeZoekUrl + 'oogkleur=' + oogkleur;
+				else { }
+
+				/*zoeken op haarkleur*/
+				let haarkleur = document.getElementsByName('zHaarkleur')[0].value;
+				if (haarkleur != '') {
+					if (tijdelijkeZoekUrl == '/profiel/search.php?') {
+						tijdelijkeZoekUrl = tijdelijkeZoekUrl + 'haarkleur=' + haarkleur;
 					}
-					else{
-					tijdelijkeZoekUrl = tijdelijkeZoekUrl + '&oogkleur=' + oogkleur;
+					else {
+						tijdelijkeZoekUrl = tijdelijkeZoekUrl + '&haarkleur=' + haarkleur;
 					}
-                let url=rooturl + tijdelijkeZoekUrl;
-                console.log(oogkleur);
+					let url = rooturl + tijdelijkeZoekUrl;
+					console.log(haarkleur);
 				}
-				else {}
-/*zoeken op gewicht*/
-			let gewicht  =  document.getElementsByName('zGewicht')[0].value;
-				if (gewicht != ''){
-					if (tijdelijkeZoekUrl == '/profiel/search.php?'){
-					tijdelijkeZoekUrl = tijdelijkeZoekUrl + 'gewichtOperator=range&rangeMinGewicht=1' +'&rangeMaxGewicht='+ gewicht ;
+				else { }
+				/*zoeken op oogkleur*/
+				let oogkleur = document.getElementsByName('zOogkleur')[0].value;
+				if (oogkleur != '') {
+					if (tijdelijkeZoekUrl == '/profiel/search.php?') {
+						tijdelijkeZoekUrl = tijdelijkeZoekUrl + 'oogkleur=' + oogkleur;
 					}
-					else{
-					tijdelijkeZoekUrl = tijdelijkeZoekUrl + '&gewichtOperator=range&rangeMinGewicht=1' +'&rangeMaxGewicht='+ gewicht ;
+					else {
+						tijdelijkeZoekUrl = tijdelijkeZoekUrl + '&oogkleur=' + oogkleur;
 					}
-                let url=rooturl + tijdelijkeZoekUrl;
-              
+					let url = rooturl + tijdelijkeZoekUrl;
+					console.log(oogkleur);
 				}
-				else {}
-				
-let url=rooturl + tijdelijkeZoekUrl;
- fetch(url)
-                    .then(function (resp)   { return resp.json(); })
-/*toon  alle resultaten*/ .then(function (data)   { console.log(data);  
+				else { }
+				/*zoeken op gewicht*/
+				let gewicht = document.getElementsByName('zGewicht')[0].value;
+				if (gewicht != '') {
+					if (tijdelijkeZoekUrl == '/profiel/search.php?') {
+						tijdelijkeZoekUrl = tijdelijkeZoekUrl + 'gewichtOperator=range&rangeMinGewicht=1' + '&rangeMaxGewicht=' + gewicht;
+					}
+					else {
+						tijdelijkeZoekUrl = tijdelijkeZoekUrl + '&gewichtOperator=range&rangeMinGewicht=1' + '&rangeMaxGewicht=' + gewicht;
+					}
+					let url = rooturl + tijdelijkeZoekUrl;
+
+				}
+				else { }
+
+				let url = rooturl + tijdelijkeZoekUrl;
+				fetch(url)
+					.then(function (resp) { return resp.json(); })
+/*toon  alle resultaten*/.then(function (data) {
+						console.log(data);
 						var sGegevens = new Array();
 						sGegevens = data;
 						var sGegeven = new Array();
-							sGegeven = sGegevens[0];
-							var teller = 0;
-							var titel = new Array();
-							
-/*aanmaak titels*/
-							console.log(sGegeven);
-							for (var property in sGegeven) {
+						sGegeven = sGegevens[0];
+						var teller = 0;
+						var titel = new Array();
+
+						/*aanmaak titels*/
+						console.log(sGegeven);
+						for (var property in sGegeven) {
 							if (sGegeven.hasOwnProperty(property)) {
 								console.log(property);
 								titel[teller] = property;
-								console.log(titel[teller]);	
-								}
-								teller=teller+1;
-								
-								}
-							
-								
-/*toon titels*/		
-						var titels =  document.createElement('p');
-						titels.setAttribute('class','titels');
-						titels.setAttribute('style','float:left ; display: inline-block ');
-						var teller3 = 5;
-						for (teller=0 ; teller <= 7-1; teller++){
-						var titelPlaats = document.createElement('span');
-						titelPlaats.setAttribute('class','titel'+[teller]);
-						titelPlaats.setAttribute('style','margin:10px ; width:114px ; text-align:center ; display:inline-block ; text-decoration:underline; font-weight:bold');
-						var titelTekst = document.createTextNode(titel[teller3]);
-						titelPlaats.appendChild(titelTekst);
-						titels.appendChild(titelPlaats);
-						if (teller3 == 5){
-						teller3=teller3+2
-						}
-						else {
-						teller3=teller3+1;
-						}
-						}
-							
-							
-/*toon leden*/			
-						var lijst = document.createElement('div');
-						lijst.setAttribute('id','lijst');
-						lijst.setAttribute('style','width: 1000px; height:300px; overflow:auto ; background-color:rgb(195,207,91,0.75) ; border: 2px solid black ; border-radius:6px ; padding:20px ; margin:20px ; box-shadow: 4px 4px 4px rgb(0,0,0,0.75)');
-						lijst.appendChild(titels);
-						for (teller = 0 ; teller<= sGegevens.length-1 ; teller++){
-							var zoekResultaten = document.createElement('p');
-							zoekResultaten.setAttribute('class','zoekResultaten');
-							zoekResultaten.setAttribute('style','float:left ; display: inline-block ');
-							
-							sGegeven = sGegevens[teller];
-							
-							teller1=0;
-							for (var property in sGegeven) {
-							if (sGegeven.hasOwnProperty(property)) {
-								if (teller1 == 5) {
-								var link = document.createElement('a');
-								link.setAttribute('href','profiel.html?id=' + sGegeven.id);
-								link.setAttribute('style','margin:10px ; width:135px ; text-align:center ; display:inline-block');
-								var sTekst = document.createTextNode(sGegeven[property]);
-								link.appendChild(sTekst);
-								zoekResultaten.appendChild(link);
-								}
-								else {
-								var zoekResultaat = document.createElement('span');
-								zoekResultaat.setAttribute('id','zoekResultaat'+[teller1]);
-								
-								if ((teller1 != 7) && (teller1 != 8) && (teller1 != 9) && (teller1 != 10) && (teller1 != 11) && (teller1 != 12)){
-								zoekResultaat.setAttribute('style','display:none');
-								}
-								else if ((teller1 == 8) || (teller1 == 11) || (teller1==12)){
-								zoekResultaat.setAttribute('style','margin:10px ; width:100px; text-align:center ; display:inline-block');}
-								else {
-								zoekResultaat.setAttribute('style','margin:10px ; width:114px; text-align:center ; display:inline-block');}
-								var sTekst = document.createTextNode(sGegeven[property]);
-								
-								zoekResultaat.appendChild(sTekst);
-									}
-									teller1=teller1+1;
-								zoekResultaten.appendChild(zoekResultaat);
+								console.log(titel[teller]);
 							}
+							teller = teller + 1;
+
+						}
+
+
+						/*toon titels*/
+						var titels = document.createElement('p');
+						titels.setAttribute('class', 'titels');
+						titels.setAttribute('style', 'float:left ; display: inline-block ');
+						var teller3 = 5;
+						for (teller = 0; teller <= 7 - 1; teller++) {
+							var titelPlaats = document.createElement('span');
+							titelPlaats.setAttribute('class', 'titel' + [teller]);
+							titelPlaats.setAttribute('style', 'margin:10px ; width:114px ; text-align:center ; display:inline-block ; text-decoration:underline; font-weight:bold');
+							var titelTekst = document.createTextNode(titel[teller3]);
+							titelPlaats.appendChild(titelTekst);
+							titels.appendChild(titelPlaats);
+							if (teller3 == 5) {
+								teller3 = teller3 + 2
+							}
+							else {
+								teller3 = teller3 + 1;
+							}
+						}
+
+
+						/*toon leden*/
+						var lijst = document.createElement('div');
+						lijst.setAttribute('id', 'lijst');
+						lijst.setAttribute('style', 'width: 1000px; height:300px; overflow:auto ; background-color:rgb(195,207,91,0.75) ; border: 2px solid black ; border-radius:6px ; padding:20px ; margin:20px ; box-shadow: 4px 4px 4px rgb(0,0,0,0.75)');
+						lijst.appendChild(titels);
+						for (teller = 0; teller <= sGegevens.length - 1; teller++) {
+							var zoekResultaten = document.createElement('p');
+							zoekResultaten.setAttribute('class', 'zoekResultaten');
+							zoekResultaten.setAttribute('style', 'float:left ; display: inline-block ');
+
+							sGegeven = sGegevens[teller];
+
+							teller1 = 0;
+							for (var property in sGegeven) {
+								if (sGegeven.hasOwnProperty(property)) {
+									if (teller1 == 5) {
+										var link = document.createElement('a');
+										link.setAttribute('href', 'profiel.html?id=' + sGegeven.id);
+										link.setAttribute('style', 'margin:10px ; width:135px ; text-align:center ; display:inline-block');
+										var sTekst = document.createTextNode(sGegeven[property]);
+										link.appendChild(sTekst);
+										zoekResultaten.appendChild(link);
+									}
+									else {
+										var zoekResultaat = document.createElement('span');
+										zoekResultaat.setAttribute('id', 'zoekResultaat' + [teller1]);
+
+										if ((teller1 != 7) && (teller1 != 8) && (teller1 != 9) && (teller1 != 10) && (teller1 != 11) && (teller1 != 12)) {
+											zoekResultaat.setAttribute('style', 'display:none');
+										}
+										else if ((teller1 == 8) || (teller1 == 11) || (teller1 == 12)) {
+											zoekResultaat.setAttribute('style', 'margin:10px ; width:100px; text-align:center ; display:inline-block');
+										}
+										else {
+											zoekResultaat.setAttribute('style', 'margin:10px ; width:114px; text-align:center ; display:inline-block');
+										}
+										var sTekst = document.createTextNode(sGegeven[property]);
+
+										zoekResultaat.appendChild(sTekst);
+									}
+									teller1 = teller1 + 1;
+									zoekResultaten.appendChild(zoekResultaat);
+								}
 							}
 							lijst.appendChild(zoekResultaten);
 						}
-						
+
 						var formulier = document.getElementsByTagName('div')[2];
 						formulier.appendChild(lijst);
-						
+
 					})
-						
-                    .catch(function (error) { console.log(error); });
-					
 
-	});
+					.catch(function (error) { console.log(error); });
 
 
-	
-}
-</script>
-</head>
-<body>
-<!--titel-->
-<div class="container mt-4">
-    <h1>zoek een date</h1>
+			});
 
-    <div class="mt-4">
-        <!--de zoekopties-->
-        <form>
-            <table>
-                <tr><td><label>nickname</label></td><td><input type="text" name="zNickname"></input></td></tr>
-                <tr><td><label>beroep</label></td><td><input type="text" name="zBeroep"></input></td></tr>
-                <tr><td><label>sexe</label></td><td><input type="radio" name="zSexe" value="m">m</input>
-                                                    <input type="radio" name="zSexe" value="v">v</input></td></tr>
-                <tr><td><label>haarkleur</label></td><td><input type="text" name="zHaarkleur"></input></td></tr>
-                <tr><td><label>oogkleur</label></td><td><input type="text" name="zOogkleur"></input></td></tr>
-                <tr><td><label>grootte (=groter dan in cm)</label></td><td><input type="number" name="zGrootte"></input></td></tr>
-                <tr><td><label>gewicht</label></td><td><input type="text" name="zGewicht"></input></td></tr>
-            </table>
 
-            <button type="submit" id="zoekKnop" class="btn btn-primary mt-4">Zoeken</button>
-        </form>
-    </div>
-</div>
 
-<footer>
-</footer>
-</body>
+		}
+	</script>
+	</head>
+
+	<body>
+		<!--titel-->
+		<div class="container mt-4">
+			<h1>zoek een date</h1>
+
+			<div class="mt-4">
+				<!--de zoekopties-->
+				<form>
+					<table>
+						<tr>
+							<td><label>nickname</label></td>
+							<td><input type="text" name="zNickname"></input></td>
+						</tr>
+						<tr>
+							<td><label>beroep</label></td>
+							<td><input type="text" name="zBeroep"></input></td>
+						</tr>
+						<tr>
+							<td><label>sexe</label></td>
+							<td><input type="radio" name="zSexe" value="m">m</input>
+								<input type="radio" name="zSexe" value="v">v</input></td>
+						</tr>
+						<tr>
+							<td><label>haarkleur</label></td>
+							<td><input type="text" name="zHaarkleur"></input></td>
+						</tr>
+						<tr>
+							<td><label>oogkleur</label></td>
+							<td><input type="text" name="zOogkleur"></input></td>
+						</tr>
+						<tr>
+							<td><label>grootte (=groter dan in cm)</label></td>
+							<td><input type="number" name="zGrootte"></input></td>
+						</tr>
+						<tr>
+							<td><label>gewicht</label></td>
+							<td><input type="text" name="zGewicht"></input></td>
+						</tr>
+					</table>
+
+					<button type="submit" id="zoekKnop" class="btn btn-primary mt-4">Zoeken</button>
+				</form>
+			</div>
+		</div>
+
+		<footer>
+		</footer>
+	</body>
+
 </html>

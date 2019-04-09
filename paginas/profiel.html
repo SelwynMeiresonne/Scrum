@@ -51,9 +51,12 @@
 				// profiel.html?id=2 => 2
 				let profielId = parseInt($_GET('id'))
 
+				console.log("$GET ", profielId)
+
 				// Geen ?id dus neem gebruikerprofiel
 				if (isNaN(profielId)) {
 					profielId = GeefGebruikerID();
+					console.log("ID ", profielId)
 				}
 
 				let url = ROOT_URL + '/profiel/read_one.php?id=' + profielId;
