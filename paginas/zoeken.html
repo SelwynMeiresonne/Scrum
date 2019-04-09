@@ -136,59 +136,77 @@ var tijdelijkeZoekUrl = '/profiel/search.php?';
 let url=rooturl + tijdelijkeZoekUrl;
  fetch(url)
                     .then(function (resp)   { return resp.json(); })
-/*toon resultaten*/ .then(function (data)   { console.log(data);  
+/*toon  alle resultaten*/ .then(function (data)   { console.log(data);  
 						var sGegevens = new Array();
 						sGegevens = data;
-						
+						var sGegeven = new Array();
+							sGegeven = sGegevens[0];
+							var teller = 0;
+							var titel = new Array();
+							
+/*aanmaak titels*/
+							console.log(sGegeven);
+							for (var property in sGegeven) {
+							if (sGegeven.hasOwnProperty(property)) {
+								console.log(property);
+								titel[teller] = property;
+								console.log(titel[teller]);	
+								}
+								teller=teller+1;
+								
+								}
+							
+								
+/*toon titels*/		
+						var titels =  document.createElement('p');
+						titels.setAttribute('class','titels');
+						var teller3 = 5;
+						for (teller=0 ; teller <= 7-1; teller++){
+						var titelPlaats = document.createElement('span');
+						titelPlaats.setAttribute('class','titel'+[teller]);
+						titelPlaats.setAttribute('style','margin:10px ; width:80px ; text-align:center ; display:inline-block');
+						var titelTekst = document.createTextNode(titel[teller3]);
+						titelPlaats.appendChild(titelTekst);
+						titels.appendChild(titelPlaats);
+						if (teller3 == 5){
+						teller3=teller3+2
+						}
+						else {
+						teller3=teller3+1;
+						}
+						}
+							
+							
+/*toon leden*/			
 						var lijst = document.createElement('div');
 						lijst.setAttribute('id','lijst');
 						lijst.setAttribute('style','width: 800px; height:300px; overflow:auto ; background-color:rgb(195,207,91,0.75) ; border: 2px solid black ; border-radius:6px ; padding:20px ; margin:20px ; box-shadow: 4px 4px 4px rgb(0,0,0,0.75)');
+						lijst.appendChild(titels);
 						for (teller = 0 ; teller<= sGegevens.length-1 ; teller++){
 							var zoekResultaten = document.createElement('p');
 							zoekResultaten.setAttribute('class','zoekResultaten');
-							var sGegeven = new Array();
 							sGegeven = sGegevens[teller];
 							
 							teller1=0;
-							
-							
-							/*busy writing*/
-							
-							
 							for (var property in sGegeven) {
 							if (sGegeven.hasOwnProperty(property)) {
-								var titels = document.createElement('span');
+								if (teller1 == 5) {
+								var link = document.createElement('a');
 								
-								console.log('hallo',titelTekst);
-								if ((teller1 != 5) && (teller1 != 7) && (teller1 != 8) && (teller1 != 9) && (teller1 != 10) && (teller1 != 11) && (teller1 != 12)){
-								titels.setAttribute('style','display:none');
+								link.setAttribute('href','profiel.html?id=' + sGegeven.id);
+								var sTekst = document.createTextNode(sGegeven[property]);
+								link.appendChild(sTekst);
+								zoekResultaten.appendChild(link);
 								}
 								else {
-								titels.setAttribute('style','margin:10px');	}
-								
-								console.log(property);
-								var titelTekst = document.createTextNode(property);
-								console.log(titelTekst);
-								titels.appendChild(titelTekst);
-								}
-								else {}
-								teller1=teller1+1;
-								}
-								zoekResultaten.appendChild(titels);
-								lijst.appendChild(zoekResultaten);
-							/*end busy writing*/	
-								
-							teller1=0;	
-							for (var property in sGegeven) {
-							if (sGegeven.hasOwnProperty(property)) {
 								var zoekResultaat = document.createElement('span');
 								zoekResultaat.setAttribute('id','zoekResultaat'+[teller1]);
 								
-								if ((teller1 != 5) && (teller1 != 7) && (teller1 != 8) && (teller1 != 9) && (teller1 != 10) && (teller1 != 11) && (teller1 != 12)){
+								if ((teller1 != 7) && (teller1 != 8) && (teller1 != 9) && (teller1 != 10) && (teller1 != 11) && (teller1 != 12)){
 								zoekResultaat.setAttribute('style','display:none');
 								}
 								else {
-								zoekResultaat.setAttribute('style','margin:10px');	}
+								zoekResultaat.setAttribute('style','margin:10px ; width:80px; text-align:center ; display:inline-block');}
 								
 								var sTekst = document.createTextNode(sGegeven[property]);
 								
@@ -196,6 +214,7 @@ let url=rooturl + tijdelijkeZoekUrl;
 									}
 									teller1=teller1+1;
 								zoekResultaten.appendChild(zoekResultaat);
+							}
 							}
 							lijst.appendChild(zoekResultaten);
 						}
@@ -208,6 +227,8 @@ let url=rooturl + tijdelijkeZoekUrl;
 					
 
 	});
+
+
 	
 }
 </script>
