@@ -39,9 +39,10 @@
 	<script>
 		window.onload = function () {
 			// Gebruiker is ingelogd, naar profiel
-			if (!IsIngelogd()) {
-				Redirect('../index.html')
-				return;
+			if (IsIngelogd() !== true) {
+			console.log(IsIngelogd());
+			Redirect('../index.html');
+			return;
 			}
 			var rooturl = "https://scrumserver.tenobe.org/scrum/api";
 			var tijdelijkeZoekUrl = '/profiel/search.php?';
@@ -147,9 +148,16 @@
 				else { }
 
 				let url = rooturl + tijdelijkeZoekUrl;
+				
+				
 				fetch(url)
 					.then(function (resp) { return resp.json(); })
 /*toon  alle resultaten*/.then(function (data) {
+						console.log(data);
+						if (data.message == 'Geen profielen gevonden.') {
+						alert('geen profielen gevonden');
+						}
+						else {
 						console.log(data);
 						var sGegevens = new Array();
 						sGegevens = data;
@@ -194,8 +202,8 @@
 
 						/*toon leden*/
 						var lijst = document.createElement('div');
-						lijst.setAttribute('id', 'lijst');
-						lijst.setAttribute('style', 'width: 1000px; height:300px; overflow:auto ; background-color:rgb(195,207,91,0.75) ; border: 2px solid black ; border-radius:6px ; padding:20px ; margin:20px ; box-shadow: 4px 4px 4px rgb(0,0,0,0.75)');
+						lijst.setAttribute('class', 'lijst');
+						lijst.setAttribute('style', 'width: 1000px; height:500px; overflow:auto ; background-color:rgb(195,207,91,0.75) ; border: 2px solid black ; border-radius:6px ; padding:20px ; margin:20px ; box-shadow: 4px 4px 4px rgb(0,0,0,0.75)');
 						lijst.appendChild(titels);
 						for (teller = 0; teller <= sGegevens.length - 1; teller++) {
 							var zoekResultaten = document.createElement('p');
@@ -241,7 +249,14 @@
 
 						var formulier = document.getElementsByTagName('div')[2];
 						formulier.appendChild(lijst);
-
+						var controleLijst = document.querySelectorAll('.lijst')[1];
+						console.log(controleLijst);
+						if ( controleLijst != null){
+						var verwijderLijst = document.querySelectorAll('.lijst')[0];
+						verwijderLijst.remove();}
+						else {
+						}
+}
 					})
 
 					.catch(function (error) { console.log(error); });
@@ -249,7 +264,7 @@
 
 			});
 
-
+	
 
 		}
 	</script>
