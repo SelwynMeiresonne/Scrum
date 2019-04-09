@@ -6,99 +6,112 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Date</title>
 
-	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-	<link href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 
     <script src="../js/utility.js"></script>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
-        <div class="container">
-            <a class="navbar-brand" href="#">Scrum Project</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
-                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav ml-auto" id="navigationElements">
-                </ul>
-            </div>
-        </div>
-    </nav>
 
-<script type="text/javascript">
+<body>
+	<!-- Navigation -->
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+		<div class="container">
+			<a class="navbar-brand" href="#">Scrum Project</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+				aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarResponsive">
+				<ul class="navbar-nav ml-auto" id="navigationElements">
+				</ul>
+			</div>
+		</div>
+	</nav>
 
-	window.onload = function(){
-		/* todo get actual profileId from localstorage */
-		//let profielId =  '1';
-		let profielId = GeefGebruikerID();
-		let url = ROOT_URL + '/profiel/read_one.php?id='+profielId;
+	<script type="text/javascript">
 
-        fetch(url)
-            .then(function (resp)   { return resp.json(); })
-            .then(function (data)   { 
-            							fillUpProfile(data);
-            							console.log(data);
-            						})
-            .catch(function (error) { console.log(error); });
-	}
+		window.onload = function () {
+			/* todo get actual profileId from localstorage */
+			//let profielId =  '1';
+			let profielId = GeefGebruikerID();
+			let url = ROOT_URL + '/profiel/read_one.php?id=' + profielId;
+
+			fetch(url)
+				.then(function (resp) { return resp.json(); })
+				.then(function (data) {
+					fillUpProfile(data);
+					console.log(data);
+				})
+				.catch(function (error) { console.log(error); });
+		}
 
 
-	function fillUpProfile(profile) {
-		/*
-			nickname 		String 	max 100 karakters uniek 	unieke roepnaam van de persoon. Wordt ook gebruikt om in te loggen. 								publiek
-			foto 			String 	max 1000 karakters 	Bestandsnaam van de foto. Je vindt alle foto's in de map https://scrumserver.tenobe.org/scrum/img 			publiek
-			beroep 			String 	max 1000 karakters 	beroep van de persoon 																						publiek
-			sexe 			String 	1 karakter ==> "m","v","x",... 	geslacht van de persoon 																		publiek
-			oogkleur 		String 	max 50 karakters 	omschrijving van de oogkleur 																				publiek
-			haarkleur 		String 	max 50 karakters 	omschrijving van de haarkleur 																				publiek
-			gewicht 		Integer 		gewicht in kg 																											publiek
-			grootte 		Integer 		lengte in cm 																											publiek
-			
-
-			id 	Bigint 		Autoincrement 	Primary key van het profiel 																							hidden
-			familienaam 	String 	max 1000 karakters 	familienaam van de persoon 																					verborgen
-			voornaam 		String 	max 1000 karakters 	voornaam van de persoon 																					verborgen
-			geboortedatum 	String 	max 10 karakters 	verkorte ISO String van de geboortedatum.
-														Verwerkingen van deze datum zoals de leeftijd kunnen publiek zijn 											verborgen
-			email 			String 	max 1000 karakters 	emailadres van de persoon 																					verborgen
-			wachtwoord 		String 	max 1000 karakters 	eigen wachtwoord van de gebruiker (standaardprofielen "vdab") 												verborgen
-			lovecoins 		Integer de lovecoins waarover een gebruiker beschikt 																					verborgen
-		*/
-
-		let c = 0;
-		for (var index in profile) {
-			var key = index
-			var value = profile[index]
-			if (key === "id") {continue}
+		function fillUpProfile(profile) {
+			/*
+				nickname 		String 	max 100 karakters uniek 	unieke roepnaam van de persoon. Wordt ook gebruikt om in te loggen. 								publiek
+				foto 			String 	max 1000 karakters 	Bestandsnaam van de foto. Je vindt alle foto's in de map https://scrumserver.tenobe.org/scrum/img 			publiek
+				beroep 			String 	max 1000 karakters 	beroep van de persoon 																						publiek
+				sexe 			String 	1 karakter ==> "m","v","x",... 	geslacht van de persoon 																		publiek
+				oogkleur 		String 	max 50 karakters 	omschrijving van de oogkleur 																				publiek
+				haarkleur 		String 	max 50 karakters 	omschrijving van de haarkleur 																				publiek
+				gewicht 		Integer 		gewicht in kg 																											publiek
+				grootte 		Integer 		lengte in cm 																											publiek
+				
 	
-			// Dingen die WEL geblacklist zijn
-			if (typeof PRIVATE_ELEMENTS[key] !== "undefined" && GeefGebruikerID() === profile.id) {
-				$('#displayElement').append("<li class='list-group-item'><p><span class='glyphicon glyphicon-eye-close'> " + key + ": " + value + "</span></p></li>")
-			} else {
-				// NIET GEBLACKLIST
-				if (typeof PRIVATE_ELEMENTS[key] === "undefined") {
-					if (GeefGebruikerID() === profile.id) {
-						$('#displayElement').append("<li class='list-group-item'><span class='glyphicon glyphicon-eye-open'> " + key + ": " + value + "</span></li>")
-					} else {
-						$('#displayElement').append("<li class='list-group-item'> " + key + ": " + value + "</li>")
+				id 	Bigint 		Autoincrement 	Primary key van het profiel 																							hidden
+				familienaam 	String 	max 1000 karakters 	familienaam van de persoon 																					verborgen
+				voornaam 		String 	max 1000 karakters 	voornaam van de persoon 																					verborgen
+				geboortedatum 	String 	max 10 karakters 	verkorte ISO String van de geboortedatum.
+															Verwerkingen van deze datum zoals de leeftijd kunnen publiek zijn 											verborgen
+				email 			String 	max 1000 karakters 	emailadres van de persoon 																					verborgen
+				wachtwoord 		String 	max 1000 karakters 	eigen wachtwoord van de gebruiker (standaardprofielen "vdab") 												verborgen
+				lovecoins 		Integer de lovecoins waarover een gebruiker beschikt 																					verborgen
+			*/
+
+			for (var index in profile) {
+				var key = index
+				var value = profile[index]
+				if (key === "id") { continue }
+
+				// Dingen die WEL geblacklist zijn
+				if (typeof PRIVATE_ELEMENTS[key] !== "undefined" && GeefGebruikerID() === profile.id) {
+					$('#displayElement').append("<li class='list-group-item'><p><span class='glyphicon glyphicon-eye-close'> " + key + ": " + value + "</span></p></li>")
+				} else {
+					// NIET GEBLACKLIST
+					if (typeof PRIVATE_ELEMENTS[key] === "undefined") {
+						if (GeefGebruikerID() === profile.id) {
+							$('#displayElement').append("<li class='list-group-item'><span class='glyphicon glyphicon-eye-open'> " + key + ": " + value + "</span></li>")
+						} else {
+							$('#displayElement').append("<li class='list-group-item'> " + key + ": " + value + "</li>")
+						}
 					}
 				}
 			}
-
-		
-	
+			
+			// Sterrenbeeld
+			let day = profile.geboortedatum.substring(profile.geboortedatum.lastIndexOf('-') + 1, profile.geboortedatum.length)
+			let month = profile.geboortedatum.substring(profile.geboortedatum.indexOf('-', 2) + 1, profile.geboortedatum.lastIndexOf('-'))
+			$('#zodic').text("Sterrenbeeld: " + GeefSterrenBeeld(day, month))
 		}
-    }
-</script>
-<body>
-	<div class="container mt-4">
-		<h3>Profiel</h3>
+
+
+	</script>
+
+	<body>
+		<div class="container mt-4">
+			<h3>Profiel</h3>
 			<ul class="list-group mt-4" id='displayElement'></ul>
-	</div>
-</body>
+			<li class="list-group-item">
+				<p>
+					<span class='glyphicon-eye-open' id="zodic">
+
+					</span>
+				</p>
+			</li>
+		</div>
+	</body>
+
 </html>

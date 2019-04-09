@@ -6,7 +6,8 @@ var NAVIGATION = [
     {Naam: "Zoeken", Pagina: "paginas/zoeken.html"},
     {Naam: "Profiel", Pagina: "paginas/profiel.html"},
     {Naam: "Berichten", Pagina: "paginas/berichten.html"},
-    {Naam: "Logout", Pagina: "index.html"}
+    {Naam: "Love Coins", Pagina: "paginas/lovecoins.html"},
+    {Naam: "Logout", Pagina: "index.html"},
 ]
 
 // Niet zichbare elementen
@@ -38,7 +39,7 @@ $('navigationElements').ready(function() {
                     url = "../" + url
                 }
             } 
-            var btn = $('<li class="nav-item"><a class="nav-link" href="'  + url + '">' + NAVIGATION[i].Naam + '</a></li>').appendTo('#navigationElements')
+            var btn = $('<li class="nav-item pl-3"><a class="nav-link" href="'  + url + '">' + NAVIGATION[i].Naam + '</a></li>').appendTo('#navigationElements')
 
             if (NAVIGATION[i].Naam == "Logout") {
                 btn.click(function() {
@@ -73,4 +74,22 @@ function Redirect(url) {
 // Animate to a div
 function ScrollToErrorMessage(id) {
     $('html, body').animate({ scrollTop: $(id).offset().top }, 'fast');
+}
+
+// Geef een sterren beeld op basis van dag & maand
+function GeefSterrenBeeld(date, month) {
+    if (month == 1 && date >= 20 || month == 2 && date <= 18) { return "Waterman"; }
+    if (month == 2 && date >= 19 || month == 3 && date <= 20) { return "Vissen"; }
+    if (month == 3 && date >= 21 || month == 4 && date <= 19) { return "Ram"; }
+    if (month == 4 && date >= 20 || month == 5 && date <= 20) { return "Stier"; }
+    if (month == 5 && date >= 21 || month == 6 && date <= 21) { return "Tweling"; }
+    if (month == 6 && date >= 22 || month == 7 && date <= 22) { return "Kreeft"; }
+    if (month == 7 && date >= 23 || month == 8 && date <= 22) { return "Leeuw"; }
+    if (month == 8 && date >= 23 || month == 9 && date <= 22) { return "Maagd"; }
+    if (month == 9 && date >= 23 || month == 10 && date <= 22) { return "Weegschaal"; }
+    if (month == 10 && date >= 23 || month == 11 && date <= 21) { return "Schorpioen"; }
+    if (month == 11 && date >= 22 || month == 12 && date <= 21) { return "Boogschutter"; }
+    if (month == 12 && date >= 22 || month == 1 && date <= 19) { return "Steenbok"; }
+
+    return "What."
 }

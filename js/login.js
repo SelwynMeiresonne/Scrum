@@ -86,7 +86,7 @@ $(document).ready(function() {
             nickname: $('input[name="r-username"]').val(),
             foto: 'no_picture.jpg',
             beroep: $('input[name="r-work"]').val(),
-            sexe: $('input[name="r-man"]').checked ? 'm' : 'v',
+            sexe: $('select[name="r-sex"]').children("option:selected").val(),
             haarkleur: $('input[name="r-hair"]').val(),
             oogkleur: $('input[name="r-eye"]').val(),
             grootte: $('input[name="r-height"]').val(),
@@ -95,8 +95,10 @@ $(document).ready(function() {
             sterrenbeeld: 'Kip',
 
             // Moet > 0 anders fout
-            lovecoins: "1"
+            lovecoins: 1
         }
+
+        console.log(data)
 
         var request = new Request(url, {
             method: 'POST',                 //request methode
