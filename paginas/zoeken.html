@@ -129,37 +129,69 @@ var tijdelijkeZoekUrl = '/profiel/search.php?';
 					tijdelijkeZoekUrl = tijdelijkeZoekUrl + '&gewichtOperator=range&rangeMinGewicht=1' +'&rangeMaxGewicht='+ gewicht ;
 					}
                 let url=rooturl + tijdelijkeZoekUrl;
-                console.log(gewicht);
+              
 				}
 				else {}
-				console.log(tijdelijkeZoekUrl);
+				
 let url=rooturl + tijdelijkeZoekUrl;
  fetch(url)
                     .then(function (resp)   { return resp.json(); })
-                    .then(function (data)   { console.log(data);  
+/*toon resultaten*/ .then(function (data)   { console.log(data);  
 						var sGegevens = new Array();
 						sGegevens = data;
-						console.log(sGegevens.length);
+						
 						var lijst = document.createElement('div');
 						lijst.setAttribute('id','lijst');
+						lijst.setAttribute('style','width: 800px; height:300px; overflow:auto ; background-color:rgb(195,207,91,0.75) ; border: 2px solid black ; border-radius:6px ; padding:20px ; margin:20px ; box-shadow: 4px 4px 4px rgb(0,0,0,0.75)');
 						for (teller = 0 ; teller<= sGegevens.length-1 ; teller++){
 							var zoekResultaten = document.createElement('p');
 							zoekResultaten.setAttribute('class','zoekResultaten');
 							var sGegeven = new Array();
 							sGegeven = sGegevens[teller];
-							console.log(sGegeven);
+							
 							teller1=0;
+							
+							
+							/*busy writing*/
+							
+							
+							for (var property in sGegeven) {
+							if (sGegeven.hasOwnProperty(property)) {
+								var titels = document.createElement('span');
+								
+								console.log('hallo',titelTekst);
+								if ((teller1 != 5) && (teller1 != 7) && (teller1 != 8) && (teller1 != 9) && (teller1 != 10) && (teller1 != 11) && (teller1 != 12)){
+								titels.setAttribute('style','display:none');
+								}
+								else {
+								titels.setAttribute('style','margin:10px');	}
+								
+								console.log(property);
+								var titelTekst = document.createTextNode(property);
+								console.log(titelTekst);
+								titels.appendChild(titelTekst);
+								}
+								else {}
+								teller1=teller1+1;
+								}
+								zoekResultaten.appendChild(titels);
+								lijst.appendChild(zoekResultaten);
+							/*end busy writing*/	
+								
+							teller1=0;	
 							for (var property in sGegeven) {
 							if (sGegeven.hasOwnProperty(property)) {
 								var zoekResultaat = document.createElement('span');
 								zoekResultaat.setAttribute('id','zoekResultaat'+[teller1]);
+								
 								if ((teller1 != 5) && (teller1 != 7) && (teller1 != 8) && (teller1 != 9) && (teller1 != 10) && (teller1 != 11) && (teller1 != 12)){
 								zoekResultaat.setAttribute('style','display:none');
 								}
-								else {}
-								console.log(property);
+								else {
+								zoekResultaat.setAttribute('style','margin:10px');	}
+								
 								var sTekst = document.createTextNode(sGegeven[property]);
-								console.log(sTekst);
+								
 								zoekResultaat.appendChild(sTekst);
 									}
 									teller1=teller1+1;
