@@ -1,6 +1,5 @@
 // Initialize
 $(document).ready(function() {
-
     // Gebruiker is ingelogd, naar profiel
     if (IsIngelogd()) {
         Redirect('paginas/profiel.html')
@@ -84,7 +83,7 @@ $(document).ready(function() {
             geboortedatum: $('input[name="r-birthday"]').val(),
             email: $('input[name="r-email"]').val(),
             nickname: $('input[name="r-username"]').val(),
-            foto: 'no_picture.jpg',
+            foto: $('input[name="r-foto"').val(),
             beroep: $('input[name="r-work"]').val(),
             sexe: $('select[name="r-sex"]').children("option:selected").val(),
             haarkleur: $('input[name="r-hair"]').val(),
