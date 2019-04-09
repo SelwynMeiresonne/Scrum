@@ -18,6 +18,7 @@ $(document).ready(function() {
     var eRegister = document.querySelector('#register')
     eRegister.addEventListener('click', OnRegisterClick)
 
+    // Checkboxes
     $('input[name=r-man').change(function() {
         $('input[name=r-woman]').prop('checked', false)
     })
@@ -120,6 +121,7 @@ $(document).ready(function() {
         // Login niet gelukt
         function OnRegisterFail() {
             $('#errormessage').show().text("Controleer of je alles juist hebt ingevuld en als je niets vergeten bent!")
+            $('html, body').animate({ scrollTop: $('#errormessage').offset().top }, 'slow');
         }
     
         // Login gelukt
