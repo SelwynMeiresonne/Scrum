@@ -33,7 +33,7 @@ window.onload = function() {
 var rooturl = "https://scrumserver.tenobe.org/scrum/api";
 var tijdelijkeZoekUrl = '/profiel/search.php?';
 	document.getElementById('zoekKnop').addEventListener('click', function (e) {
-				e.preventDefault;
+				e.preventDefault();
 				tijdelijkeZoekUrl = '/profiel/search.php?';
 				
 /*zoeken op grootte*/				
@@ -168,7 +168,7 @@ let url=rooturl + tijdelijkeZoekUrl;
 							lijst.appendChild(zoekResultaten);
 						}
 						
-						var formulier = document.getElementsByTagName('div')[1];
+						var formulier = document.getElementsByTagName('div')[2];
 						formulier.appendChild(lijst);
 					})
 						
