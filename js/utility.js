@@ -7,6 +7,7 @@ var NAVIGATION = [
     {Naam: "Profiel", Pagina: "paginas/profiel.html"},
     {Naam: "Berichten", Pagina: "paginas/berichten.html"},
     {Naam: "Love Coins", Pagina: "paginas/lovecoins.html"},
+    {Naam: "Delete account", Pagina: "paginas/delete.html"},
     {Naam: "Logout", Pagina: "index.html"},
 ]
 
@@ -93,3 +94,9 @@ function GeefSterrenBeeld(date, month) {
 
     return "What."
 }
+
+// Thank you PHP
+function $_GET(q) { 
+    let url = window.location.href
+    return url.substring(url.indexOf('?') + q.length + 2, url.length);
+} 

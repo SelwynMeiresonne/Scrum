@@ -36,16 +36,21 @@
 		window.onload = function () {
 			/* todo get actual profileId from localstorage */
 			//let profielId =  '1';
-			let profielId = GeefGebruikerID();
+			let profielId = parseInt($_GET('id'))
+
+			if (isNaN(profielId)) {
+				profielId = GeefGebruikerID();
+			}
+
+			console.log(profielId)
 			let url = ROOT_URL + '/profiel/read_one.php?id=' + profielId;
 
 			fetch(url)
 				.then(function (resp) { return resp.json(); })
 				.then(function (data) {
 					fillUpProfile(data);
-					console.log(data);
 				})
-				.catch(function (error) { console.log(error); });
+				.catch(function (error) { console.log("ERROR " + error); });
 		}
 
 
