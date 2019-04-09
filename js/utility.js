@@ -59,3 +59,8 @@ function Logout() {
 function Redirect(url) {
     window.location.replace(url)
 }
+
+// Animate to a div
+function ScrollToErrorMessage(id) {
+    $('html, body').animate({ scrollTop: $(id).offset().top }, 'fast');
+}

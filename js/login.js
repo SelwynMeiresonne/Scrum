@@ -3,9 +3,8 @@ $(document).ready(function() {
 
     // Gebruiker is ingelogd, naar profiel
     if (IsIngelogd()) {
-       //window.location.replace('profiel.html');
-
-       // return;
+        Redirect('paginas/profiel.html')
+        return;
     }
 
     $('#errormessage').hide()
@@ -121,7 +120,7 @@ $(document).ready(function() {
         // Login niet gelukt
         function OnRegisterFail() {
             $('#errormessage').show().text("Controleer of je alles juist hebt ingevuld en als je niets vergeten bent!")
-            $('html, body').animate({ scrollTop: $('#errormessage').offset().top }, 'slow');
+            ScrollToErrorMessage('#errormessage')
         }
     
         // Login gelukt
