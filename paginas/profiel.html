@@ -10,6 +10,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 
     <script src="../js/utility.js"></script>
 </head>
@@ -71,48 +72,33 @@
 			lovecoins 		Integer de lovecoins waarover een gebruiker beschikt 																					verborgen
 		*/
 
-		var defaultHiddenFieldsUser;
-		if(localStorage && localStorage.getItem("defaultHiddenFieldsUser")) {
-			defaultHiddenFieldsUser = localStorage.getItem("defaultHiddenFieldsUser");
-		} else {
-			defaultHiddenFieldsUser = ["id","familienaam","voornaam","geboortedatum","email","wachtwoord","lovecoins"];			
-		}
-
 		for (var index in profile) {
 			var key = index
 			var value = profile[index]
 
-			console.log(key, value)
-
-			if (typeof PRIVATE_ELEMENTS[key] !== "undefined") {
-				$('#displayElement').append("<p>" + key + ": " + value + "</p>")
-			}
-			if (profile.hasOwnProperty(key)) {
-				//console.log(key + ": " + profile[key]);
-				
-
-				/* Todo show actual foto as img */
-				if(key === "foto") {
-					console.log(foto + ": " + profile[key]);
+			// Dingen die WEL geblacklist zijn
+			if (typeof PRIVATE_ELEMENTS[key] !== "undefined" && GeefGebruikerID() === profile.id) {
+				$('#displayElement').append("<li class='list-group-item'><span class='glyphicon glyphicon-eye-close'> " + key + ": " + value + "</span></li>")
+			} else {
+				// NIET GEBLACKLIST
+				if (typeof PRIVATE_ELEMENTS[key] === "undefined") {
+					if (GeefGebruikerID() === profile.id) {
+						$('#displayElement').append("<li class='list-group-item'><span class='glyphicon glyphicon-eye-open'> " + key + ": " + value + "</span></li>")
+					} else {
+						$('#displayElement').append("<li class='list-group-item'> " + key + ": " + value + "</li>")
+					}
 				}
-
-				/* Add css .hideItem to those elements that are not supposed to be shown for this user */
-				for(var str in defaultHiddenFieldsUser) {
-					//console.log(defaultHiddenFieldsUser[str]);
-					if(key === defaultHiddenFieldsUser[str]){
-					
-					}	
-				}
-
 			}
+	
 		}
     }
-
-
-
 </script>
 <body>
-	<div class="container mt-4" id="displayElement">
+	<div class="container mt-4">
+		<h3>Profiel</h3>
+		<ul class="list-group mt-4" id="displayElement">
+
+		</ul>
 	</div>
 </body>
 </html>

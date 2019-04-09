@@ -11,8 +11,8 @@ var NAVIGATION = [
 
 // Niet zichbare elementen
 var PRIVATE_ELEMENTS = {}
-PRIVATE_ELEMENTS["familienaam"] = true;
-PRIVATE_ELEMENTS["id"] = true;
+PRIVATE_ELEMENTS['familienaam'] = true;
+PRIVATE_ELEMENTS['id'] = true;
 PRIVATE_ELEMENTS['voornaam'] = true;
 PRIVATE_ELEMENTS['geboortedatum'] = true;
 PRIVATE_ELEMENTS['email'] = true;
