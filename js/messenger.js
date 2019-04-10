@@ -15,9 +15,6 @@ $('document').ready(function () {
     let users = {}
     var selectedTarget = isNaN($_GET('id')) ? -1 : $_GET('id')
 
-    console.log(selectedTarget)
-
-
     fetch(url + "?profielId=" + id)
         .then(function (response) { return response.json(); })
         .then(function (data) {
@@ -30,7 +27,6 @@ $('document').ready(function () {
     function CreateConversations(data) {
         let i = 0;
         data.forEach(element => {
-            console.log(element)
             let from_user = GeefGebruikerID()
             let to_user = GetChatOther(element.vanId, element.naarId)
 
@@ -57,8 +53,24 @@ $('document').ready(function () {
     // Called when profiles are in
     function PopulateUserList(a) {
         GeefProfielVanID(a).then(function (data) {
+            console.log('CALL')
             // Create button
-            var btn = $('#contacten').append("<li class='list-group-item chatitem'><p><button class='btn btn-primary' id='chatuser-" + data.id + "'>" + data.nickname + ' - ' + data.id + "</button></li>")
+            var btn = $('#contacten').append(`
+                <a href="#" id="chatuser-${data.id}">
+                    <div class="chat_people mt-3">
+                        <div class="chat_img">
+                            <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
+                        </div>
+
+                        <div class="chat_ib">
+                            <h5>${data.nickname}</h5>
+                            <p>${messages[a][0].bericht}</p>
+                        </div>
+                    </div>
+                </a>`
+             )
+
+
             // DoClick
             $('#chatuser-' + data.id).click(function () {
                 // Clear
@@ -67,21 +79,30 @@ $('document').ready(function () {
                 // Update
                 selectedTarget = parseInt(a);
 
-                UpdateChatFromServer();
+                //UpdateChatFromServer();
 
                 // Insert them
                 for (let b in messages[a]) {
-                    $('#berichten').append(`
-                            <div class="chat_people">
-                            <div class="chat_img">'
-                                <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">\
+                    if (messages[a][b].vanId == GeefGebruikerID()) {
+                        $('#berichten').append(`
+                        <div class="incoming_msg mb-4">
+                            <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png"
+                                    alt="sunil"> </div>
+                            <div class="received_msg">
+                                <div class="received_withd_msg">
+                                    <p class="bericht">${messages[a][b].bericht}a</p>
+                                </div>
                             </div>
-                            <p>${messages[a][b].bericht}</p>
+                    `)
+                    } else {
+                        $('#berichten').append(`
+                        <div class="outgoing_msg">
+                            <div class="sent_msg">
+                                <p>${messages[a][b].bericht}</p>
+                            </div>
                         </div>
-                        `)
-
-                    
-
+                    `)
+                    }
                 }
             })
         })
