@@ -53,7 +53,7 @@
         <!-- REGISTER REGISTER REGISTER -->
         <h2 class="mt-5">Registreer</h2>
 
-        <form class="row">
+        <form class="row" id="registerform" data-toggle="validator" role="form">
             <div class="col-sm-6">
                 <h5 class="mt-5">Basis gegevens</h5>
 
@@ -72,6 +72,12 @@
                     <label>Wachtwoord</label>
                     <input type="password" name="r-password" class="form-control" placeholder="Bv. E4x5Gy31hT">
                     <small class="form-text text-muted">Kies een veilig en lang wachtwoord</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Herhaling Wachtwoord</label>
+                    <input type="password" name="r-password-2" class="form-control">
+                    <small class="form-text text-muted">Wachtwoorden moeten overeen komen</small>
                 </div>
             </div>
 

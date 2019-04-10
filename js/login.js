@@ -1,5 +1,5 @@
 // Initialize
-$(document).ready(function() {
+$(document).ready(function () {
     // Gebruiker is ingelogd, naar profiel
     if (IsIngelogd()) {
         Redirect('paginas/profiel.html')
@@ -15,15 +15,6 @@ $(document).ready(function() {
     // Registreer
     var eRegister = document.querySelector('#register')
     eRegister.addEventListener('click', OnRegisterClick)
-
-    // Checkboxes
-    $('input[name=r-man').change(function() {
-        $('input[name=r-woman]').prop('checked', false)
-    })
-
-    $('input[name=r-woman').change(function() {
-        $('input[name=r-man]').prop('checked', false)
-    })
 
     // Login knop
     function OnLoginClick(evt) {
@@ -75,6 +66,26 @@ $(document).ready(function() {
     function OnRegisterClick(evt) {
         evt.preventDefault();
 
+        // Wachtwoorden
+        var wachtwoordA = $('input[name=r-password]').val()
+        var wachtwoordB = $('input[name=r-password-2]').val()
+
+        // Lengte
+        if (wachtwoordA.length < 10) {
+            $('#errormessage').show().text("Het wachtwoord moet groter zijn dan 10 karakters");
+            ScrollToErrorMessage('#errormessage')
+            return
+        }
+
+        // Wachtwoorden zijn gelijk
+        if (wachtwoordA !== wachtwoordB) {
+            $('#errormessage').show().text("De wachtwoorden komen niet overeen");
+            ScrollToErrorMessage('#errormessage')
+            return
+        }
+
+        console.log("ITS ", $('input[name="r-foto"]').val())
+
         let url = ROOT_URL + '/profiel/create.php';
 
         let data = {
@@ -83,7 +94,7 @@ $(document).ready(function() {
             geboortedatum: $('input[name="r-birthday"]').val(),
             email: $('input[name="r-email"]').val(),
             nickname: $('input[name="r-username"]').val(),
-            foto: $('input[name="r-foto"').val(),
+            foto: $('input[name="r-foto"]').val(),
             beroep: $('input[name="r-work"]').val(),
             sexe: $('select[name="r-sex"]').children("option:selected").val(),
             haarkleur: $('input[name="r-hair"]').val(),
@@ -91,13 +102,10 @@ $(document).ready(function() {
             grootte: $('input[name="r-height"]').val(),
             gewicht: $('input[name="r-weight"]').val(),
             wachtwoord: $('input[name="r-password"]').val(),
-            sterrenbeeld: 'Kip',
 
             // Moet > 0 anders fout
             lovecoins: 1
         }
-
-        console.log(data)
 
         var request = new Request(url, {
             method: 'POST',                 //request methode
@@ -108,29 +116,29 @@ $(document).ready(function() {
         });
 
         fetch(request)
-            .then(function (response){return response.json();})
-            .then(function (data){
-                 if (data.id) {
+            .then(function (response) { return response.json(); })
+            .then(function (data) {
+                if (data.id) {
                     OnRegisterSuccess(data)
                 } else {
                     OnRegisterFail()
                 }
             })
-        .catch(function (error){console.log(error);});
+            .catch(function (error) { console.log(error); });
     }
 
-        // Login niet gelukt
-        function OnRegisterFail() {
-            $('#errormessage').show().text("Controleer of je alles juist hebt ingevuld en als je niets vergeten bent!")
-            ScrollToErrorMessage('#errormessage')
-        }
-    
-        // Login gelukt
-        function OnRegisterSuccess(data) {
-            // Local storage
-            localStorage.setItem('user_id', data.id)
-    
-            // Redirect
-            Redirect('paginas/profiel.html');
-        }
+    // Login niet gelukt
+    function OnRegisterFail() {
+        $('#errormessage').show().text("Controleer of je alles juist hebt ingevuld en als je niets vergeten bent!")
+        ScrollToErrorMessage('#errormessage')
+    }
+
+    // Login gelukt
+    function OnRegisterSuccess(data) {
+        // Local storage
+        localStorage.setItem('user_id', data.id)
+
+        // Redirect
+        Redirect('paginas/profiel.html');
+    }
 })
