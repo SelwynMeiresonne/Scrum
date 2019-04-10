@@ -11,6 +11,10 @@ $('document').ready(function () {
     // Basic url
     let url = ROOT_URL + "/bericht/read.php"
 
+    function GeefGebruikerID() {
+        return 10
+    }
+
     let id = '10'
     let current_id = 10
 
@@ -23,29 +27,51 @@ $('document').ready(function () {
     fetch(url + "?profielId=" + id)
         .then(function (response) { return response.json(); })
         .then(function (data) {
-            console.log("DATA -> ", data)
-            data.forEach(element => {
-                messages.push(element)
-                // Voor ieder bericht
-                for (let i = 0; i < element.length - 1; i++) {
-                    // Get the profiles
-
-                    console.log(element[i].naarId == GeefGebruikerID() ?  element[id].vanId : element[id].naarId)
-                   //var id = element[i].naarId == GeefGebruikerID() ?  element[id].vanId : element[id].naarId
-            
-                    if (element[i].naarId != current_id) {
-                    GeefProfielVanID(id).then(function (data) {
-
-                        $('#contacten').append('<p>' + data.nickname + ' - ' + data.id + '</p>')
-                    })
-                }
-                }
-            })
-
+            for (let i = 0; i < data.length; i++) {
+                CreateConversations(data[i])
+            }
         })
 
-    // Called when profiles are in
-    function PopulateUserList(users) {
+    function CreateConversations(data) {
+        data.forEach(element => {
+            let from_user = GeefGebruikerID()
+            let to_user = GetChatOther(element.vanId, element.naarId)
+
+            // Only create if its not already cached
+            if (typeof users[to_user] === 'undefined') {
+                // Store
+                users[to_user] = true
+
+                // Message
+                messages[to_user] = element
+
+                // Create
+                PopulateUserList(to_user)
+            }
+        })
     }
 
+    // Called when profiles are in
+    function PopulateUserList(a) {
+        GeefProfielVanID(a).then(function (data) {
+            // Create button
+            var btn = $('#contacten').append("<li class='list-group-item chatitem'><p><button class='btn btn-primary' id='chatuser-" + data.id + "'>" + data.nickname + ' - ' + data.id + "</button></li>")
+            // DoClick
+            $('#chatuser-' + data.id).click(function () {
+                // Get the ID
+                var id = data.id;
+
+                for (let i = 0; i < data.length; i++) {
+                    console.log(' -> ', data[i])
+                }
+
+            })
+        })
+
+    }
+
+    function GetChatOther(a, b) {
+        if (a == GeefGebruikerID()) { return b }
+        return a
+    }
 })

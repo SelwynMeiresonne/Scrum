@@ -1,0 +1,8 @@
+
+.nav > li > a:hover{
+    background-color:#FCC;
+}
+
+.chatitem:hover() {
+    background-color:rgba(0, 0, 232, .2)
+}
