@@ -45,7 +45,9 @@ $('navigationElements').ready(function () {
             GeefProfielVanID(GeefGebruikerID()).then(function (data) {
                 if (NAVIGATION[i].Naam == "Love Coins") {
                     // Modify
-                    NAVIGATION[i].Naam += ' (' + data.lovecoins + ')'
+                    if (data.lovecoins > 0) {
+                        NAVIGATION[i].Naam += ' <span style="color:rgb(255, 255, 0)">(' + data.lovecoins + ')</span>'
+                    }
                 }
 
                 var btn = $('<li class="nav-item pl-3"><a class="nav-link" href="' + url + '">' + NAVIGATION[i].Naam + '</a></li>').appendTo('#navigationElements')
