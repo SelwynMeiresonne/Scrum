@@ -8,12 +8,71 @@ $('document').ready(function () {
         return;
     }
 
+    // Animations
+    $('.inbox_people').width('99%')
+    $('.mesgs').hide()
+
+    /*
+    $.ajax({
+        type: 'GET',
+        url: ROOT_URL + '/bericht/read.php',
+
+        dataType: 'json',
+
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+
+        success: function (data) {
+            console.log(data)
+        },
+    })​*/
+
+    /*
+    var ajaxReq = $.ajax(ROOT_URL + '/bericht/read.php', {
+        dataType: 'json',
+        timeout: 500,
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+    });*/
+
+    $.ajax({
+        url: ROOT_URL + '/bericht/read.php?profileId=22',
+        dataType: 'json',
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+    }).fail(function (data) {
+        console.log("FAIL -> ", data);
+    }).done(function (data) {
+        console.log(data)
+    })
+
     // Basic url
     let url = ROOT_URL + "/bericht/read.php"
     let id = GeefGebruikerID()
     let messages = []
     let users = {}
-    var selectedTarget = isNaN($_GET('id')) ? -1 : $_GET('id')
+    var selectedTarget = isNaN($_GET('id')) ? -1 : parseInt($_GET('id'))
+
+    if (selectedTarget > -1) { }
+    GeefProfielVanID(selectedTarget).then(function (data) {
+        console.log(data)
+        if (typeof data.message !== 'undefined') {
+            $('.inbox_people').width('39%')
+            $('.mesgs').show()
+        } else {
+            $('.talkingto').text("Bericht aan " + data.nickname)
+        }
+    })
+
+    // CACHE CACHE CACHE
+    let profile_pic = "https://scrumserver.tenobe.org/scrum/img/no_image.png";
 
     fetch(url + "?profielId=" + id)
         .then(function (response) { return response.json(); })
@@ -23,19 +82,14 @@ $('document').ready(function () {
             }
         })
 
+    // Scroll
+    function Scroll() {
+        $(".msg_history").animate({ scrollTop: $('.msg_history').prop("scrollHeight")}, 200);
+    }
 
+    // Create conversations
     function CreateConversations(data) {
         let i = 0;
-
-        console.log(data)
-
-        // Sort
-        data.sort(function(a, b) {
-            return parseInt(b) - parseInt(a)
-        });
-
-        console.log(data)
-
         data.forEach(element => {
             let from_user = GeefGebruikerID()
             let to_user = GetChatOther(element.vanId, element.naarId)
@@ -44,7 +98,6 @@ $('document').ready(function () {
             if (typeof users[to_user] === 'undefined') {
                 // Store
                 users[to_user] = true
-
                 messages[to_user] = {}
                 messages[to_user][0] = element
 
@@ -63,62 +116,68 @@ $('document').ready(function () {
     // Called when profiles are in
     function PopulateUserList(a) {
         GeefProfielVanID(a).then(function (data) {
-            console.log('CALL')
             // Create button
-           // console.log(data)
             var len = GetMessagesCount(a)
 
-            console.log("LEN ", len)
             //vanessa_vaneenoo.png
             var btn = $('#contacten').append(`
-                <a href="#" id="chatuser-${data.id}">
+                <a id="chatuser-${data.id}">
                     <div class="chat_people mt-3">
                         <div class="chat_img">
-                            <img src="${"https://scrumserver.tenobe.org/scrum/img/" +data.foto}" alt="sunil">
+                            <img src="${"https://scrumserver.tenobe.org/scrum/img/" + data.foto}" alt="Profile picture">
                         </div>
 
                         <div class="chat_ib">
                             <h5>${data.nickname}</h5>
-                            <p>${messages[a][len-1].bericht}</p>
+                            <p>${messages[a][len - 1].bericht}</p>
                         </div>
                     </div>
                 </a>`
-             )
+            )
 
             // DoClick
             $('#chatuser-' + data.id).click(function () {
-                console.log('cc')
+                $('.inbox_people').width('39%')
+                $('.mesgs').show()
+
                 // Clear
                 $('#berichten').empty()
+
+                // Set this
+                profile_pic = "https://scrumserver.tenobe.org/scrum/img/" + data.foto
 
                 // Update
                 selectedTarget = parseInt(a);
 
                 //UpdateChatFromServer();
+                $('.talkingto').text("Bericht aan " + data.nickname)
 
                 // Insert them
                 for (let b in messages[a]) {
                     if (messages[a][b].vanId == GeefGebruikerID()) {
                         $('#berichten').append(`
-                        <div class="incoming_msg mb-4">
-                            <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png"
-                                    alt="sunil"> </div>
-                            <div class="received_msg">
-                                <div class="received_withd_msg">
-                                    <p class="bericht">${messages[a][b].bericht}a</p>
-                                </div>
-                            </div>
-                    `)
-                    } else {
-                        $('#berichten').append(`
-                        <div class="outgoing_msg">
+                            <div class="outgoing_msg">
                             <div class="sent_msg">
                                 <p>${messages[a][b].bericht}</p>
                             </div>
                         </div>
                     `)
+                    } else {
+                        $('#berichten').append(`
+                        <div class="incoming_msg mb-4">
+                        <div class="incoming_msg_img"> <img src="${"https://scrumserver.tenobe.org/scrum/img/" + data.foto}"
+                                alt="Profile Picture"> </div>
+                        <div class="received_msg">
+                            <div class="received_withd_msg">
+                                <p class="bericht">${messages[a][b].bericht}</p>
+                            </div>
+                        </div>
+                    `)
                     }
                 }
+
+                // Scroll
+                Scroll()
             })
         })
     }
@@ -134,11 +193,11 @@ $('document').ready(function () {
                     console.log(data)
                 })
 
-                /*
-            // Insert them
-            for (let b in messages[a]) {
-                $('#berichten').append('<div class="container mb-4 ' + (GeefGebruikerID() == messages[a][b].vanId ? 'bericht-from text-left' : 'bericht-to text-right') + '">' + messages[a][b].bericht + '</div>')
-            }*/
+            /*
+        // Insert them
+        for (let b in messages[a]) {
+            $('#berichten').append('<div class="container mb-4 ' + (GeefGebruikerID() == messages[a][b].vanId ? 'bericht-from text-left' : 'bericht-to text-right') + '">' + messages[a][b].bericht + '</div>')
+        }*/
         }
     }
 
@@ -154,6 +213,13 @@ $('document').ready(function () {
         return count;
     }
 
+    $('input[name="bericht"]').keypress(function (event) {
+        // 13 -> enter
+        if (event.keyCode === 13) {
+            $('#sendmessage').click()
+        }
+    })
+
     // Send button
     $('#sendmessage').click(function () {
         let text = $('input[name="bericht"]').val();
@@ -161,14 +227,15 @@ $('document').ready(function () {
         // Meh
         if (selectedTarget <= 0) { return; }
 
+        // Reset
+        $('input[name="bericht"]').val('')
+
         // Send
         SendMessage(selectedTarget, text)
 
-        $('#berichten').animate({
-            scrollBottom: $("#berichten").offset().bottom
-        }, 2000);
+        // Scroll
+        Scroll()
     })
-
 
     // Stuur een bericht
     function SendMessage(to, message) {
@@ -214,31 +281,16 @@ $('document').ready(function () {
 
                     }
 
-                    console.log(messages[selectedTarget], len)
-
-                    //$('#berichten').append()
-                    if (messages[selectedTarget][len].vanId == GeefGebruikerID()) {
-                        $('#berichten').append(`
-                        <div class="incoming_msg mb-4">
-                            <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png"
-                                    alt="sunil"> </div>
-                            <div class="received_msg">
-                                <div class="received_withd_msg">
-                                    <p class="bericht">${messages[selectedTarget][len].bericht}</p>
-                                </div>
-                            </div>
-                    `)
-                    } else {
-                        $('#berichten').append(`
+                    $('#berichten').append(`
                         <div class="outgoing_msg">
                             <div class="sent_msg">
                                 <p>${messages[selectedTarget][len].bericht}</p>
                             </div>
                         </div>
                     `)
-                    }
-                
 
+                    // Scroll
+                    $('.msg_history').scrollTop($('.msg_history')[0].scrollHeight);
                 }
             })
             .catch(function (error) { console.log(error); });
