@@ -145,26 +145,33 @@
 					console.log(data);
 					koopKnop1 = document.getElementById('koopKnop1');
 					koopKnop1.addEventListener('click', function () {
+				
 					totaal = parseInt(aantal) + parseInt(sSaldo); 
 					
 					let urlUpdate=rooturl+'/profiel/update.php?id=' + profielId;
 					console.log(profielId);
-						totaal = totaal.toString();
-                        data[0].lovecoins= totaal;
+						
+						
+                        data[0].lovecoins = totaal;
+						
 						console.log(data);
 						
 						console.log(totaal);
 
                         var request = new Request(urlUpdate, {
                             method: 'PUT',
-                            body: JSON.stringify(data),
+                            body: JSON.stringify(data[0]),
                             headers: new Headers({
                                 'Content-Type': 'application/json'
                             })
                         });
                         fetch(request)
                             .then(function (resp)   { return resp.json(); })
-                            .then(function (data)   { console.log(data);  })
+                            .then(function (data)   { console.log(data);  
+							
+							Redirect('lovecoins.html');
+							
+							})
                             .catch(function (error) { console.log(error); });
 
 
@@ -172,6 +179,7 @@
                     
                     
             
+					
 					
 					
 					
