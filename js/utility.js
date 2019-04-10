@@ -26,7 +26,7 @@ function GetBasePath() {
 }
 
 // Maak de navigatie als je ingelogd bent
-$('navigationElements').ready(function() {
+$('navigationElements').ready(function () {
     var isRoot = window.location.href.endsWith('index.html');
 
     if (IsIngelogd()) {
@@ -39,15 +39,24 @@ $('navigationElements').ready(function() {
                 } else {
                     url = "../" + url
                 }
-            } 
-            var btn = $('<li class="nav-item pl-3"><a class="nav-link" href="'  + url + '">' + NAVIGATION[i].Naam + '</a></li>').appendTo('#navigationElements')
-
-            if (NAVIGATION[i].Naam == "Logout") {
-                btn.click(function() {
-                    Logout()
-                    Redirect('index.html')
-                })
             }
+
+            // Toon amount
+            GeefProfielVanID(GeefGebruikerID()).then(function (data) {
+                if (NAVIGATION[i].Naam == "Love Coins") {
+                    // Modify
+                    NAVIGATION[i].Naam += ' (' + data.lovecoins + ')'
+                }
+
+                var btn = $('<li class="nav-item pl-3"><a class="nav-link" href="' + url + '">' + NAVIGATION[i].Naam + '</a></li>').appendTo('#navigationElements')
+
+                if (NAVIGATION[i].Naam == "Logout") {
+                    btn.click(function () {
+                        Logout()
+                        Redirect('index.html')
+                    })
+                }
+            })
         }
     }
 })
@@ -99,7 +108,7 @@ function GeefSterrenBeeld(date, month) {
 function $_GET(q) { 
     let url = window.location.href
     return url.substring(url.indexOf('?') + q.length + 2, url.length);
-} 
+}               
 
 // Geef het profiel van iemand 
 // async stuff, whoop
@@ -113,3 +122,4 @@ async function GeefProfielVanID(id) {
 
     return result
 }
+
