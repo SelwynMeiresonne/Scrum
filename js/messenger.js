@@ -39,25 +39,9 @@ $('document').ready(function () {
         },
     });*/
 
-    $.ajax({
-        url: ROOT_URL + '/bericht/read.php?profileId=22',
-        dataType: 'json',
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-    }).fail(function (data) {
-        console.log("FAIL -> ", data);
-    }).done(function (data) {
-        console.log(data)
-    })
-
     // Basic url
     let url = ROOT_URL + "/bericht/read.php"
     let id = GeefGebruikerID()
-    let messages = []
-    let users = {}
     var selectedTarget = isNaN($_GET('id')) ? -1 : parseInt($_GET('id'))
 
     if (selectedTarget > -1) { }
@@ -74,13 +58,33 @@ $('document').ready(function () {
     // CACHE CACHE CACHE
     let profile_pic = "https://scrumserver.tenobe.org/scrum/img/no_image.png";
 
-    fetch(url + "?profielId=" + id)
-        .then(function (response) { return response.json(); })
-        .then(function (data) {
-            for (let i = 0; i < data.length; i++) {
-                CreateConversations(data[i])
-            }
-        })
+    let messages = []
+    let users = {}
+
+    function Init() {
+        console.log('got em')
+        messages = []
+        users = {}
+
+        $('#contacten').empty()
+
+        // Fetch
+        fetch(url + "?profielId=" + id)
+            .then(function (response) { return response.json(); })
+            .then(function (data) {
+                for (let i = 0; i < data.length; i++) {
+                    CreateConversations(data[i])
+                }
+
+                console.log('TARGET ->', selectedTarget)
+                CreateMessages(selectedTarget)
+            })
+
+
+        setTimeout(Init, 3000)
+    }
+
+    Init()
 
     // Scroll
     function Scroll() {
@@ -111,6 +115,38 @@ $('document').ready(function () {
             // Increase
             i++;
         })
+    }
+
+    function CreateMessages(a) {
+
+        console.log(messages)
+        $('.msg_history').empty()
+
+        for (let b in messages[a]) {
+            if (messages[a][b].vanId == GeefGebruikerID()) {
+                $('#berichten').append(`
+                    <div class="outgoing_msg">
+                    <div class="sent_msg">
+                        <p>${messages[a][b].bericht}</p>
+                    </div>
+                </div>
+            `)
+            } else {
+                $('#berichten').append(`
+                <div class="incoming_msg mb-4">
+                <div class="incoming_msg_img"> <img src=https://scrumserver.tenobe.org/scrum/img/no_image.png"
+                        alt="Profile Picture"> </div>
+                <div class="received_msg">
+                    <div class="received_withd_msg">
+                        <p class="bericht">${messages[a][b].bericht}</p>
+                    </div>
+                </div>
+            `)
+            }
+        }
+
+        $('.msg_history').scrollTop($('.msg_history')[0].scrollHeight);;
+        
     }
 
     // Called when profiles are in
