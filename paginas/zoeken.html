@@ -155,7 +155,7 @@
 								document.getElementsByName('zSexe')[1].checked = false;
 								}
 
-						}
+						
 
 						else {
 							console.log(data);
@@ -224,7 +224,7 @@
 							/*toon leden*/
 							var lijst = document.createElement('div');
 							lijst.setAttribute('class', 'lijst');
-							lijst.setAttribute('style', 'width: 1000px; height:500px; overflow:auto ; background-color:rgb(195,207,91,0.75) ; border: 2px solid black ; border-radius:6px ; padding:20px ; margin:20px ; box-shadow: 4px 4px 4px rgb(0,0,0,0.75)');
+							lijst.setAttribute('style', 'width: 1200px; height:500px; overflow:auto ; background-color:rgb(195,207,91,0.75) ; border: 2px solid black ; border-radius:6px ; padding:20px ; margin:20px ; box-shadow: 4px 4px 4px rgb(0,0,0,0.75)');
 							lijst.appendChild(titels);
 							for (teller = 0; teller <= sGegevens.length - 1; teller++) {
 								var zoekResultaten = document.createElement('p');
@@ -305,6 +305,7 @@
 							else {
 							}
 						}
+						}
 					})
 
 					.catch(function (error) { console.log(error); });
@@ -368,11 +369,7 @@
 						<td><input type="number" name="zGrootte"></input></td>
 					</tr>
 					<tr>
-
 						<td><label>gewicht (=weegt minder of =)</label></td>
-
-						<td><label>gewicht</label></td>
-
 						<td><input type="text" name="zGewicht"></input></td>
 					</tr>
 				</table>
