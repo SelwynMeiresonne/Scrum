@@ -94,7 +94,7 @@ $(document).ready(function () {
             geboortedatum: $('input[name="r-birthday"]').val(),
             email: $('input[name="r-email"]').val(),
             nickname: $('input[name="r-username"]').val(),
-            foto: $('input[name="r-foto"]').val(),
+            foto: "no_image.jpg",
             beroep: $('input[name="r-work"]').val(),
             sexe: $('select[name="r-sex"]').children("option:selected").val(),
             haarkleur: $('input[name="r-hair"]').val(),
@@ -106,6 +106,8 @@ $(document).ready(function () {
             // Moet > 0 anders fout
             lovecoins: 1
         }
+
+        console.log(base64Encode($('input[name="r-foto"]').val()))
 
         var request = new Request(url, {
             method: 'POST',                 //request methode
