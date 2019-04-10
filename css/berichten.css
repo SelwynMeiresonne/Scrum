@@ -6,3 +6,12 @@
 .chatitem:hover() {
     background-color:rgba(0, 0, 232, .2)
 }
+
+.bericht-from {
+    background-color:rgba(12, 232, 12, .3)
+}
+
+.bericht-to {
+    background-color:rgba(12, 12, 232, .3)
+}
+
