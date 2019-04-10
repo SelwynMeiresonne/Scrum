@@ -140,6 +140,7 @@
 						console.log(data);
 						if (data.message == 'Geen profielen gevonden.') {
 							alert('geen profielen gevonden');
+<<<<<<< HEAD
 							var verwijderLijst = document.querySelectorAll('.lijst')[0];
 								if (verwijderLijst != null){
 								verwijderLijst.remove();
@@ -154,6 +155,9 @@
 								document.getElementsByName('zSexe')[1].checked = false;
 								}
 						
+=======
+						}
+>>>>>>> eabdbb3a97842821d6632bfcc739eabeaea5bb78
 						else {
 							console.log(data);
 							var sGegevens = new Array();
@@ -195,6 +199,7 @@
 									teller3 = teller3 + 1;
 								}
 							}
+<<<<<<< HEAD
 							var titelPlaats = document.createElement('span');
 								titelPlaats.setAttribute('class', 'titel' + [teller]);
 								titelPlaats.setAttribute('style', 'margin:10px ; width:114px ; text-align:center ; display:inline-block ; text-decoration:underline; font-weight:bold');
@@ -214,6 +219,22 @@
 
 								sGegeven = sGegevens[teller];
 
+=======
+
+
+							/*toon leden*/
+							var lijst = document.createElement('div');
+							lijst.setAttribute('class', 'lijst');
+							lijst.setAttribute('style', 'width: 1000px; height:500px; overflow:auto ; background-color:rgb(195,207,91,0.75) ; border: 2px solid black ; border-radius:6px ; padding:20px ; margin:20px ; box-shadow: 4px 4px 4px rgb(0,0,0,0.75)');
+							lijst.appendChild(titels);
+							for (teller = 0; teller <= sGegevens.length - 1; teller++) {
+								var zoekResultaten = document.createElement('p');
+								zoekResultaten.setAttribute('class', 'zoekResultaten');
+								zoekResultaten.setAttribute('style', 'float:left ; display: inline-block ');
+
+								sGegeven = sGegevens[teller];
+
+>>>>>>> eabdbb3a97842821d6632bfcc739eabeaea5bb78
 								teller1 = 0;
 								for (var property in sGegeven) {
 									if (sGegeven.hasOwnProperty(property)) {
@@ -228,6 +249,7 @@
 										else {
 											var zoekResultaat = document.createElement('span');
 											zoekResultaat.setAttribute('id', 'zoekResultaat' + [teller1]);
+<<<<<<< HEAD
 
 											if ((teller1 != 7) && (teller1 != 8) && (teller1 != 9) && (teller1 != 10) && (teller1 != 11) && (teller1 != 12)) {
 												zoekResultaat.setAttribute('style', 'display:none');
@@ -240,12 +262,27 @@
 											}
 											var sTekst = document.createTextNode(sGegeven[property]);
 
+=======
+
+											if ((teller1 != 7) && (teller1 != 8) && (teller1 != 9) && (teller1 != 10) && (teller1 != 11) && (teller1 != 12)) {
+												zoekResultaat.setAttribute('style', 'display:none');
+											}
+											else if ((teller1 == 8) || (teller1 == 11) || (teller1 == 12)) {
+												zoekResultaat.setAttribute('style', 'margin:10px ; width:100px; text-align:center ; display:inline-block');
+											}
+											else {
+												zoekResultaat.setAttribute('style', 'margin:10px ; width:114px; text-align:center ; display:inline-block');
+											}
+											var sTekst = document.createTextNode(sGegeven[property]);
+
+>>>>>>> eabdbb3a97842821d6632bfcc739eabeaea5bb78
 											zoekResultaat.appendChild(sTekst);
 										}
 										teller1 = teller1 + 1;
 										zoekResultaten.appendChild(zoekResultaat);
 									}
 								}
+<<<<<<< HEAD
 								var zoekResultaat = document.createElement('span');
 								zoekResultaat.setAttribute('id', 'zoekResultaat' + [teller1]);
 								zoekResultaat.setAttribute('style', 'margin:10px ; width:114px; text-align:center ; display:inline-block');
@@ -255,6 +292,8 @@
 								var sTekst = document.createTextNode(sterrenbeeld);
 								zoekResultaat.appendChild(sTekst);
 								zoekResultaten.appendChild(zoekResultaat);
+=======
+>>>>>>> eabdbb3a97842821d6632bfcc739eabeaea5bb78
 								lijst.appendChild(zoekResultaten);
 							}
 
@@ -332,7 +371,11 @@
 						<td><input type="number" name="zGrootte"></input></td>
 					</tr>
 					<tr>
+<<<<<<< HEAD
 						<td><label>gewicht (=weegt minder of =)</label></td>
+=======
+						<td><label>gewicht</label></td>
+>>>>>>> eabdbb3a97842821d6632bfcc739eabeaea5bb78
 						<td><input type="text" name="zGewicht"></input></td>
 					</tr>
 				</table>

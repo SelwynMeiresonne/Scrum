@@ -100,3 +100,16 @@ function $_GET(q) {
     let url = window.location.href
     return url.substring(url.indexOf('?') + q.length + 2, url.length);
 } 
+
+// Geef het profiel van iemand 
+// async stuff, whoop
+async function GeefProfielVanID(id) {
+    let result = []
+    fetch(ROOT_URL + '/profiel/read_one.php?id=' + id).then(function (resp) { return resp.json(); }).then(function (data) {
+        result = data
+    ;})
+
+    await new Promise((resolve, reject) => setTimeout(resolve, 500));
+
+    return result
+}
