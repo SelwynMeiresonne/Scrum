@@ -54,6 +54,7 @@ $('document').ready(function () {
         })
     }
 
+
     // Called when profiles are in
     function PopulateUserList(a) {
         GeefProfielVanID(a).then(function (data) {
@@ -71,7 +72,22 @@ $('document').ready(function () {
 
                 // Insert them
                 for (let b in messages[a]) {
-                    $('#berichten').append('<div class="container mb-4 ' + (GeefGebruikerID() == messages[a][b].vanId ? 'bericht-from text-left' : 'bericht-to text-right') + '">' + messages[a][b].bericht + '</div>')
+                    $('#berichten').append(`
+                            <div class="chat_people">
+                            <div class="chat_img">'
+                                <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">\
+                            </div>
+                            <p>{$}
+                        </div>
+                        `)
+
+                    
+                                <div class="chat_ib">
+                                    <h5>Sunil Rajput <span class="chat_date">Dec 25</span></h5>
+                                    <p>Test, which is a new approach to have all solutions
+                                        astrology under one roof.</p>
+                                </div>
+                            </div>
                 }
             })
         })
