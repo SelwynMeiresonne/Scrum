@@ -26,6 +26,16 @@ $('document').ready(function () {
 
     function CreateConversations(data) {
         let i = 0;
+
+        console.log(data)
+
+        // Sort
+        data.sort(function(a, b) {
+            return parseInt(b) - parseInt(a)
+        });
+
+        console.log(data)
+
         data.forEach(element => {
             let from_user = GeefGebruikerID()
             let to_user = GetChatOther(element.vanId, element.naarId)
@@ -55,24 +65,29 @@ $('document').ready(function () {
         GeefProfielVanID(a).then(function (data) {
             console.log('CALL')
             // Create button
+           // console.log(data)
+            var len = GetMessagesCount(a)
+
+            console.log("LEN ", len)
+            //vanessa_vaneenoo.png
             var btn = $('#contacten').append(`
                 <a href="#" id="chatuser-${data.id}">
                     <div class="chat_people mt-3">
                         <div class="chat_img">
-                            <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
+                            <img src="${"https://scrumserver.tenobe.org/scrum/img/" +data.foto}" alt="sunil">
                         </div>
 
                         <div class="chat_ib">
                             <h5>${data.nickname}</h5>
-                            <p>${messages[a][0].bericht}</p>
+                            <p>${messages[a][len-1].bericht}</p>
                         </div>
                     </div>
                 </a>`
              )
 
-
             // DoClick
             $('#chatuser-' + data.id).click(function () {
+                console.log('cc')
                 // Clear
                 $('#berichten').empty()
 
@@ -141,7 +156,6 @@ $('document').ready(function () {
 
     // Send button
     $('#sendmessage').click(function () {
-        console.log('CCCCCCCCCC')
         let text = $('input[name="bericht"]').val();
 
         // Meh
@@ -149,6 +163,10 @@ $('document').ready(function () {
 
         // Send
         SendMessage(selectedTarget, text)
+
+        $('#berichten').animate({
+            scrollBottom: $("#berichten").offset().bottom
+        }, 2000);
     })
 
 
@@ -198,7 +216,28 @@ $('document').ready(function () {
 
                     console.log(messages[selectedTarget], len)
 
-                    $('#berichten').append('<div class="container mb-4 ' + (GeefGebruikerID() == messages[selectedTarget][len].vanId ? 'bericht-from text-left' : 'bericht-to text-right') + '">' + message + '</div>')
+                    //$('#berichten').append()
+                    if (messages[selectedTarget][len].vanId == GeefGebruikerID()) {
+                        $('#berichten').append(`
+                        <div class="incoming_msg mb-4">
+                            <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png"
+                                    alt="sunil"> </div>
+                            <div class="received_msg">
+                                <div class="received_withd_msg">
+                                    <p class="bericht">${messages[selectedTarget][len].bericht}</p>
+                                </div>
+                            </div>
+                    `)
+                    } else {
+                        $('#berichten').append(`
+                        <div class="outgoing_msg">
+                            <div class="sent_msg">
+                                <p>${messages[selectedTarget][len].bericht}</p>
+                            </div>
+                        </div>
+                    `)
+                    }
+                
 
                 }
             })
