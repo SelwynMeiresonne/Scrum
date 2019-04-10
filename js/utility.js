@@ -26,31 +26,43 @@ function GetBasePath() {
 }
 
 // Maak de navigatie als je ingelogd bent
-$('navigationElements').ready(function() {
+$('navigationElements').ready(function () {
     var isRoot = window.location.href.endsWith('index.html');
 
     if (IsIngelogd()) {
-        for (let i in NAVIGATION) {
-            var url = NAVIGATION[i].Pagina
+        // Toon amount
+        GeefProfielVanID(GeefGebruikerID()).then(function (data) {
+            for (let i in NAVIGATION) {
+                var url = NAVIGATION[i].Pagina
 
-            if (!isRoot) {
-                if (NAVIGATION[i].Naam != "Logout") {
-                    url = url.substring(url.lastIndexOf('/') + 1, url.length)
-                } else {
-                    url = "../" + url
+                if (!isRoot) {
+                    if (NAVIGATION[i].Naam != "Logout") {
+                        url = url.substring(url.lastIndexOf('/') + 1, url.length)
+                    } else {
+                        url = "../" + url
+                    }
                 }
-            } 
-            var btn = $('<li class="nav-item pl-3"><a class="nav-link" href="'  + url + '">' + NAVIGATION[i].Naam + '</a></li>').appendTo('#navigationElements')
 
-            if (NAVIGATION[i].Naam == "Logout") {
-                btn.click(function() {
-                    Logout()
-                    Redirect('index.html')
-                })
+                if (NAVIGATION[i].Naam == "Love Coins") {
+                    // Modify
+                    if (data.lovecoins > 0) {
+                        NAVIGATION[i].Naam += ' <span style="color:rgb(255, 255, 0)">(' + data.lovecoins + ')</span>'
+                    }
+                }
+            
+                var btn = $('<li class="nav-item pl-3"><a class="nav-link" href="' + url + '">' + NAVIGATION[i].Naam + '</a></li>').appendTo('#navigationElements')
+
+                if (NAVIGATION[i].Naam == "Logout") {
+                    btn.click(function () {
+                        Logout()
+                        Redirect('index.html')
+                    })
+                }
             }
-        }
+        })
     }
 })
+
 
 // Kijken of een gebruiker is ingelogd
 function IsIngelogd() {
@@ -99,7 +111,7 @@ function GeefSterrenBeeld(date, month) {
 function $_GET(q) { 
     let url = window.location.href
     return url.substring(url.indexOf('?') + q.length + 2, url.length);
-} 
+}               
 
 // Geef het profiel van iemand 
 // async stuff, whoop
@@ -113,3 +125,4 @@ async function GeefProfielVanID(id) {
 
     return result
 }
+
