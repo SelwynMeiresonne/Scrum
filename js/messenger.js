@@ -87,9 +87,12 @@ $('document').ready(function () {
                     // Add them
                     messages[to_user][len + i] = data[data.length - 1]
 
+                    console.log(profile_pic)
+                    //20190411121334616600_test_image_woop
+
                     $('#berichten').append(`
                         <div class="incoming_msg mb-4">
-                        <div class="incoming_msg_img"> <img src=https://scrumserver.tenobe.org/scrum/img/no_image.png"
+                        <div class="incoming_msg_img"> <img src="https://scrumserver.tenobe.org/scrum/img/${profile_pic}"
                                 alt="Profile Picture"> </div>
                         <div class="received_msg">
                             <div class="received_withd_msg">
@@ -186,7 +189,7 @@ $('document').ready(function () {
             } else {
                 $('#berichten').append(`
                 <div class="incoming_msg mb-4">
-                <div class="incoming_msg_img"> <img src=https://scrumserver.tenobe.org/scrum/img/${users[a].foto}"
+                <div class="incoming_msg_img"> <img src="https://scrumserver.tenobe.org/scrum/img/${profile_pic}"
                         alt="Profile Picture"> </div>
                 <div class="received_msg">
                     <div class="received_withd_msg">
@@ -229,11 +232,10 @@ $('document').ready(function () {
                 $('.inbox_people').width('39%')
                 $('.mesgs').show()
 
+                profile_pic = data.foto;
+
                 // Clear
                 $('#berichten').empty()
-
-                // Set this
-                profile_pic = "https://scrumserver.tenobe.org/scrum/img/" + data.foto
 
                 // Update
                 selectedTarget = parseInt(a);
