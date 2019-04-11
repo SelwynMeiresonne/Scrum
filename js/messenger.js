@@ -79,7 +79,6 @@ $('document').ready(function () {
             // New
             if (len < data.length) {
 
-                console.log('rr')
                 // Difference
                 var diff = data.length - len
 
@@ -100,18 +99,10 @@ $('document').ready(function () {
                     `)
                 }
             } else { // Delete
-                console.log('found a delete!', data, messages[to_user])
-
-                for (let message in messages[to_user]) {
-                    //var a = $.inArray(data, messages[to_user][message].berichtId)
-                
-                   if (typeof data[message] === 'undefined' ) {
-                        $('#bericht-' + messages[to_user][message].berichtId).remove()
-
-                       // PLZ WORK
-                       delete messages[to_user][message]
-                   }
-                }
+                // Just reset, too tired to do anything else :/
+                $('#berichten').empty()
+                messages[to_user] = data
+                CreateMessages(selectedTarget)
             }
 
             Scroll()
@@ -185,9 +176,10 @@ $('document').ready(function () {
         for (let b in messages[a]) {
             if (messages[a][b].vanId == GeefGebruikerID()) {
                 $('#berichten').append(`
-                    <div class="outgoing_msg">
+                    <div id="bericht-${messages[a][b].berichtId}" class="outgoing_msg">
                     <div class="sent_msg">
                         <p>${messages[a][b].bericht}</p>
+                        <small class="form-text text-muted"><a href="#" id="delete-${messages[a][b].berichtId}">Delete</a></small>
                     </div>
                 </div>
             `)
