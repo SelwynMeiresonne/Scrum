@@ -71,7 +71,7 @@
 						fillUpProfile(data);
 					})
 					.catch(function (error) { console.log("ERROR " + error); });
-<<<<<<< HEAD
+
 					if (gebruikerProfielId != profielId){
 					lovecoins (rooturl,gebruikerProfielId,profielId,gebruikerUrl);
 					}
@@ -122,16 +122,9 @@
 					}); ;})
 					}
 					
-			
-			function fillUpProfile(profile) {
-=======
-
-			}
-
-
 			function fillUpProfile(profile) {
 
->>>>>>> a299429b4db982aafbb2a231a7fcf9910febd26e
+
 				for (var key in profile) {
 					if (key === "id") { continue; }
 					if (key === "foto") { continue; }
@@ -157,7 +150,7 @@
 					//$('#zodic').text("Sterrenbeeld: " + GeefSterrenBeeld(day, month))
 					$('#displayElement').append("<li class='list-group-item'><p><span'> " + "Sterrenbeeld" + ": " + GeefSterrenBeeld(day, month) + "</span></p></li>");
 					//todo fixme correcte afbeelding tonen links onder profielfoto
-<<<<<<< HEAD
+
 				}
 				if (typeof profile.foto != 'undefined') {
 					var imgLocationOnServer = ROOT_URL.substring(0, ROOT_URL.length-3) + "img/" + profile[key];
@@ -199,9 +192,9 @@
 					}
 				}
 			
-		}
-=======
-				}
+		
+
+				
 
 				if (typeof profile.foto != 'undefined') {
 					var imgLocationOnServer = ROOT_URL.substring(0, ROOT_URL.length-3) + "img/" + profile[key];
@@ -257,7 +250,7 @@
 		}
 
 
->>>>>>> a299429b4db982aafbb2a231a7fcf9910febd26e
+
 		</script>
 
 		<body>
