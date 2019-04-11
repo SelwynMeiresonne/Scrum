@@ -95,7 +95,7 @@ function GeefSterrenBeeld(date, month) {
     if (month == 2 && date >= 19 || month == 3 && date <= 20) { return "Vissen"; }
     if (month == 3 && date >= 21 || month == 4 && date <= 19) { return "Ram"; }
     if (month == 4 && date >= 20 || month == 5 && date <= 20) { return "Stier"; }
-    if (month == 5 && date >= 21 || month == 6 && date <= 21) { return "Tweling"; }
+    if (month == 5 && date >= 21 || month == 6 && date <= 21) { return "Tweeling"; }
     if (month == 6 && date >= 22 || month == 7 && date <= 22) { return "Kreeft"; }
     if (month == 7 && date >= 23 || month == 8 && date <= 22) { return "Leeuw"; }
     if (month == 8 && date >= 23 || month == 9 && date <= 22) { return "Maagd"; }
