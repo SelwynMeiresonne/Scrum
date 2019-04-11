@@ -172,18 +172,7 @@
 							Redirect('lovecoins.html');
 							
 							})
-                            .catch(function (error) { console.log(error); });
-
-
-
-                    
-                    
-            
-					
-					
-					
-					
-					
+                            .catch(function (error) { console.log(error); });                                                										
 					}); })
 					.catch(function (error) {console.log(error);});
 			});
@@ -229,10 +218,10 @@
 					</tr>
 					<tr>
 						<td><label>Aantal (kostprijs: 1€/stuk)</label></td>
-						<td><input type="number" name="aantal"></input></td>
+						<td><input type="number" min="1" name="aantal"></input></td>
 					</tr>
 					<tr>
-						<td><h5>Klik op de knop KOOP om de aankoop af te ronden</h5></td>
+						<td><h5>Klik op de knop KOOP om de betaalwijze te kiezen</h5></td>
 				</table>
 
 				<button type="submit" id="koop" class="btn btn-primary mt-4">KOOP</button>

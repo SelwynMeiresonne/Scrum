@@ -40,43 +40,101 @@
 		</nav>
 
 		<script type="text/javascript">
-
 			window.onload = function () {
+			let rooturl = "https://scrumserver.tenobe.org/scrum/api";
+			
+			
+			
 				// Gebruiker is ingelogd, naar profiel
 				if (!IsIngelogd()) {
 					Redirect('../index.html')
 					return;
 				}
-
 				console.log(window.location)
-
 				// profiel.html?id=2 => 2
 				let profielId = parseInt($_GET('id'))
-
-				console.log("$GET ", profielId)
-
+				let gebruikerProfielId = GeefGebruikerID();
+				let gebruikerUrl = ROOT_URL + '/profiel/read_one.php?id=' + gebruikerProfielId;
+				console.log("$GET ", profielId, gebruikerProfielId);
+				
 				// Geen ?id dus neem gebruikerprofiel
 				if (isNaN(profielId)) {
 					profielId = GeefGebruikerID();
 					console.log("ID ", profielId)
 				}
-
 				let url = ROOT_URL + '/profiel/read_one.php?id=' + profielId;
-
 				console.log(url)
-
 				fetch(url)
 					.then(function (resp) { return resp.json(); })
 					.then(function (data) {
 						console.log(data)
+						
 						fillUpProfile(data);
+						
 					})
 					.catch(function (error) { console.log("ERROR " + error); });
 
-			}
+					if (gebruikerProfielId != profielId){
+					lovecoins (rooturl,gebruikerProfielId,profielId,gebruikerUrl);
+					}
+					}
+			/*einde window.onload*/
+			
+			function lovecoins(rooturl,gebruikerProfielId,profielId,gebruikerUrl){
+					
+					fetch(gebruikerUrl)
+					.then(function (resp) { return resp.json(); })
+					.then(function (data) {
+						console.log(data);
+						var toonKnop = document.getElementById('showAllHiddenInfo');
+						toonKnop.addEventListener('click',function () {
+						toonKnop.setAttribute('style','display:none');
+						var sSaldo = data.lovecoins;
+						console.log(sSaldo);
+						var totaal = parseInt(sSaldo) - 1; 
+						if (sSaldo > 0){
+						let urlUpdate=rooturl+'/profiel/update.php?id=' + gebruikerProfielId;
+						
+						
+                        data.lovecoins = totaal;
+						
+						console.log(data);
+						
+						console.log(totaal);
 
-
+                        var request = new Request(urlUpdate, {
+                            method: 'PUT',
+                            body: JSON.stringify(data),
+                            headers: new Headers({
+                                'Content-Type': 'application/json'
+                            })
+                        });
+                        fetch(request)
+                            .then(function (resp)   { return resp.json(); })
+                            .then(function (data)   { console.log(data);  
+							
+							
+							
+							})
+                            .catch(function (error) { console.log(error); });   
+							
+							/*functie schrijven die alles toont*/
+							
+							
+							fillUpProfileAangepast(data);
+							}
+							else {
+							alert('U heeft onvoldoende lovecoins');
+							}
+							
+					}); ;})
+					
+					
+					
+					}
+					
 			function fillUpProfile(profile) {
+
 
 				for (var key in profile) {
 					if (key === "id") { continue; }
@@ -96,7 +154,6 @@
 					}
 
 				}
-
 				if (typeof profile.geboortedatum != 'undefined') {
 					// Sterrenbeeld
 					let day = profile.geboortedatum.substring(profile.geboortedatum.lastIndexOf('-') + 1, profile.geboortedatum.length)
@@ -104,8 +161,8 @@
 					//$('#zodic').text("Sterrenbeeld: " + GeefSterrenBeeld(day, month))
 					$('#displayElement').append("<li class='list-group-item'><p><span'> " + "Sterrenbeeld" + ": " + GeefSterrenBeeld(day, month) + "</span></p></li>");
 					//todo fixme correcte afbeelding tonen links onder profielfoto
-				}
 
+				}
 				if (typeof profile.foto != 'undefined') {
 					var imgLocationOnServer = ROOT_URL.substring(0, ROOT_URL.length-3) + "img/" + profile[key];
 					console.log(imgLocationOnServer);
@@ -116,30 +173,22 @@
 						eImageToLoad.src = imgLocationOnServer;
 					}
 				}
-
 				/* Jezelf als favoriet toevoegen of gegevens unlocken met LC is niet nodig op je eigen profiel */				
 				if(GeefGebruikerID() === profile.id) {
-
 					$("#addToFavorites").css("display", "none");
 					$("#showAllHiddenInfo").css("display", "none");
-
 				} else {
-
 					var eAddProfileToFavorites = document.getElementById("addToFavorites");	
 					eAddProfileToFavorites.addEventListener('click', onAddToFavoritesClick);
-
 					function onAddToFavoritesClick(evt) {
-
+						eAddProfileToFavorites.setAttribute('style','display:none');
 		                let mijnId =  GeefGebruikerID(); 
 		                let anderId =  profile.id;
-
 		                let url=ROOT_URL+'/favoriet/like.php';
-
 		                let data = {
 		                    mijnId: mijnId,
 		                    anderId: anderId
 		                }
-
 		                var request = new Request(url, {
 		                    method: 'POST',
 		                    body: JSON.stringify(data),
@@ -153,11 +202,45 @@
 		                    .then( function (data)  { console.log(data);  })
 		                    .catch(function (error) { console.log(error); });
 					}
-
 				}
+			
+		
+
+				
+
+				if (typeof profile.foto != 'undefined') {
+					var imgLocationOnServer = ROOT_URL.substring(0, ROOT_URL.length-3) + "img/" + profile[key];
+					console.log(imgLocationOnServer);
+					let eImageToLoad = document.getElementById("profileImageToLoad");
+					eImageToLoad.src = imgLocationOnServer;
+					eImageToLoad.onerror = function(){
+						imgLocationOnServer = ROOT_URL.substring(0, ROOT_URL.length-3) + "img/no_image.png"
+						eImageToLoad.src = imgLocationOnServer;
+					}
+				}		
+		}
+		
+		
+		function fillUpProfileAangepast(profile) {
+
+
+				for (var key in profile) {
+					if (key === "id") { continue; }
+					if (key === "foto") { continue; }
+					console.log(key);
+						/* Op een ander profiel mag je enkel de niet-private velden bekijken */
+						if ((PRIVATE_ELEMENTS[key] === true) && (key != 'wachtwoord') && (key != 'lovecoins')) { //defined AND true 							
+							console.log(key + " NIET tonen " + PRIVATE_ELEMENTS[key]);
+							$('#displayElement').append("<li style='display:block' class='list-group-item'> " + key + ": " + profile[key] + "</li>")
+						} 
+					}
+					}
+
 
 			
-		}
+		
+		
+
 
 
 		</script>
@@ -189,3 +272,18 @@
 		</body>
 
 </html>
+
+    © 2019 GitHub, Inc.
+    Terms
+    Privacy
+    Security
+    Status
+    Help
+
+    Contact GitHub
+    Pricing
+    API
+    Training
+    Blog
+    About
+
