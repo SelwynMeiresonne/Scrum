@@ -76,15 +76,12 @@ $('document').ready(function () {
         // OMG IT HAS AN UPDATE
         // IT WORKS
         if (len != data.length) {
-            // Add them
-            var diff = 0
-
             // New
             if (len < data.length) {
 
                 console.log('rr')
                 // Difference
-                dif = data.length - len
+                var diff = data.length - len
 
                 // Loop through new messages
                 for (let i = 0; i < diff; i++) {
@@ -109,13 +106,10 @@ $('document').ready(function () {
                     //var a = $.inArray(data, messages[to_user][message].berichtId)
                 
                    if (typeof data[message] === 'undefined' ) {
-
                         $('#bericht-' + messages[to_user][message].berichtId).remove()
 
                        // PLZ WORK
                        delete messages[to_user][message]
-
-
                    }
                 }
             }
@@ -314,15 +308,33 @@ $('document').ready(function () {
         }
     })
 
+    var canSend = true;
+
     // Send button
     $('#sendmessage').click(function () {
         let text = $('input[name="bericht"]').val();
 
         // Meh
         if (selectedTarget <= 0) { return; }
+        if (canSend == false) {     
+            $('#berichten').append(`
+                <div class="outgoing_msg">
+                    <div class="sent_msg">
+                        <p style="color:red">Gelieve even te wachten voor je een nieuw bericht verzend</p>
+                    </div>
+                </div>
+            `)
+            return;
+        }
 
         // Reset
         $('input[name="bericht"]').val('')
+
+        canSend = false;
+
+        setTimeout(function() {
+            canSend = true;
+        }, 600)
 
         // Send
         SendMessage(selectedTarget, text)
