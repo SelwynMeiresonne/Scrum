@@ -9,6 +9,7 @@ $('document').ready(function () {
         return;
     }
 
+    // W
     // Animations
     $('.inbox_people').width('99%')
     $('.mesgs').hide()
