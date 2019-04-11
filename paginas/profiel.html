@@ -73,15 +73,6 @@
 					})
 					.catch(function (error) { console.log("ERROR " + error); });
 
-				var eAddProfileToFavorites = document.getElementById("addToFavorites");
-				eAddProfileToFavorites.addEventListener('click', onAddToFavoritesClick);
-
-				function onAddToFavoritesClick(evt) {
-					console.log("profielId : " + profielId);
-					let userFavoritesList = localStorage.getItem('user_fav');
-					userFavoritesList.push(profielId);
-					localStorage.setItem('user_fav', userFavoritesList);
-				}					
 			}
 
 
@@ -125,8 +116,49 @@
 						eImageToLoad.src = imgLocationOnServer;
 					}
 				}
+
+				/* Jezelf als favoriet toevoegen of gegevens unlocken met LC is niet nodig op je eigen profiel */				
+				if(GeefGebruikerID() === profile.id) {
+
+					$("#addToFavorites").css("display", "none");
+					$("#showAllHiddenInfo").css("display", "none");
+
+				} else {
+
+					var eAddProfileToFavorites = document.getElementById("addToFavorites");	
+					eAddProfileToFavorites.addEventListener('click', onAddToFavoritesClick);
+
+					function onAddToFavoritesClick(evt) {
+
+		                let mijnId =  GeefGebruikerID(); 
+		                let anderId =  profile.id;
+
+		                let url=ROOT_URL+'/favoriet/like.php';
+
+		                let data = {
+		                    mijnId: mijnId,
+		                    anderId: anderId
+		                }
+
+		                var request = new Request(url, {
+		                    method: 'POST',
+		                    body: JSON.stringify(data),
+		                    headers: new Headers({
+		                        'Content-Type': 'application/json'
+		                    })
+		                });
+		                
+		                fetch(request)
+		                    .then( function (resp)  { return resp.json(); })
+		                    .then( function (data)  { console.log(data);  })
+		                    .catch(function (error) { console.log(error); });
+					}
+
+				}
+
 			
-			}
+		}
+
 
 		</script>
 
@@ -145,7 +177,7 @@
 						<ul class="list-group mt-4" id='displayElement'></ul>
 <!-- fixme deze niet tonen op eigen profiel, tekst veranderen naar verwijder als het profiel dat je bekijkt van iemand is die je reeds hebt toegevoegd als favoriet, en laat ze nog floaten met flex -->
 						<div>
-							<button type="submit" id="zoekKnop" class="btn btn-primary mt-2">Toon alles (1 LC)</button>
+							<button type="submit" id="showAllHiddenInfo" class="btn btn-primary mt-2">Toon alles (1 LC)</button>
 							<button style="float:right;" type="submit" class="btn btn-primary mt-2" id="addToFavorites">Voeg toe als favoriet (1 LC)</button>					
 						</div>
 <!-- fixme deze niet tonen op eigen profiel, tekst veranderen naar verwijder als het profiel dat je bekijkt van iemand is die je reeds hebt toegevoegd als favoriet, en laat ze nog floaten met flex -->	
