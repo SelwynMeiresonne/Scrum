@@ -17,8 +17,7 @@ $('document').ready(function () {
     // Basic url
     let url = ROOT_URL + "/bericht/read.php"
     let id = GeefGebruikerID()
-    //var selectedTarget = isNaN($_GET('id')) ? -1 : parseInt($_GET('id'))
-    var selectedTarget = -1
+    var selectedTarget = isNaN($_GET('id')) ? -1 : parseInt($_GET('id'))
 
     if (selectedTarget > -1) { }
     GeefProfielVanID(selectedTarget).then(function (data) {
@@ -48,6 +47,13 @@ $('document').ready(function () {
 
                 CreateMessages(selectedTarget)
             })
+
+            if (selectedTarget != -1) {
+                PopulateUserList(selectedTarget)
+
+                messages[to_user] = {}
+                users[to_user] = {}
+            }
     }
 
     // Update
