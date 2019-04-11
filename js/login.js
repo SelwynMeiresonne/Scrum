@@ -1,4 +1,7 @@
 // Initialize
+
+   // SendImage('profile_picture', foto)
+
 $(document).ready(function () {
     // Gebruiker is ingelogd, naar profiel
     if (IsIngelogd()) {
@@ -63,6 +66,41 @@ $(document).ready(function () {
         Redirect('paginas/profiel.html');
     }
 
+    let current_picture = ""
+    let current_picture_id = "no_image.png"
+    $('input[name="r-foto"]').on('change', function(){
+        var reader = new FileReader();
+        var file    = document.querySelector('input[type=file]').files[0];
+    
+        reader.readAsDataURL(file);
+        reader.onload = function(e) {
+            current_picture = e.target.result
+            SendImage('test_image_woop', current_picture)
+        }
+    })
+
+    function SendImage(naam, encoded) {
+        let url = ROOT_URL + '/image/upload.php';
+
+        let data = {
+            naam: naam,
+            afbeelding: encoded
+        }
+
+        var request = new Request(url, {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            })
+        });
+
+        fetch(request)
+            .then(function (resp) { return resp.json(); })
+            .then(function (data) { current_picture_id = data.fileName })
+            .catch(function (error) { console.log(error); });
+    }
+
     function OnRegisterClick(evt) {
         evt.preventDefault();
 
@@ -94,7 +132,7 @@ $(document).ready(function () {
             geboortedatum: $('input[name="r-birthday"]').val(),
             email: $('input[name="r-email"]').val(),
             nickname: $('input[name="r-username"]').val(),
-            foto: "no_image.jpg",
+            foto: current_picture_id,
             beroep: $('input[name="r-work"]').val(),
             sexe: $('select[name="r-sex"]').children("option:selected").val(),
             haarkleur: $('input[name="r-hair"]').val(),
@@ -106,8 +144,6 @@ $(document).ready(function () {
             // Moet > 0 anders fout
             lovecoins: 1
         }
-
-        console.log(base64Encode($('input[name="r-foto"]').val()))
 
         var request = new Request(url, {
             method: 'POST',                 //request methode

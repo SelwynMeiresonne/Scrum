@@ -16,7 +16,8 @@ $('document').ready(function () {
     // Basic url
     let url = ROOT_URL + "/bericht/read.php"
     let id = GeefGebruikerID()
-    var selectedTarget = isNaN($_GET('id')) ? -1 : parseInt($_GET('id'))
+    //var selectedTarget = isNaN($_GET('id')) ? -1 : parseInt($_GET('id'))
+    var selectedTarget = -1
 
     if (selectedTarget > -1) { }
     GeefProfielVanID(selectedTarget).then(function (data) {
