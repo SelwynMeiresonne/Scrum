@@ -42,15 +42,13 @@
 		<script type="text/javascript">
 			window.onload = function () {
 			let rooturl = "https://scrumserver.tenobe.org/scrum/api";
-			
-			
-			
 				// Gebruiker is ingelogd, naar profiel
 				if (!IsIngelogd()) {
-					Redirect('../index.html')
+					Redirect('../index.html');
 					return;
 				}
-				console.log(window.location)
+				console.log(window.location);
+				console.log(window.location);
 				// profiel.html?id=2 => 2
 				let profielId = parseInt($_GET('id'))
 				let gebruikerProfielId = GeefGebruikerID();
