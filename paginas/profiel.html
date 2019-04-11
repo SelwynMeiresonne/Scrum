@@ -71,6 +71,7 @@
 						fillUpProfile(data);
 					})
 					.catch(function (error) { console.log("ERROR " + error); });
+<<<<<<< HEAD
 					if (gebruikerProfielId != profielId){
 					lovecoins (rooturl,gebruikerProfielId,profielId,gebruikerUrl);
 					}
@@ -123,6 +124,14 @@
 					
 			
 			function fillUpProfile(profile) {
+=======
+
+			}
+
+
+			function fillUpProfile(profile) {
+
+>>>>>>> a299429b4db982aafbb2a231a7fcf9910febd26e
 				for (var key in profile) {
 					if (key === "id") { continue; }
 					if (key === "foto") { continue; }
@@ -139,6 +148,7 @@
 							$('#displayElement').append("<li class='list-group-item'><p><span'> " + key + ": " + profile[key] + "</span></p></li>");
 						}
 					}
+
 				}
 				if (typeof profile.geboortedatum != 'undefined') {
 					// Sterrenbeeld
@@ -147,6 +157,7 @@
 					//$('#zodic').text("Sterrenbeeld: " + GeefSterrenBeeld(day, month))
 					$('#displayElement').append("<li class='list-group-item'><p><span'> " + "Sterrenbeeld" + ": " + GeefSterrenBeeld(day, month) + "</span></p></li>");
 					//todo fixme correcte afbeelding tonen links onder profielfoto
+<<<<<<< HEAD
 				}
 				if (typeof profile.foto != 'undefined') {
 					var imgLocationOnServer = ROOT_URL.substring(0, ROOT_URL.length-3) + "img/" + profile[key];
@@ -189,6 +200,64 @@
 				}
 			
 		}
+=======
+				}
+
+				if (typeof profile.foto != 'undefined') {
+					var imgLocationOnServer = ROOT_URL.substring(0, ROOT_URL.length-3) + "img/" + profile[key];
+					console.log(imgLocationOnServer);
+					let eImageToLoad = document.getElementById("profileImageToLoad");
+					eImageToLoad.src = imgLocationOnServer;
+					eImageToLoad.onerror = function(){
+						imgLocationOnServer = ROOT_URL.substring(0, ROOT_URL.length-3) + "img/no_image.png"
+						eImageToLoad.src = imgLocationOnServer;
+					}
+				}
+
+				/* Jezelf als favoriet toevoegen of gegevens unlocken met LC is niet nodig op je eigen profiel */				
+				if(GeefGebruikerID() === profile.id) {
+
+					$("#addToFavorites").css("display", "none");
+					$("#showAllHiddenInfo").css("display", "none");
+
+				} else {
+
+					var eAddProfileToFavorites = document.getElementById("addToFavorites");	
+					eAddProfileToFavorites.addEventListener('click', onAddToFavoritesClick);
+
+					function onAddToFavoritesClick(evt) {
+
+		                let mijnId =  GeefGebruikerID(); 
+		                let anderId =  profile.id;
+
+		                let url=ROOT_URL+'/favoriet/like.php';
+
+		                let data = {
+		                    mijnId: mijnId,
+		                    anderId: anderId
+		                }
+
+		                var request = new Request(url, {
+		                    method: 'POST',
+		                    body: JSON.stringify(data),
+		                    headers: new Headers({
+		                        'Content-Type': 'application/json'
+		                    })
+		                });
+		                
+		                fetch(request)
+		                    .then( function (resp)  { return resp.json(); })
+		                    .then( function (data)  { console.log(data);  })
+		                    .catch(function (error) { console.log(error); });
+					}
+
+				}
+
+			
+		}
+
+
+>>>>>>> a299429b4db982aafbb2a231a7fcf9910febd26e
 		</script>
 
 		<body>

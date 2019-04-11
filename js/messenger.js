@@ -1,5 +1,6 @@
 // Global functions
-TEST = {}
+
+
 // Called when the document is ready
 $('document').ready(function () {
     // Gebruiker is niet ingelogd, naar index
@@ -8,22 +9,155 @@ $('document').ready(function () {
         return;
     }
 
+    // Animations
+    $('.inbox_people').width('99%')
+    $('.mesgs').hide()
+
     // Basic url
     let url = ROOT_URL + "/bericht/read.php"
     let id = GeefGebruikerID()
+    var selectedTarget = isNaN($_GET('id')) ? -1 : parseInt($_GET('id'))
+
+    if (selectedTarget > -1) { }
+    GeefProfielVanID(selectedTarget).then(function (data) {
+        if (typeof data.message !== 'undefined') {
+            $('.inbox_people').width('39%')
+            $('.mesgs').show()
+        } else {
+            $('.talkingto').text("Bericht aan " + data.nickname)
+        }
+    })
+
+    // CACHE CACHE CACHE
+    let profile_pic = "https://scrumserver.tenobe.org/scrum/img/no_image.png";
+
     let messages = []
     let users = {}
-    var selectedTarget = isNaN($_GET('id')) ? -1 : $_GET('id')
 
-    fetch(url + "?profielId=" + id)
-        .then(function (response) { return response.json(); })
-        .then(function (data) {
-            for (let i = 0; i < data.length; i++) {
-                CreateConversations(data[i])
+    // Start point
+    function Init() {
+        // Fetch
+        fetch(url + "?profielId=" + id)
+            .then(function (response) { return response.json(); })
+            .then(function (data) {
+                for (let i = 0; i < data.length; i++) {
+                    CreateConversations(data[i])
+                }
+
+                CreateMessages(selectedTarget)
+            })
+    }
+
+    // Update
+    function Update() {
+        // Fetch
+        fetch(url + "?profielId=" + id)
+            .then(function (response) { return response.json(); })
+            .then(function (data) {
+                for (let i = 0; i < data.length; i++) {
+                    CheckIfShouldAddMessages(data[i])
+                }
+            })
+
+        // Update, RIP server
+        setTimeout(Update, 1000 * .3)
+    }
+
+    function CheckIfShouldAddMessages(data) {
+        // Easy
+        let to_user = parseInt(GetChatOther(data[0].vanId, data[0].naarId))
+
+        // Count
+        let len = GetMessagesCount(to_user)
+
+        // UPDATE UPDATE IT HAS AN UPDATE
+        // OMG IT HAS AN UPDATE
+        // IT WORKS
+        if (len != data.length) {
+            // Add them
+            var diff = 0
+
+            // New
+            if (len < data.length) {
+
+                console.log('rr')
+                // Difference
+                dif = data.length - len
+
+                // Loop through new messages
+                for (let i = 0; i < diff; i++) {
+                    // Add them
+                    messages[to_user][len + i] = data[data.length - 1]
+
+                    $('#berichten').append(`
+                        <div class="incoming_msg mb-4">
+                        <div class="incoming_msg_img"> <img src=https://scrumserver.tenobe.org/scrum/img/no_image.png"
+                                alt="Profile Picture"> </div>
+                        <div class="received_msg">
+                            <div class="received_withd_msg">
+                                <p class="bericht">${data[data.length - 1].bericht}</p>
+                            </div>
+                        </div>
+                    `)
+                }
+            } else { // Delete
+                console.log('found a delete!', data, messages[to_user])
+
+                for (let message in messages[to_user]) {
+                    //var a = $.inArray(data, messages[to_user][message].berichtId)
+                
+                   if (typeof data[message] === 'undefined' ) {
+
+                        $('#bericht-' + messages[to_user][message].berichtId).remove()
+
+                       // PLZ WORK
+                       delete messages[to_user][message]
+
+
+                   }
+                }
             }
-        })
 
+            Scroll()
+        }
+    }
 
+    // First init
+    Init()
+
+    // Update
+    Update()
+
+    // Scroll
+    function Scroll() {
+        $(".msg_history").animate({ scrollTop: $('.msg_history').prop("scrollHeight") }, 200);
+    }
+
+    function DeleteMessage(id) {
+        let url = ROOT_URL + '/bericht/delete.php';
+
+        let data = {
+            id: id
+        }
+
+        var request = new Request(url, {
+            method: 'DELETE',
+            body: JSON.stringify(data),
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            })
+        });
+
+        fetch(request)
+            .then(function (resp) { return resp.json(); })
+            .then(function (data) {
+                    console.log(data)
+                    $('#bericht-' + data.berichtId).remove()
+             })
+            .catch(function (error) { console.log(error); });
+    }
+
+    // Create conversations
     function CreateConversations(data) {
         let i = 0;
         data.forEach(element => {
@@ -33,8 +167,7 @@ $('document').ready(function () {
             // Only create if its not already cached
             if (typeof users[to_user] === 'undefined') {
                 // Store
-                users[to_user] = true
-
+                users[to_user] = { foto: "no_image.png" }
                 messages[to_user] = {}
                 messages[to_user][0] = element
 
@@ -50,81 +183,114 @@ $('document').ready(function () {
         })
     }
 
+    function CreateMessages(a) {
+        $('.msg_history').empty()
+
+        for (let b in messages[a]) {
+            if (messages[a][b].vanId == GeefGebruikerID()) {
+                $('#berichten').append(`
+                    <div class="outgoing_msg">
+                    <div class="sent_msg">
+                        <p>${messages[a][b].bericht}</p>
+                    </div>
+                </div>
+            `)
+            } else {
+                $('#berichten').append(`
+                <div class="incoming_msg mb-4">
+                <div class="incoming_msg_img"> <img src=https://scrumserver.tenobe.org/scrum/img/${users[a].foto}"
+                        alt="Profile Picture"> </div>
+                <div class="received_msg">
+                    <div class="received_withd_msg">
+                        <p class="bericht">${messages[a][b].bericht}</p>
+                    </div>
+                </div>
+            `)
+            }
+
+            AddDeleteButtons(messages[a][b], a, b)
+        }
+
+        $('.msg_history').scrollTop($('.msg_history')[0].scrollHeight);;
+    }
+
     // Called when profiles are in
     function PopulateUserList(a) {
         GeefProfielVanID(a).then(function (data) {
-            console.log('CALL')
             // Create button
+            var len = GetMessagesCount(a)
+
+            //vanessa_vaneenoo.png
             var btn = $('#contacten').append(`
-                <a href="#" id="chatuser-${data.id}">
+                <a id="chatuser-${data.id}">
                     <div class="chat_people mt-3">
                         <div class="chat_img">
-                            <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
+                            <img src="${"https://scrumserver.tenobe.org/scrum/img/" + data.foto}" alt="Profile picture">
                         </div>
 
                         <div class="chat_ib">
                             <h5>${data.nickname}</h5>
-                            <p>${messages[a][0].bericht}</p>
+                            <p>${messages[a][len - 1].bericht}</p>
                         </div>
                     </div>
                 </a>`
-             )
-
+            )
 
             // DoClick
             $('#chatuser-' + data.id).click(function () {
+                $('.inbox_people').width('39%')
+                $('.mesgs').show()
+
                 // Clear
                 $('#berichten').empty()
+
+                // Set this
+                profile_pic = "https://scrumserver.tenobe.org/scrum/img/" + data.foto
 
                 // Update
                 selectedTarget = parseInt(a);
 
                 //UpdateChatFromServer();
+                $('.talkingto').text("Bericht aan " + data.nickname)
 
                 // Insert them
                 for (let b in messages[a]) {
                     if (messages[a][b].vanId == GeefGebruikerID()) {
                         $('#berichten').append(`
-                        <div class="incoming_msg mb-4">
-                            <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png"
-                                    alt="sunil"> </div>
-                            <div class="received_msg">
-                                <div class="received_withd_msg">
-                                    <p class="bericht">${messages[a][b].bericht}a</p>
-                                </div>
+                            <div id="bericht-${messages[a][b].berichtId}" class="outgoing_msg">
+                            <div class="sent_msg">
+                                <p>${messages[a][b].bericht}</p>
+                                <small class="form-text text-muted"><a href="#" id="delete-${messages[a][b].berichtId}">Delete</a></small>
                             </div>
+                        </div>
                     `)
                     } else {
                         $('#berichten').append(`
-                        <div class="outgoing_msg">
-                            <div class="sent_msg">
-                                <p>${messages[a][b].bericht}</p>
+                        <div class="incoming_msg mb-4">
+                        <div class="incoming_msg_img"> <img src="${"https://scrumserver.tenobe.org/scrum/img/" + data.foto}"
+                                alt="Profile Picture"> </div>
+                        <div class="received_msg">
+                            <div class="received_withd_msg">
+                                <p class="bericht">${messages[a][b].bericht}</p>
                             </div>
                         </div>
                     `)
                     }
+
+                    AddDeleteButtons(messages[a][b], a, b)
                 }
+
+                // Scroll
+                Scroll()
             })
         })
     }
 
-    function UpdateChatFromServer() {
-        if (selectedTarget > 0) {
-            // Clear
-            $('#berichten').empty()
-
-            fetch(url + "?profielId=" + GeefGebruikerID())
-                .then(function (response) { return response.json(); })
-                .then(function (data) {
-                    console.log(data)
-                })
-
-                /*
-            // Insert them
-            for (let b in messages[a]) {
-                $('#berichten').append('<div class="container mb-4 ' + (GeefGebruikerID() == messages[a][b].vanId ? 'bericht-from text-left' : 'bericht-to text-right') + '">' + messages[a][b].bericht + '</div>')
-            }*/
-        }
+    // Create delete button
+    function AddDeleteButtons(data, from_id, convo_id) {
+        $('#delete-' + data.berichtId).click(function () {
+            DeleteMessage(data.berichtId)
+        })
     }
 
     // Get the count van alle messages van 1 user, id => profielId
@@ -139,18 +305,29 @@ $('document').ready(function () {
         return count;
     }
 
+    $('input[name="bericht"]').keypress(function (event) {
+        // 13 -> enter
+        if (event.keyCode === 13) {
+            $('#sendmessage').click()
+        }
+    })
+
     // Send button
     $('#sendmessage').click(function () {
-        console.log('CCCCCCCCCC')
         let text = $('input[name="bericht"]').val();
 
         // Meh
         if (selectedTarget <= 0) { return; }
 
+        // Reset
+        $('input[name="bericht"]').val('')
+
         // Send
         SendMessage(selectedTarget, text)
-    })
 
+        // Scroll
+        Scroll()
+    })
 
     // Stuur een bericht
     function SendMessage(to, message) {
@@ -178,8 +355,6 @@ $('document').ready(function () {
                     // Into the stack
                     var len = GetMessagesCount(selectedTarget)
 
-                    console.log(len)
-
                     if (typeof users[to] === 'undefined') {
                         // Store
                         users[to] = true
@@ -188,22 +363,29 @@ $('document').ready(function () {
                         PopulateUserList(to)
                     }
 
+                    // Guess I'm lazy
                     messages[selectedTarget][len] = {
                         vanId: '' + GeefGebruikerID(),
                         naarId: '' + selectedTarget,
                         partnerId: '' + selectedTarget,
                         bericht: message,
-
+                        berichtId: data.id
                     }
 
-                    console.log(messages[selectedTarget], len)
+                    $('#berichten').append(`
+                        <div id="bericht-${messages[selectedTarget][len].berichtId}" class="outgoing_msg">
+                            <div class="sent_msg">
+                                <p>${messages[selectedTarget][len].bericht}</p>
+                                <small class="form-text text-muted"><a href="#" id="delete-${messages[selectedTarget][len].berichtId}">Delete</a></small>
+                            </div>
+                        </div>
+                    `)
 
-                    $('#berichten').append('<div class="container mb-4 ' + (GeefGebruikerID() == messages[selectedTarget][len].vanId ? 'bericht-from text-left' : 'bericht-to text-right') + '">' + message + '</div>')
-
+                    // Create delete buttons
+                    AddDeleteButtons(messages[selectedTarget][len], selectedTarget, len)
                 }
             })
             .catch(function (error) { console.log(error); });
-
     }
 
     function GetChatOther(a, b) {
@@ -211,3 +393,4 @@ $('document').ready(function () {
         return a
     }
 })
+

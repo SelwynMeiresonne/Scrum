@@ -109,8 +109,11 @@ img{ max-width:100%;}
 .received_withd_msg { width: 57%;}
 .mesgs {
   float: left;
-  padding: 30px 15px 0 25px;
   width: 60%;
+
+  border-top: 1px solid #c4c4c4;
+  border-right: 1px solid #c4c4c4;
+  border-bottom: 1px solid #c4c4c4;
 }
 
  .sent_msg p {
@@ -124,18 +127,26 @@ img{ max-width:100%;}
 .outgoing_msg{ overflow:hidden; margin:26px 0 26px;}
 .sent_msg {
   float: right;
-  width: 46%;
+  margin-right:.5rem;
+  max-width: 30rem;
+  display: inline-block;
 }
 .input_msg_write input {
   background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
   border: medium none;
   color: #4c4c4c;
   font-size: 15px;
-  min-height: 48px;
+  min-height: 35px;
   width: 100%;
 }
 
-.type_msg {border-top: 1px solid #c4c4c4;position: relative;}
+
+.type_msg {
+  border-top: 1px solid #c4c4c4;
+  position: relative;
+  width:100%;
+}
+
 .msg_send_btn {
   background: #05728f none repeat scroll 0 0;
   border: medium none;
@@ -150,17 +161,59 @@ img{ max-width:100%;}
   width: 33px;
 }
 .messaging { padding: 0 0 50px 0;}
+
 .msg_history {
   height: 516px;
   overflow-y: auto;
+  padding-left:10px;
 }
 
-
 .new_contact{
-
     float:left;
     border-top: 1px solid #c4c4c4;
 
     width:100%;
     height:50px;
+}
+
+.sent_msg p {
+  word-wrap: break-word;
+  width:auto;
+}
+
+.messaging img {
+  border-radius: 50%;
+}
+
+.chat_people:hover {
+  background-color:rgba(62, 62, 62, .05)
+}
+
+button {
+  margin-top:-1px;
+}
+
+.input_msg_write {
+  margin-left:1px;
+  padding-left:5px;
+
+  min-height: 0;
+}
+
+.input_msg_write {
+  border:none;
+}
+
+.versturen {
+  width:24.3%;
+  border-radius: 0;
+}
+
+.talkingto {
+  width:100%;
+  height:2.9rem;
+  border-bottom: 1px solid #c4c4c4;
+  line-height: 2.9rem;
+  text-align: center;
+  margin-bottom: 1rem;
 }
