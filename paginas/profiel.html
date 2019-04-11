@@ -110,16 +110,22 @@
                             .then(function (resp)   { return resp.json(); })
                             .then(function (data)   { console.log(data);  
 							
-							window.history.go(0);
+							
 							
 							})
-                            .catch(function (error) { console.log(error); });     
+                            .catch(function (error) { console.log(error); });   
+							
+							/*functie schrijven die alles toont*/
+							fillUpProfileAangepast(data);
 							}
 							else {
 							alert('U heeft onvoldoende lovecoins');
 							}
 							
 					}); ;})
+					
+					
+					
 					}
 					
 			function fillUpProfile(profile) {
@@ -248,6 +254,122 @@
 
 			
 		}
+		
+		
+		function fillUpProfileAangepast(profile) {
+
+
+				for (var key in profile) {
+					if (key === "id") { continue; }
+					if (key === "foto") { continue; }
+					console.log(key);
+						/* Op een ander profiel mag je enkel de niet-private velden bekijken */
+						if ((PRIVATE_ELEMENTS[key] === true) && (key != 'wachtwoord') && (key != 'lovecoins')) { //defined AND true 							
+							console.log(key + " NIET tonen " + PRIVATE_ELEMENTS[key]);
+							$('#displayElement').append("<li style='display:block' class='list-group-item'> " + key + ": " + profile[key] + "</li>")
+						} 
+					}
+
+					//todo fixme correcte afbeelding tonen links onder profielfoto
+
+				
+				if (typeof profile.foto != 'undefined') {
+					var imgLocationOnServer = ROOT_URL.substring(0, ROOT_URL.length-3) + "img/" + profile[key];
+					console.log(imgLocationOnServer);
+					let eImageToLoad = document.getElementById("profileImageToLoad");
+					eImageToLoad.src = imgLocationOnServer;
+					eImageToLoad.onerror = function(){
+						imgLocationOnServer = ROOT_URL.substring(0, ROOT_URL.length-3) + "img/no_image.png"
+						eImageToLoad.src = imgLocationOnServer;
+					}
+				}
+				/* Jezelf als favoriet toevoegen of gegevens unlocken met LC is niet nodig op je eigen profiel */				
+				if(GeefGebruikerID() === profile.id) {
+					$("#addToFavorites").css("display", "none");
+					$("#showAllHiddenInfo").css("display", "none");
+				} else {
+					var eAddProfileToFavorites = document.getElementById("addToFavorites");	
+					eAddProfileToFavorites.addEventListener('click', onAddToFavoritesClick);
+					function onAddToFavoritesClick(evt) {
+		                let mijnId =  GeefGebruikerID(); 
+		                let anderId =  profile.id;
+		                let url=ROOT_URL+'/favoriet/like.php';
+		                let data = {
+		                    mijnId: mijnId,
+		                    anderId: anderId
+		                }
+		                var request = new Request(url, {
+		                    method: 'POST',
+		                    body: JSON.stringify(data),
+		                    headers: new Headers({
+		                        'Content-Type': 'application/json'
+		                    })
+		                });
+		                
+		                fetch(request)
+		                    .then( function (resp)  { return resp.json(); })
+		                    .then( function (data)  { console.log(data);  })
+		                    .catch(function (error) { console.log(error); });
+					}
+				}
+			
+		
+
+				
+
+				if (typeof profile.foto != 'undefined') {
+					var imgLocationOnServer = ROOT_URL.substring(0, ROOT_URL.length-3) + "img/" + profile[key];
+					console.log(imgLocationOnServer);
+					let eImageToLoad = document.getElementById("profileImageToLoad");
+					eImageToLoad.src = imgLocationOnServer;
+					eImageToLoad.onerror = function(){
+						imgLocationOnServer = ROOT_URL.substring(0, ROOT_URL.length-3) + "img/no_image.png"
+						eImageToLoad.src = imgLocationOnServer;
+					}
+				}
+
+				/* Jezelf als favoriet toevoegen of gegevens unlocken met LC is niet nodig op je eigen profiel */				
+				if(GeefGebruikerID() === profile.id) {
+
+					$("#addToFavorites").css("display", "none");
+					$("#showAllHiddenInfo").css("display", "none");
+
+				} else {
+
+					var eAddProfileToFavorites = document.getElementById("addToFavorites");	
+					eAddProfileToFavorites.addEventListener('click', onAddToFavoritesClick);
+
+					function onAddToFavoritesClick(evt) {
+
+		                let mijnId =  GeefGebruikerID(); 
+		                let anderId =  profile.id;
+
+		                let url=ROOT_URL+'/favoriet/like.php';
+
+		                let data = {
+		                    mijnId: mijnId,
+		                    anderId: anderId
+		                }
+
+		                var request = new Request(url, {
+		                    method: 'POST',
+		                    body: JSON.stringify(data),
+		                    headers: new Headers({
+		                        'Content-Type': 'application/json'
+		                    })
+		                });
+		                
+		                fetch(request)
+		                    .then( function (resp)  { return resp.json(); })
+		                    .then( function (data)  { console.log(data);  })
+		                    .catch(function (error) { console.log(error); });
+					}
+
+				}
+
+			
+		}
+		
 
 
 
