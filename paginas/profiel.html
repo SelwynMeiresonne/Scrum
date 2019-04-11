@@ -68,7 +68,9 @@
 					.then(function (resp) { return resp.json(); })
 					.then(function (data) {
 						console.log(data)
+						
 						fillUpProfile(data);
+						
 					})
 					.catch(function (error) { console.log("ERROR " + error); });
 
@@ -86,6 +88,7 @@
 						console.log(data);
 						var toonKnop = document.getElementById('showAllHiddenInfo');
 						toonKnop.addEventListener('click',function () {
+						toonKnop.setAttribute('style','display:none');
 						var sSaldo = data.lovecoins;
 						console.log(sSaldo);
 						var totaal = parseInt(sSaldo) - 1; 
@@ -116,6 +119,8 @@
                             .catch(function (error) { console.log(error); });   
 							
 							/*functie schrijven die alles toont*/
+							
+							
 							fillUpProfileAangepast(data);
 							}
 							else {
@@ -176,6 +181,7 @@
 					var eAddProfileToFavorites = document.getElementById("addToFavorites");	
 					eAddProfileToFavorites.addEventListener('click', onAddToFavoritesClick);
 					function onAddToFavoritesClick(evt) {
+						eAddProfileToFavorites.setAttribute('style','display:none');
 		                let mijnId =  GeefGebruikerID(); 
 		                let anderId =  profile.id;
 		                let url=ROOT_URL+'/favoriet/like.php';
@@ -211,48 +217,7 @@
 						imgLocationOnServer = ROOT_URL.substring(0, ROOT_URL.length-3) + "img/no_image.png"
 						eImageToLoad.src = imgLocationOnServer;
 					}
-				}
-
-				/* Jezelf als favoriet toevoegen of gegevens unlocken met LC is niet nodig op je eigen profiel */				
-				if(GeefGebruikerID() === profile.id) {
-
-					$("#addToFavorites").css("display", "none");
-					$("#showAllHiddenInfo").css("display", "none");
-
-				} else {
-
-					var eAddProfileToFavorites = document.getElementById("addToFavorites");	
-					eAddProfileToFavorites.addEventListener('click', onAddToFavoritesClick);
-
-					function onAddToFavoritesClick(evt) {
-
-		                let mijnId =  GeefGebruikerID(); 
-		                let anderId =  profile.id;
-
-		                let url=ROOT_URL+'/favoriet/like.php';
-
-		                let data = {
-		                    mijnId: mijnId,
-		                    anderId: anderId
-		                }
-
-		                var request = new Request(url, {
-		                    method: 'POST',
-		                    body: JSON.stringify(data),
-		                    headers: new Headers({
-		                        'Content-Type': 'application/json'
-		                    })
-		                });
-		                
-		                fetch(request)
-		                    .then( function (resp)  { return resp.json(); })
-		                    .then( function (data)  { console.log(data);  })
-		                    .catch(function (error) { console.log(error); });
-					}
-
-				}
-
-			
+				}		
 		}
 		
 		
@@ -269,106 +234,11 @@
 							$('#displayElement').append("<li style='display:block' class='list-group-item'> " + key + ": " + profile[key] + "</li>")
 						} 
 					}
-
-					//todo fixme correcte afbeelding tonen links onder profielfoto
-
-				
-				if (typeof profile.foto != 'undefined') {
-					var imgLocationOnServer = ROOT_URL.substring(0, ROOT_URL.length-3) + "img/" + profile[key];
-					console.log(imgLocationOnServer);
-					let eImageToLoad = document.getElementById("profileImageToLoad");
-					eImageToLoad.src = imgLocationOnServer;
-					eImageToLoad.onerror = function(){
-						imgLocationOnServer = ROOT_URL.substring(0, ROOT_URL.length-3) + "img/no_image.png"
-						eImageToLoad.src = imgLocationOnServer;
 					}
-				}
-				/* Jezelf als favoriet toevoegen of gegevens unlocken met LC is niet nodig op je eigen profiel */				
-				if(GeefGebruikerID() === profile.id) {
-					$("#addToFavorites").css("display", "none");
-					$("#showAllHiddenInfo").css("display", "none");
-				} else {
-					var eAddProfileToFavorites = document.getElementById("addToFavorites");	
-					eAddProfileToFavorites.addEventListener('click', onAddToFavoritesClick);
-					function onAddToFavoritesClick(evt) {
-		                let mijnId =  GeefGebruikerID(); 
-		                let anderId =  profile.id;
-		                let url=ROOT_URL+'/favoriet/like.php';
-		                let data = {
-		                    mijnId: mijnId,
-		                    anderId: anderId
-		                }
-		                var request = new Request(url, {
-		                    method: 'POST',
-		                    body: JSON.stringify(data),
-		                    headers: new Headers({
-		                        'Content-Type': 'application/json'
-		                    })
-		                });
-		                
-		                fetch(request)
-		                    .then( function (resp)  { return resp.json(); })
-		                    .then( function (data)  { console.log(data);  })
-		                    .catch(function (error) { console.log(error); });
-					}
-				}
+
+
 			
 		
-
-				
-
-				if (typeof profile.foto != 'undefined') {
-					var imgLocationOnServer = ROOT_URL.substring(0, ROOT_URL.length-3) + "img/" + profile[key];
-					console.log(imgLocationOnServer);
-					let eImageToLoad = document.getElementById("profileImageToLoad");
-					eImageToLoad.src = imgLocationOnServer;
-					eImageToLoad.onerror = function(){
-						imgLocationOnServer = ROOT_URL.substring(0, ROOT_URL.length-3) + "img/no_image.png"
-						eImageToLoad.src = imgLocationOnServer;
-					}
-				}
-
-				/* Jezelf als favoriet toevoegen of gegevens unlocken met LC is niet nodig op je eigen profiel */				
-				if(GeefGebruikerID() === profile.id) {
-
-					$("#addToFavorites").css("display", "none");
-					$("#showAllHiddenInfo").css("display", "none");
-
-				} else {
-
-					var eAddProfileToFavorites = document.getElementById("addToFavorites");	
-					eAddProfileToFavorites.addEventListener('click', onAddToFavoritesClick);
-
-					function onAddToFavoritesClick(evt) {
-
-		                let mijnId =  GeefGebruikerID(); 
-		                let anderId =  profile.id;
-
-		                let url=ROOT_URL+'/favoriet/like.php';
-
-		                let data = {
-		                    mijnId: mijnId,
-		                    anderId: anderId
-		                }
-
-		                var request = new Request(url, {
-		                    method: 'POST',
-		                    body: JSON.stringify(data),
-		                    headers: new Headers({
-		                        'Content-Type': 'application/json'
-		                    })
-		                });
-		                
-		                fetch(request)
-		                    .then( function (resp)  { return resp.json(); })
-		                    .then( function (data)  { console.log(data);  })
-		                    .catch(function (error) { console.log(error); });
-					}
-
-				}
-
-			
-		}
 		
 
 
