@@ -46,7 +46,7 @@ $('navigationElements').ready(function () {
                 if (NAVIGATION[i].Naam == "Love Coins") {
                     // Modify
                     if (data.lovecoins > 0) {
-                        NAVIGATION[i].Naam += ' <span style="color:rgb(255, 255, 0)">(' + data.lovecoins + ')</span>'
+                        NAVIGATION[i].Naam += ' <span style="color:#ffbf00">(' + data.lovecoins + ')</span>'
                     }
                 }
             

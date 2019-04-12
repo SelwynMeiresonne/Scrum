@@ -20,170 +20,92 @@
 
 	<script src="../js/utility.js"></script>
 	<script>
-	window.onload = function () {
-/*niet ingelogd -> geen toegang tot coin market*/
-	if (!IsIngelogd()) {
-					Redirect('../index.html')
-					return;
-				}
-/*wel ingelogd krijg je de gebruiker id*/
-	profielId = GeefGebruikerID();
-	console.log("ID ", profielId)
-	let rooturl = "https://scrumserver.tenobe.org/scrum/api";
-	url = rooturl + '/profiel/search.php?id=' + profielId;
-	
-	fetch(url)
-					.then(function (resp) { return resp.json();})
-					.then(function (data) {console.log(data);
-					let lovecoins = document.createTextNode(data[0].lovecoins);
-					console.log(lovecoins);
-					let sSaldo = document.getElementById('saldo');
-					sSaldo.appendChild(lovecoins);
-					})
-					.catch(function (error) { console.log(error);});
-					
-	let koopKnop = document.getElementById('koop');
-	koopKnop.addEventListener('click', function (e) {
-			e.preventDefault();
-			let aantal = document.getElementsByName('aantal')[0].value;
-			let sSaldo = document.getElementById('saldo').innerHTML;
-			console.log(sSaldo, aantal, 'check');
-			let verwijderPagina = document.querySelectorAll('.mt-4')[1];
-			verwijderPagina.remove();
-			
-			let container = document.createElement('div')
-			container.setAttribute('class','mt-4');
-			let formulier = document.createElement('form');
-			let tabel = document.createElement('table');
-			
-			let rij = document.createElement('tr');
-			let kolom = document.createElement('td');
-			let tekst = document.createElement('span');
-			
-			let sTekst = document.createTextNode('Saldo');
-			tekst.appendChild(sTekst);
-			kolom.appendChild(tekst);
-			rij.appendChild(kolom);
-			tabel.appendChild(rij);
-			kolom = document.createElement('td');
-			tekst = document.createElement('span');
-			sTekst = document.createTextNode(sSaldo);
-			tekst.appendChild(sTekst);
-			kolom.appendChild(tekst);
-			rij.appendChild(kolom);
-			tabel.appendChild(rij);
-			
-			rij = document.createElement('tr');
-			kolom = document.createElement('td');
-			tekst = document.createElement('span');
-			sTekst = document.createTextNode('Totale Kostrpijs');
-			tekst.appendChild(sTekst);
-			kolom.appendChild(tekst);
-			rij.appendChild(kolom);
-			tabel.appendChild(rij);
-			kolom = document.createElement('td');
-			tekst = document.createElement('span');
-			sTekst = document.createTextNode(aantal + '€');
-			tekst.appendChild(sTekst);
-			kolom.appendChild(tekst);
-			rij.appendChild(kolom);
-			tabel.appendChild(rij);
-			
-			rij = document.createElement('tr');
-			kolom = document.createElement('td');
-			tekst = document.createElement('span');
-			sTekst = document.createTextNode('Kies uw betaalwijze');
-			tekst.appendChild(sTekst);
-			kolom.appendChild(tekst);
-			rij.appendChild(kolom);
-			tabel.appendChild(rij);
-			kolom = document.createElement('td');
-			let keuze = document.createElement('select');
-			keuze.setAttribute('name','betaalwijze');
-			let optie = document.createElement('option');
-			optie.setAttribute('value','BankContact/MisterCash');
-			let opties = document.createTextNode('BankContact/MisterCash');
-			optie.appendChild(opties);
-			keuze.appendChild(optie);
-			optie = document.createElement('option');
-			optie.setAttribute('value','Visa/CreditCard');
-			opties = document.createTextNode('Visa/CreditCard');
-			optie.appendChild(opties);
-			keuze.appendChild(optie);
-			kolom.appendChild(keuze);
-			rij.appendChild(kolom);
-			tabel.appendChild(rij);
-			
-			formulier.appendChild(tabel);
-			container.appendChild(formulier);
-			let website = document.getElementById('cont');
-			website.appendChild(container);
-			
-			let koopKnop1 = document.createElement('input');
-			koopKnop1.setAttribute('type','button');
-			koopKnop1.setAttribute('value','KOOP');
-			koopKnop1.setAttribute('id','koopKnop1');
-			koopKnop1.setAttribute('class','btn btn-primary mt-4');
-			website.appendChild(koopKnop1);
-			
-			let resetKnop = document.createElement('input');
-			resetKnop.setAttribute('type','button');
-			resetKnop.setAttribute('value','RESET');
-			resetKnop.setAttribute('id','resetKnop');
-			resetKnop.setAttribute('class','btn btn-primary mt-4');
-			resetKnop.setAttribute('style','margin-left:5px');
-			website.appendChild(resetKnop);
-			
-			
-			resetKnop = document.getElementById('resetKnop');
-			resetKnop.addEventListener('click', function (){
-			window.history.go(0);
-			});
-			fetch(url)
-					.then(function (resp) { return resp.json();})
-					.then(function (data) {
-					console.log(data);
-					koopKnop1 = document.getElementById('koopKnop1');
-					koopKnop1.addEventListener('click', function () {
-				
-					totaal = parseInt(aantal) + parseInt(sSaldo); 
-					
-					let urlUpdate=rooturl+'/profiel/update.php?id=' + profielId;
-					console.log(profielId);
-						
-						
-                        data[0].lovecoins = totaal;
-						
-						console.log(data);
-						
-						console.log(totaal);
+		$('document').ready(function () {
+			let sSaldo = 0;
+			/*niet ingelogd -> geen toegang tot coin market*/
+			if (!IsIngelogd()) {
+				Redirect('../index.html')
+				return;
+			}
 
-                        var request = new Request(urlUpdate, {
-                            method: 'PUT',
-                            body: JSON.stringify(data[0]),
-                            headers: new Headers({
-                                'Content-Type': 'application/json'
-                            })
-                        });
-                        fetch(request)
-                            .then(function (resp)   { return resp.json(); })
-                            .then(function (data)   { console.log(data);  
-							
-							Redirect('lovecoins.html');
-							
+			/*wel ingelogd krijg je de gebruiker id*/
+			profielId = GeefGebruikerID();
+			let profiel_data = []
+			let rooturl = "https://scrumserver.tenobe.org/scrum/api";
+			url = rooturl + '/profiel/search.php?id=' + profielId;
+
+			// Reset knop
+			$('#reset').click(function () {
+				Redirect('lovecoins.html')
+			})
+
+			// Aantal veld
+			$('input[name="i-aantal"').on("change", function () {
+				// Get amount
+				let amount = parseInt($('input[name="i-aantal"').val())
+
+				// Validate
+				if (amount > 100) {
+					$('input[name="i-aantal"]').val(100)
+				} else if (amount < 1) {
+					$('input[name="i-aantal"]').val(1)
+				}
+
+				// Totaal coins die je koop
+				let totaal = parseInt(amount) + parseInt(sSaldo);
+
+				// Prijs
+				let prijs = parseInt(amount) * 1
+
+				// Update other fields
+				$('#prijs').html('&euro; ' + prijs)
+				$('#totaalcoins').html(totaal)
+			})
+
+			fetch(url)
+				.then(function (resp) { return resp.json(); })
+				.then(function (data) {
+					// Store
+					sSaldo = data[0].lovecoins
+
+					// Store profiel data
+					profiel_data = data[0]
+
+					// Set on page
+					$('#saldo').html(sSaldo)
+				})
+				.catch(function (error) { console.log(error); });
+
+			$('#koop').click(function (e) {
+				e.preventDefault()
+				fetch(url)
+					.then(function (resp) { return resp.json(); })
+					.then(function (data) {
+						console.log(data)
+						let totaal = parseInt($('input[name="i-aantal"]').val()) + parseInt(sSaldo);
+
+						let urlUpdate = rooturl + '/profiel/update.php?id=' + profielId;
+
+						profiel_data.lovecoins = totaal;
+
+						var request = new Request(urlUpdate, {
+							method: 'PUT',
+							body: JSON.stringify(profiel_data),
+							headers: new Headers({
+								'Content-Type': 'application/json'
 							})
-                            .catch(function (error) { console.log(error); });                                                										
-					}); })
-					.catch(function (error) {console.log(error);});
-			});
-			
-			resetKnop = document.getElementById('reset');
-			resetKnop.addEventListener('click', function (){
-			window.history.go(0);
-			});
-}	
-	</script>
-	</head>
+						});
+
+						fetch(request)
+							.then(function (resp) { return resp.json(); })
+							.then(function (data) {
+								Redirect('koop.html')
+							})
+					})
+			})
+	})
+</script>
+</head>
 
 <body>
 	<!-- Navigation -->
@@ -205,28 +127,51 @@
 	<div class="container mt-4" id='cont'>
 		<h1>Love Coins Market</h1>
 
-		<div class="mt-4">
-			<!--de love coins aankoop opties-->
-			<form>
-				<table>
-					<tr>
-						<td><label>Saldo</label></td>
-						<td><span id="saldo"></span></td>
-					</tr>
-					<tr>
-						<td><h3>Koop extra love coins</h3></td>
-					</tr>
-					<tr>
-						<td><label>Aantal (kostprijs: 1€/stuk)</label></td>
-						<td><input type="number" min="1" name="aantal"></input></td>
-					</tr>
-					<tr>
-						<td><h5>Klik op de knop KOOP om de betaalwijze te kiezen</h5></td>
-				</table>
+		<div class="row mt-4">
+			<div class="col-sm-4">
+				<!--de zoekopties-->
+				<form>
+					<div class="form-group">
+						<label>Saldo</label>
+						<span class="float-right" id="saldo"></span>
+					</div>
 
-				<button type="submit" id="koop" class="btn btn-primary mt-4">KOOP</button>
-				<button type="submit" id="reset" class="btn btn-primary mt-4">RESET</button>
-		
+					<div class="form-group">
+						<label>Aantal (kostprijs: 1€/stuk)</label>
+						<input class="form-control" name="i-aantal" type="number" min="1" max="100" name="aantal"
+							placeholder="1 - 100">
+					</div>
+
+					<div class="form-group">
+						<label>Betaal wijze</label>
+						<select class="form-control">
+							<option>BankContact</option>
+							<option>Visa</option>
+							<option>Paypal</option>
+						</select>
+					</div>
+
+					<button id="koop" class="btn btn-danger w-100 mt-2">Koop</button>
+					<button id="reset" class="btn btn-primary w-25 mt-2">Reset</button>
+				</form>
+			</div>
+
+			<div class="col-sm-8">
+				<h4 class="mb-4">Factuur</h4>
+				<form>
+					<div class="form-group">
+						<label>Aantal Coins:</label>
+						<label id="totaalcoins" class="float-right">0</label>
+					</div>
+
+					<div class="form-group">
+						<label>Prijs:</label>
+						<label id="prijs" class="float-right">&euro; 0</label>
+					</div>
+				</form>
+			</div>
+
+
 		</div>
 	</div>
 

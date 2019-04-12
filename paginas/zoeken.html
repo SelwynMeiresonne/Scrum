@@ -17,6 +17,7 @@
 		crossorigin="anonymous"></script>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
 		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<link rel="stylesheet" href="../css/index.css">
 
 	<script src="../js/utility.js"></script>
 
@@ -61,6 +62,8 @@
 						tijdelijkeZoekUrl = tijdelijkeZoekUrl + '&sexe=' + geslacht;
 					}
 					let url = rooturl + tijdelijkeZoekUrl;
+					document.getElementsByName('zSexe')[0].checked = false;
+					document.getElementsByName('zSexe')[1].checked = false;
 				}
 				else { }
 				/*zoeken op nickname*/
@@ -131,7 +134,8 @@
 				}
 				else { }
 
-				let url = rooturl + tijdelijkeZoekUrl;
+				let url = rooturl + tijdelijkeZoekUrl + '&orderBy=nickname';
+				console.log(url);
 
 
 				fetch(url)
@@ -142,20 +146,20 @@
 							alert('geen profielen gevonden');
 
 							var verwijderLijst = document.querySelectorAll('.lijst')[0];
-								if (verwijderLijst != null){
+							if (verwijderLijst != null) {
 								verwijderLijst.remove();
-								}
-								document.getElementsByName('zNickname')[0].value = '';
-								document.getElementsByName('zBeroep')[0].value = '';
-								document.getElementsByName('zGewicht')[0].value = '';
-								document.getElementsByName('zHaarkleur')[0].value = '';
-								document.getElementsByName('zOogkleur')[0].value = '';
-								document.getElementsByName('zGrootte')[0].value = '';
-								document.getElementsByName('zSexe')[0].checked = false;
-								document.getElementsByName('zSexe')[1].checked = false;
-								}
+							}
+							document.getElementsByName('zNickname')[0].value = '';
+							document.getElementsByName('zBeroep')[0].value = '';
+							document.getElementsByName('zGewicht')[0].value = '';
+							document.getElementsByName('zHaarkleur')[0].value = '';
+							document.getElementsByName('zOogkleur')[0].value = '';
+							document.getElementsByName('zGrootte')[0].value = '';
+							document.getElementsByName('zSexe')[0].checked = false;
+							document.getElementsByName('zSexe')[1].checked = false;
+						}
 
-						
+
 
 						else {
 							console.log(data);
@@ -200,11 +204,11 @@
 							}
 
 							var titelPlaats = document.createElement('span');
-								titelPlaats.setAttribute('class', 'titel' + [teller]);
-								titelPlaats.setAttribute('style', 'margin:10px ; width:114px ; text-align:center ; display:inline-block ; text-decoration:underline; font-weight:bold');
-								var titelTekst = document.createTextNode('sterrenbeeld');
-								titelPlaats.appendChild(titelTekst);
-								titels.appendChild(titelPlaats);
+							titelPlaats.setAttribute('class', 'titel' + [teller]);
+							titelPlaats.setAttribute('style', 'margin:10px ; width:114px ; text-align:center ; display:inline-block ; text-decoration:underline; font-weight:bold');
+							var titelTekst = document.createTextNode('sterrenbeeld');
+							titelPlaats.appendChild(titelTekst);
+							titels.appendChild(titelPlaats);
 
 							/*toon leden*/
 							var lijst = document.createElement('div');
@@ -221,90 +225,90 @@
 
 
 
-							/*toon leden*/
-							var lijst = document.createElement('div');
-							lijst.setAttribute('class', 'lijst');
-							lijst.setAttribute('style', 'width: 1200px; height:500px; overflow:auto ; background-color:rgb(195,207,91,0.75) ; border: 2px solid black ; border-radius:6px ; padding:20px ; margin:20px ; box-shadow: 4px 4px 4px rgb(0,0,0,0.75)');
-							lijst.appendChild(titels);
-							for (teller = 0; teller <= sGegevens.length - 1; teller++) {
-								var zoekResultaten = document.createElement('p');
-								zoekResultaten.setAttribute('class', 'zoekResultaten');
-								zoekResultaten.setAttribute('style', 'float:left ; display: inline-block ');
+								/*toon leden*/
+								var lijst = document.createElement('div');
+								lijst.setAttribute('class', 'lijst');
+								lijst.setAttribute('style', 'width: 1200px; height:500px; overflow:auto ; background-color:rgb(195,207,91,0.75) ; border: 2px solid black ; border-radius:6px ; padding:20px ; margin:20px ; box-shadow: 4px 4px 4px rgb(0,0,0,0.75)');
+								lijst.appendChild(titels);
+								for (teller = 0; teller <= sGegevens.length - 1; teller++) {
+									var zoekResultaten = document.createElement('p');
+									zoekResultaten.setAttribute('class', 'zoekResultaten');
+									zoekResultaten.setAttribute('style', 'float:left ; display: inline-block ');
 
-								sGegeven = sGegevens[teller];
-
-
-								teller1 = 0;
-								for (var property in sGegeven) {
-									if (sGegeven.hasOwnProperty(property)) {
-										if (teller1 == 5) {
-											var link = document.createElement('a');
-											link.setAttribute('href', 'profiel.html?id=' + sGegeven.id);
-											link.setAttribute('style', 'margin:10px ; width:135px ; text-align:center ; display:inline-block');
-											var sTekst = document.createTextNode(sGegeven[property]);
-											link.appendChild(sTekst);
-											zoekResultaten.appendChild(link);
-										}
-										else {
-											var zoekResultaat = document.createElement('span');
-											zoekResultaat.setAttribute('id', 'zoekResultaat' + [teller1]);
+									sGegeven = sGegevens[teller];
 
 
-											if ((teller1 != 7) && (teller1 != 8) && (teller1 != 9) && (teller1 != 10) && (teller1 != 11) && (teller1 != 12)) {
-												zoekResultaat.setAttribute('style', 'display:none');
-											}
-											else if ((teller1 == 8) || (teller1 == 11) || (teller1 == 12)) {
-												zoekResultaat.setAttribute('style', 'margin:10px ; width:100px; text-align:center ; display:inline-block');
+									teller1 = 0;
+									for (var property in sGegeven) {
+										if (sGegeven.hasOwnProperty(property)) {
+											if (teller1 == 5) {
+												var link = document.createElement('a');
+												link.setAttribute('href', 'profiel.html?id=' + sGegeven.id);
+												link.setAttribute('style', 'margin:10px ; width:135px ; text-align:center ; display:inline-block');
+												var sTekst = document.createTextNode(sGegeven[property]);
+												link.appendChild(sTekst);
+												zoekResultaten.appendChild(link);
 											}
 											else {
-												zoekResultaat.setAttribute('style', 'margin:10px ; width:114px; text-align:center ; display:inline-block');
-											}
-											var sTekst = document.createTextNode(sGegeven[property]);
+												var zoekResultaat = document.createElement('span');
+												zoekResultaat.setAttribute('id', 'zoekResultaat' + [teller1]);
 
 
-											if ((teller1 != 7) && (teller1 != 8) && (teller1 != 9) && (teller1 != 10) && (teller1 != 11) && (teller1 != 12)) {
-												zoekResultaat.setAttribute('style', 'display:none');
-											}
-											else if ((teller1 == 8) || (teller1 == 11) || (teller1 == 12)) {
-												zoekResultaat.setAttribute('style', 'margin:10px ; width:100px; text-align:center ; display:inline-block');
-											}
-											else {
-												zoekResultaat.setAttribute('style', 'margin:10px ; width:114px; text-align:center ; display:inline-block');
-											}
-											var sTekst = document.createTextNode(sGegeven[property]);
+												if ((teller1 != 7) && (teller1 != 8) && (teller1 != 9) && (teller1 != 10) && (teller1 != 11) && (teller1 != 12)) {
+													zoekResultaat.setAttribute('style', 'display:none');
+												}
+												else if ((teller1 == 8) || (teller1 == 11) || (teller1 == 12)) {
+													zoekResultaat.setAttribute('style', 'margin:10px ; width:100px; text-align:center ; display:inline-block');
+												}
+												else {
+													zoekResultaat.setAttribute('style', 'margin:10px ; width:114px; text-align:center ; display:inline-block');
+												}
+												var sTekst = document.createTextNode(sGegeven[property]);
 
 
-											zoekResultaat.appendChild(sTekst);
+												if ((teller1 != 7) && (teller1 != 8) && (teller1 != 9) && (teller1 != 10) && (teller1 != 11) && (teller1 != 12)) {
+													zoekResultaat.setAttribute('style', 'display:none');
+												}
+												else if ((teller1 == 8) || (teller1 == 11) || (teller1 == 12)) {
+													zoekResultaat.setAttribute('style', 'margin:10px ; width:100px; text-align:center ; display:inline-block');
+												}
+												else {
+													zoekResultaat.setAttribute('style', 'margin:10px ; width:114px; text-align:center ; display:inline-block');
+												}
+												var sTekst = document.createTextNode(sGegeven[property]);
+
+
+												zoekResultaat.appendChild(sTekst);
+											}
+											teller1 = teller1 + 1;
+											zoekResultaten.appendChild(zoekResultaat);
 										}
-										teller1 = teller1 + 1;
-										zoekResultaten.appendChild(zoekResultaat);
 									}
+
+									var zoekResultaat = document.createElement('span');
+									zoekResultaat.setAttribute('id', 'zoekResultaat' + [teller1]);
+									zoekResultaat.setAttribute('style', 'margin:10px ; width:114px; text-align:center ; display:inline-block');
+									let day = sGegeven.geboortedatum.substring(sGegeven.geboortedatum.lastIndexOf('-') + 1, sGegeven.geboortedatum.length);
+									let month = sGegeven.geboortedatum.substring(sGegeven.geboortedatum.indexOf('-', 2) + 1, sGegeven.geboortedatum.lastIndexOf('-'));
+									var sterrenbeeld = GeefSterrenBeeld(day, month);
+									var sTekst = document.createTextNode(sterrenbeeld);
+									zoekResultaat.appendChild(sTekst);
+									zoekResultaten.appendChild(zoekResultaat);
+
+									lijst.appendChild(zoekResultaten);
 								}
 
-								var zoekResultaat = document.createElement('span');
-								zoekResultaat.setAttribute('id', 'zoekResultaat' + [teller1]);
-								zoekResultaat.setAttribute('style', 'margin:10px ; width:114px; text-align:center ; display:inline-block');
-								let day = sGegeven.geboortedatum.substring(sGegeven.geboortedatum.lastIndexOf('-') + 1, sGegeven.geboortedatum.length);
-								let month = sGegeven.geboortedatum.substring(sGegeven.geboortedatum.indexOf('-', 2) + 1, sGegeven.geboortedatum.lastIndexOf('-'));
-								var sterrenbeeld = GeefSterrenBeeld(day, month);
-								var sTekst = document.createTextNode(sterrenbeeld);
-								zoekResultaat.appendChild(sTekst);
-								zoekResultaten.appendChild(zoekResultaat);
-
-								lijst.appendChild(zoekResultaten);
+								var formulier = document.getElementsByTagName('div')[2];
+								formulier.appendChild(lijst);
+								var controleLijst = document.querySelectorAll('.lijst')[1];
+								console.log(controleLijst);
+								if (controleLijst != null) {
+									var verwijderLijst = document.querySelectorAll('.lijst')[0];
+									verwijderLijst.remove();
+								}
+								else {
+								}
 							}
-
-							var formulier = document.getElementsByTagName('div')[2];
-							formulier.appendChild(lijst);
-							var controleLijst = document.querySelectorAll('.lijst')[1];
-							console.log(controleLijst);
-							if (controleLijst != null) {
-								var verwijderLijst = document.querySelectorAll('.lijst')[0];
-								verwijderLijst.remove();
-							}
-							else {
-							}
-						}
 						}
 					})
 
@@ -339,48 +343,73 @@
 	<div class="container mt-4">
 		<h1>zoek een date</h1>
 
-		<div class="mt-4">
-			<!--de zoekopties-->
-			<form>
-				<table>
-					<tr>
-						<td><label>nickname</label></td>
-						<td><input type="text" name="zNickname"></input></td>
-					</tr>
-					<tr>
-						<td><label>beroep</label></td>
-						<td><input type="text" name="zBeroep"></input></td>
-					</tr>
-					<tr>
-						<td><label>sexe</label></td>
-						<td><input type="radio" name="zSexe" value="m">m</input>
-							<input type="radio" name="zSexe" value="v">v</input></td>
-					</tr>
-					<tr>
-						<td><label>haarkleur</label></td>
-						<td><input type="text" name="zHaarkleur"></input></td>
-					</tr>
-					<tr>
-						<td><label>oogkleur</label></td>
-						<td><input type="text" name="zOogkleur"></input></td>
-					</tr>
-					<tr>
-						<td><label>grootte (=groter dan in cm)</label></td>
-						<td><input type="number" name="zGrootte"></input></td>
-					</tr>
-					<tr>
-						<td><label>gewicht (=weegt minder of =)</label></td>
-						<td><input type="text" name="zGewicht"></input></td>
-					</tr>
-				</table>
+		<div class="row mt-4">
+			<div class="col-sm-4">
+				<!--de zoekopties-->
+				<form>
+					<div class="form-group">
+						<label>Nickname</label>
+						<input type="text" name="zNickname" class="form-control"
+							placeholder="Een gebruiker zijn nickname">
+					</div>
 
-				<button type="submit" id="zoekKnop" class="btn btn-primary mt-4">Zoeken</button>
-			</form>
+					<div class="form-group">
+						<label>Beroep</label>
+						<input name="zBeroep" type="text" class="form-control"
+							placeholder="Bv. Developer, winkelbediende">
+					</div>
+
+					<label>Geslacht</label><br>
+					<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							<label class="btn btn-primary active">
+							  <input type="radio" name="zSexe" id="option1" value="m" autocomplete="off" checked> Man
+							</label>
+							<label class="btn btn-danger">
+							  <input type="radio" name="zSexe" id="option2" value="v" autocomplete="off"> Vrouw
+							</label>
+					</div>
+				</form>
+			</div>
+
+			<div class="col-sm-4">
+				<form>
+
+					<div class="form-group">
+						<label>Haarkleur</label>
+						<input type="text" class="form-control" name="zHaarkleur" placeholder="Bv. Bruin"></input>
+					</div>
+
+					<div class="form-group">
+						<label>Oogkleur</label>
+						<input type="text" name="zOogkleur" class="form-control" placeholder="Bv. Blauw">
+					</div>
+				</form>
+			</div>
+
+			<div class="col-sm-4">
+					<form>
+						<div class="form-group">
+							<label>Beroep</label>
+							<input name="zBeroep" type="text" class="form-control"
+								placeholder="Bv. Developer, winkelbediende">
+						</div>
+
+						<div class="form-group">
+							<label>Grootte (minimum)</label>
+							<input name="zGrootte" type="text" class="form-control" placeholder="Bv. 180">
+						</div>
+
+						<div class="form-group">
+							<label>Gewicht (maximum)</label>
+							<input name="zGewicht" type="text" class="form-control" placeholder="Bv. 80">
+						</div>
+					</form>
+				</div>
+
+				<div class="container">
+					<button type="submit" id="zoekKnop" class="btn btn-primary btn-block mt-2">Zoeken</button>
+				</div>
 		</div>
-	</div>
-
-	<footer>
-	</footer>
 </body>
 
 </html>
