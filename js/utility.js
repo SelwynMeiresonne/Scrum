@@ -31,27 +31,31 @@ $('navigationElements').ready(function () {
     // Altijd update eerst want standaard is het 0 (of 1)
     var lastcoins = -1
 
-    for (let i in NAVIGATION) {
-        var url = NAVIGATION[i].Pagina
+    if (IsIngelogd()) {
+        for (let i in NAVIGATION) {
+            var url = NAVIGATION[i].Pagina
 
-        if (!isRoot) {
-            if (NAVIGATION[i].Naam != "Logout") {
-                url = url.substring(url.lastIndexOf('/') + 1, url.length)
-            } else {
-                url = "../" + url
+            if (!isRoot) {
+                if (NAVIGATION[i].Naam != "Logout") {
+                    url = url.substring(url.lastIndexOf('/') + 1, url.length)
+                } else {
+                    url = "../" + url
+                }
+            }
+
+            var naam = NAVIGATION[i].Naam
+            var btn = $('<li class="nav-item pl-3"><a class="nav-link" href="' + url + '">' + naam + '</a></li>').appendTo('#navigationElements')
+
+            if (NAVIGATION[i].Naam == "Logout") {
+                btn.click(function () {
+                    Logout()
+                    Redirect('index.html')
+                })
             }
         }
-
-        var naam = NAVIGATION[i].Naam
-        var btn = $('<li class="nav-item pl-3"><a class="nav-link" href="' + url + '">' + naam + '</a></li>').appendTo('#navigationElements')
-
-        if (NAVIGATION[i].Naam == "Logout") {
-            btn.click(function () {
-                Logout()
-                Redirect('index.html')
-            })
-        }
     }
+
+    $('#nav').css('background-color', 'blue')
 
     // Update
     function UpdateNav() {

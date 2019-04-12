@@ -109,6 +109,18 @@ $('document').ready(function () {
                 // Difference
                 var diff = data.length - len
 
+                // New user
+                if (len == 0) {
+                    users[to_user] = true
+                    messages[to_user] = {}
+                    messages[to_user] = CreateMessagePacket(to_user, "")
+                    
+                    // Create this
+                    PopulateUserList(to_user)
+
+                    return
+                }
+
                 // Loop through new messages
                 for (let i = 0; i < diff; i++) {
                     // Add them
@@ -131,6 +143,7 @@ $('document').ready(function () {
             } else { // Delete
                 // Just reset, too tired to do anything else :/
                 $('#berichten').empty()
+
                 messages[to_user] = data
                 CreateMessages(selectedTarget)
             }
@@ -429,7 +442,7 @@ $('document').ready(function () {
                     // Create delete buttons
                     AddDeleteButtons(messages[selectedTarget][len], selectedTarget, len)
                 } else {
-                    
+
                 }
             })
             .catch(function (error) { console.log(error); });
