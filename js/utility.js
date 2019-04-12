@@ -36,10 +36,9 @@ $('navigationElements').ready(function () {
         if (IsIngelogd()) {
             // Toon amount
             GeefProfielVanID(GeefGebruikerID()).then(function (data) {
-                console.log(lastcoins, data.lovecoins)
                 if (parseInt(data.lovecoins) != parseInt(lastcoins)) {
                     $('#navigationElements').empty()
-                    
+
                     // yet
                     lastcoins = data.lovecoins
 
