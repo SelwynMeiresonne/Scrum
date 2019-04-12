@@ -23,7 +23,7 @@
 
 	<script type="text/javascript">
 
-			var profielId;//ID of profile we are looking at
+			var profielId;	//ID of profile we are looking at
 			var lastClickedFavoriteProfileId;
 
 			window.onload = function () {
@@ -48,16 +48,14 @@
 						
 						fillUpProfile(data, false);//this data is current profile info
 
-					}).catch(function (error) { console.log("ERROR " + error); });
-
-
+					}).catch(function (error) { console.log("ERROR reading single profile " + error); });
 
 				/* Listener for Button "I LIKE (1 LC)" */
 				var eAddProfileToFavorites = document.getElementById("addToFavorites");	
 				eAddProfileToFavorites.addEventListener('click', onAddToFavoritesClick);
 
 				function onAddToFavoritesClick(evt) {
-					console.log("Clicked on MAAK FAVORIET");
+					//console.log("Clicked on MAAK FAVORIET");
 
 					let url = ROOT_URL + '/profiel/read_one.php?id=' + GeefGebruikerID();
 
@@ -84,9 +82,10 @@
 				                		alert('Toegevoegd als favoriet');
 				                		$('#addToFavorites').css("display", "none");
 				                		//fixme ook nog lovecoinsaldo in navbar aanpassen
+				                		$("#sendMessageToFavorite").css("display", "block");
 				                })
 				                .catch(function (error) { 
-				                	console.log(error);
+				                	console.log("ERROR updating lovecoin saldo for " + GeefGebruikerID() + " ==> " + error);
 				                	alert('Toegevoegen als favoriet niet gelukt'); //todo omdat er iets niet is gelukt, OF omdat je deze reeds hebt als favoriet
 				                }); 
 
@@ -96,14 +95,12 @@
 
 
 						})
-						.catch(function (error) { console.log("ERROR " + error); });
-
-//fixme ook nog lovecoinsaldo in navbar aanpassen
+						.catch(function (error) { console.log("ERROR reading profile " + GeefGebruikerID()+ " ==> " + error); });
 
 	                let mijnId =  GeefGebruikerID(); 
-	                let anderId =  profielId; //profile.id;//fixme get this from somewhere
-						console.log("Mijn Id: " + mijnId);
-						console.log("Ander profiel Id: " + anderId);
+	                let anderId =  profielId;
+						//console.log("Mijn Id: " + mijnId);
+						//console.log("Ander profiel Id: " + anderId);
 	                url=ROOT_URL+'/favoriet/like.php';
 
 	                let data = {
@@ -122,7 +119,9 @@
 	                fetch(request)
 	                    .then( function (resp)  { return resp.json(); })
 	                    .then( function (data)  { console.log(data);  })
-	                    .catch(function (error) { console.log(error); });
+	                    .catch(function (error) { 
+	                    	console.log("ERROR adding profile " + GeefGebruikerID() + " as a favorite ==> " + error); 	                    	
+	                    });
 				}
 
 				/* Listener for Button "Toon mijn favorieten" */
@@ -131,16 +130,15 @@
 
 				function onShowAllMyFavoritesClick(evt) {
 					console.log("Clicked on BEKIJK MIJN FAVORIETEN");
-	                //let profielId = GeefGebruikerID();
 	                let url=ROOT_URL+'/favoriet/read.php?profielId='+ GeefGebruikerID();
 					fetch(url)
 	                    .then(function (resp)   { return resp.json(); })
 	                    .then(function (data)   { //data bevat hier de lijst met favorieten van deze user
 
-	                    	maakKnoppenRechtsVoorFavorieten(data);		
+	                    	maakKnoppenRechtsVoorFavorieten(data);			
 	                    	
 	                    })
-	                    .catch(function (error) { console.log(error); });
+	                    .catch(function (error) { console.log("ERROR reading profile " + GeefGebruikerID() + " ==> " + error); });
 				}
 
 				/*Listener for Button "TOON ALLES (1 LC)" */ 
@@ -174,16 +172,16 @@
 				                	.then(function (resp)   { return resp.json(); })
 				                	.then(function (updateData)   { 
 
-//newww									
 										/* Gebruiker zoekt een profiel, bekijkt dit profiel, liked het, en wil dan extra info kopen, 
-										   er is in deze situatie echter nog geen lastClickedFavoriteProfileId, neem in dat geval het id vd persoon wiens profiel je ah bekijken bent */
+										er is in deze situatie echter nog geen lastClickedFavoriteProfileId(want je gaat niet via "Toon mijn favoriten"), 
+										neem in dat geval het id vd persoon wiens profiel je ah bekijken bent wat op hetzelfde neer komt */
 										var favProfileId;
 
 										if(typeof lastClickedFavoriteProfileId === 'undefined'){
-											console.log("lastClickedFavoriteProfileId === 'undefined', we nemen profielId in de plaats [" + profielId + "]");
+											//console.log("lastClickedFavoriteProfileId === 'undefined', we nemen profielId in de plaats [" + profielId + "]");
 											favProfileId = profielId;
 										} else {
-											console.log("lastClickedFavoriteProfileId === [" + lastClickedFavoriteProfileId + "]");
+											//console.log("lastClickedFavoriteProfileId === [" + lastClickedFavoriteProfileId + "]");
 											favProfileId = lastClickedFavoriteProfileId.substring(8, lastClickedFavoriteProfileId.length); //generated profile buttons start with "favBtnId"
 										}
 
@@ -192,17 +190,11 @@
 										fetch(url)
 											.then(function (resp) { return resp.json(); })
 											.then(function (favData) {
-												//console.log("FAV PROFILE FILL " + favData.voornaam + " " + favData.familienaam + " " + favData.id);	//profiel werd geupdate
 												$('#displayElement').empty();
 												fillUpProfile(favData, true);//this data is current profile info
-												//console.log("FAV PROFILE FILL POST " + favData.voornaam + " " + favData.familienaam + " " + favData.id);	//profiel werd geupdate
+												//fixme ook nog lovecoinsaldo in navbar aanpassen
+											}).catch(function (error) { console.log("ERROR reading profile " + favProfileId + " ==> " + error); });
 
-											}).catch(function (error) { console.log("ERROR " + error); });
-
-										//fixme ook nog lovecoinsaldo in navbar aanpassen
-//newww
-
-				                		
 				                	})
 				                	.catch(function (error) { console.log(error); });   
 								
@@ -222,8 +214,13 @@
 				eSendMessageToFavorite.addEventListener('click', onSendMessageToFavorite);
 
 				function onSendMessageToFavorite(evt){
+					console.log("Clicked on onSendMessageToFavorite");
 
-					Redirect("berichten.html?id=" + profielId);	
+					//console.log("GeefGebruikerID(): " + GeefGebruikerID());
+					//console.log("profielId: " + profielId);
+					//console.log("lastClickedFavoriteProfileId: " + lastClickedFavoriteProfileId);
+					
+					Redirect("berichten.html?id=" + lastClickedFavoriteProfileId.substring(8, lastClickedFavoriteProfileId.length));
 				}
 
 
@@ -247,11 +244,9 @@
 				/* data contains list of all your favorites, create a button for every one of them */
 				for(let i=0;i<data.length;i++){
 
-					console.log(data[i]);
+					//console.log(data[i]);
 
 					let url = ROOT_URL + '/profiel/read_one.php?id=' + data[i].anderId;
-
-					//console.log(url)
 
 					fetch(url)
 						.then(function (resp) { return resp.json(); })
@@ -264,22 +259,21 @@
 								if (key === "familienaam") { naam+=data[key]; continue; }
 								if (key === "voornaam") { naam=naam+" "+data[key]; continue; }						
 							}
+							
 							/* Create button */
 							var btn = document.createElement("BUTTON");
 							btn.innerHTML = naam + "<br>";
 							btn.setAttribute("class","btn btn-primary mt-2");
 							btn.setAttribute("style","width:100%");
  							btn.setAttribute("id","favBtnId"+favorietId);
-							btn.addEventListener('click', function(){
-//new
-								lastClickedFavoriteProfileId = btn.id;
-								console.log("Id of button just clicked: " + btn.id);
-
-//new								
+							btn.addEventListener('click', function() {
+								lastClickedFavoriteProfileId = btn.id;								
 								$('#displayElement').empty();//Clear any existing li elements from ul because they are going to be generated again
 								fillUpProfile(data, false);//data contains my and not fav user
-								$("#showAllHiddenInfo").css("display", "block");
+								$("#showAllHiddenInfo").css("display", "block");//toon knop om private data te zien
+								$("#sendMessageToFavorite").css("display", "block");//Toon knop om berichten te kunnen sturen
 							});
+
 							/* Attach button to panel */
 							$('#rightPanel').append(btn);
 							console.log("BUTTON ATTACHED");
@@ -364,7 +358,7 @@
 						<button style="width:100%;" type="submit" id="addToFavorites" class="btn btn-primary mt-2">MAAK FAVORIET <br>(1 LC)</button>
 						<button style="width:100%;" type="submit" id="showAllHiddenInfo" class="btn btn-primary mt-2">TOON EXTRA INFO <br> (1 LC)</button>
 						<button style="width:100%;" type="submit" id="showAllMyFavorites" class="btn btn-primary mt-2">BEKIJK MIJN FAVORIETEN </button>	
-						<button style="width:100%;" type="submit" id="sendMessageToFavorite" class="btn btn-primary mt-2">STUUR &nbsp;&nbsp;&nbsp;BERICHT </button>
+						<button style="width:100%; display:none" type="submit" id="sendMessageToFavorite" class="btn btn-primary mt-2">STUUR &nbsp;&nbsp;&nbsp;BERICHT </button>
 					</div>
 					<!-- Left panel -->
 					<div style="width:35%; display:flex; flex-direction:column; justify-content:flex-start; flex-wrap: wrap;  align-items:center; border: 2px solid #73AD21; margin:1em;">
