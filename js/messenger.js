@@ -9,6 +9,7 @@ $('document').ready(function () {
         return;
     }
 
+    // W
     // Animations
     $('.inbox_people').width('99%')
     $('.mesgs').hide()
@@ -18,15 +19,31 @@ $('document').ready(function () {
     let id = GeefGebruikerID()
     var selectedTarget = isNaN($_GET('id')) ? -1 : parseInt($_GET('id'))
 
-    if (selectedTarget > -1) { }
-    GeefProfielVanID(selectedTarget).then(function (data) {
-        if (typeof data.message !== 'undefined') {
-            $('.inbox_people').width('39%')
-            $('.mesgs').show()
-        } else {
-            $('.talkingto').text("Bericht aan " + data.nickname)
+    if (selectedTarget > -1) { 
+        GeefProfielVanID(selectedTarget).then(function (data) {
+            if (typeof data.message === 'undefined') {
+                $('.inbox_people').width('39%')
+                $('.mesgs').show()
+                $('.talkingto').text("Bericht aan " + data.nickname)
+            } else {
+                // error profiel?
+                Redirect('berichten.html')
+            }
+        })
+    }
+
+    // Create a message
+    function CreateMessagePacket(target, message) {
+        let data = {
+            vanId: '' + GeefGebruikerID(),
+            naarId: '' + target,
+            partnerId: '' + target,
+            bericht: message,
+            berichtId: "error"
         }
-    })
+
+        return data
+    }
 
     // CACHE CACHE CACHE
     let profile_pic = "https://scrumserver.tenobe.org/scrum/img/no_image.png";
@@ -46,6 +63,18 @@ $('document').ready(function () {
 
                 CreateMessages(selectedTarget)
             })
+
+            if (selectedTarget != -1) {
+                PopulateUserList(selectedTarget)
+
+                let to_user = selectedTarget
+
+                // Default message
+                messages[to_user] = {}
+                messages[to_user][0] = CreateMessagePacket(to_user, 'Stuur je vriend een bericht!')
+
+                users[to_user] = {}
+            }
     }
 
     // Update
@@ -74,24 +103,23 @@ $('document').ready(function () {
         // OMG IT HAS AN UPDATE
         // IT WORKS
         if (len != data.length) {
-            // Add them
-            var diff = 0
-
             // New
             if (len < data.length) {
 
-                console.log('rr')
                 // Difference
-                dif = data.length - len
+                var diff = data.length - len
 
                 // Loop through new messages
                 for (let i = 0; i < diff; i++) {
                     // Add them
                     messages[to_user][len + i] = data[data.length - 1]
 
+                    console.log(profile_pic)
+                    //20190411121334616600_test_image_woop
+
                     $('#berichten').append(`
                         <div class="incoming_msg mb-4">
-                        <div class="incoming_msg_img"> <img src=https://scrumserver.tenobe.org/scrum/img/no_image.png"
+                        <div class="incoming_msg_img"> <img src="https://scrumserver.tenobe.org/scrum/img/${profile_pic}"
                                 alt="Profile Picture"> </div>
                         <div class="received_msg">
                             <div class="received_withd_msg">
@@ -101,21 +129,10 @@ $('document').ready(function () {
                     `)
                 }
             } else { // Delete
-                console.log('found a delete!', data, messages[to_user])
-
-                for (let message in messages[to_user]) {
-                    //var a = $.inArray(data, messages[to_user][message].berichtId)
-                
-                   if (typeof data[message] === 'undefined' ) {
-
-                        $('#bericht-' + messages[to_user][message].berichtId).remove()
-
-                       // PLZ WORK
-                       delete messages[to_user][message]
-
-
-                   }
-                }
+                // Just reset, too tired to do anything else :/
+                $('#berichten').empty()
+                messages[to_user] = data
+                CreateMessages(selectedTarget)
             }
 
             Scroll()
@@ -189,16 +206,17 @@ $('document').ready(function () {
         for (let b in messages[a]) {
             if (messages[a][b].vanId == GeefGebruikerID()) {
                 $('#berichten').append(`
-                    <div class="outgoing_msg">
+                    <div id="bericht-${messages[a][b].berichtId}" class="outgoing_msg">
                     <div class="sent_msg">
                         <p>${messages[a][b].bericht}</p>
+                        <small class="form-text text-muted"><a href="#" id="delete-${messages[a][b].berichtId}">Delete</a></small>
                     </div>
                 </div>
             `)
             } else {
                 $('#berichten').append(`
                 <div class="incoming_msg mb-4">
-                <div class="incoming_msg_img"> <img src=https://scrumserver.tenobe.org/scrum/img/${users[a].foto}"
+                <div class="incoming_msg_img"> <img src="https://scrumserver.tenobe.org/scrum/img/${profile_pic}"
                         alt="Profile Picture"> </div>
                 <div class="received_msg">
                     <div class="received_withd_msg">
@@ -210,6 +228,9 @@ $('document').ready(function () {
 
             AddDeleteButtons(messages[a][b], a, b)
         }
+
+        // Delete the delete lul
+        $('#delete-error').remove()
 
         $('.msg_history').scrollTop($('.msg_history')[0].scrollHeight);;
     }
@@ -236,16 +257,18 @@ $('document').ready(function () {
                 </a>`
             )
 
+            // Delete the delete lul
+            $('#delete-error').remove()
+
             // DoClick
             $('#chatuser-' + data.id).click(function () {
                 $('.inbox_people').width('39%')
                 $('.mesgs').show()
 
+                profile_pic = data.foto;
+
                 // Clear
                 $('#berichten').empty()
-
-                // Set this
-                profile_pic = "https://scrumserver.tenobe.org/scrum/img/" + data.foto
 
                 // Update
                 selectedTarget = parseInt(a);
@@ -280,6 +303,9 @@ $('document').ready(function () {
                     AddDeleteButtons(messages[a][b], a, b)
                 }
 
+                // Delete the delete lul
+                $('#delete-error').remove()
+
                 // Scroll
                 Scroll()
             })
@@ -312,15 +338,33 @@ $('document').ready(function () {
         }
     })
 
+    var canSend = true;
+
     // Send button
     $('#sendmessage').click(function () {
         let text = $('input[name="bericht"]').val();
 
         // Meh
         if (selectedTarget <= 0) { return; }
+        if (canSend == false) {     
+            $('#berichten').append(`
+                <div class="outgoing_msg">
+                    <div class="sent_msg">
+                        <p style="color:red">Gelieve even te wachten voor je een nieuw bericht verzend</p>
+                    </div>
+                </div>
+            `)
+            return;
+        }
 
         // Reset
         $('input[name="bericht"]').val('')
+
+        canSend = false;
+
+        setTimeout(function() {
+            canSend = true;
+        }, 600)
 
         // Send
         SendMessage(selectedTarget, text)
@@ -351,6 +395,7 @@ $('document').ready(function () {
         fetch(request)
             .then(function (resp) { return resp.json(); })
             .then(function (data) {
+
                 if (data.message = "Bericht werd aangemaakt.") {
                     // Into the stack
                     var len = GetMessagesCount(selectedTarget)
