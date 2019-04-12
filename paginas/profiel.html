@@ -219,8 +219,14 @@
 					//console.log("GeefGebruikerID(): " + GeefGebruikerID());
 					//console.log("profielId: " + profielId);
 					//console.log("lastClickedFavoriteProfileId: " + lastClickedFavoriteProfileId);
-					
-					Redirect("berichten.html?id=" + lastClickedFavoriteProfileId.substring(8, lastClickedFavoriteProfileId.length));
+					var favProfileId;
+					if(typeof lastClickedFavoriteProfileId === 'undefined'){
+						favProfileId = profielId;
+					} else {
+						favProfileId = lastClickedFavoriteProfileId.substring(8, lastClickedFavoriteProfileId.length); //generated profile buttons start with "favBtnId"
+					}
+
+					Redirect("berichten.html?id=" + favProfileId);
 				}
 
 
