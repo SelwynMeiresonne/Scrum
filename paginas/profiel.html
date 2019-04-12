@@ -19,11 +19,245 @@
 		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
 	<script src="../js/utility.js"></script>
+	<link rel="stylesheet" type="text/css" href="../css/profiel.css" />
+
+	<script type="text/javascript">
+
+			var profielId;//ID of profile we are looking at
+
+			window.onload = function () {
+
+				// Gebruiker is ingelogd, naar profiel
+				if (!IsIngelogd()) {
+					Redirect('../index.html');
+					return;
+				}
+
+				profielId = parseInt($_GET('id'));
+				// Geen ?id dus neem gebruikerprofiel
+				if (isNaN(profielId)) {
+					profielId = GeefGebruikerID();
+				}
+
+				let url = ROOT_URL + '/profiel/read_one.php?id=' + profielId;
+
+				fetch(url)
+					.then(function (resp) { return resp.json(); })
+					.then(function (data) {
+						
+						fillUpProfile(data, false);//this data is current profile info
+
+					}).catch(function (error) { console.log("ERROR " + error); });
+
+
+
+				/* Listener for Button "I LIKE (1 LC)" */
+				var eAddProfileToFavorites = document.getElementById("addToFavorites");	
+				eAddProfileToFavorites.addEventListener('click', onAddToFavoritesClick);
+
+				function onAddToFavoritesClick(evt) {
+					console.log("Clicked on MAAK FAVORIET");
+
+//fixme je moet eerst nog saldo checken en betalen om dit te kunnen, haal dat uit onShowAllHiddenInfo, ook nog loveconsaldo in navbar aanpassen
+
+	                let mijnId =  GeefGebruikerID(); 
+	                let anderId =  profielId; //profile.id;//fixme get this from somewhere
+						console.log("Mijn Id: " + mijnId);
+						console.log("Ander profiel Id: " + anderId);
+	                let url=ROOT_URL+'/favoriet/like.php';
+
+	                let data = {
+	                    mijnId: mijnId,
+	                    anderId: anderId
+	                }
+
+	                var request = new Request(url, {
+	                    method: 'POST',
+	                    body: JSON.stringify(data),
+	                    headers: new Headers({
+	                        'Content-Type': 'application/json'
+	                    })
+	                });
+	                
+	                fetch(request)
+	                    .then( function (resp)  { return resp.json(); })
+	                    .then( function (data)  { console.log(data);  })
+	                    .catch(function (error) { console.log(error); });
+				}
+
+				/* Listener for Button "Toon mijn favorieten" */
+				var eShowAllMyFavorites = document.getElementById("showAllMyFavorites");
+				eShowAllMyFavorites.addEventListener('click', onShowAllMyFavoritesClick);
+
+				function onShowAllMyFavoritesClick(evt) {
+					console.log("Clicked on BEKIJK MIJN FAVORIETEN");
+	                //let profielId = GeefGebruikerID();
+	                let url=ROOT_URL+'/favoriet/read.php?profielId='+ GeefGebruikerID();
+					fetch(url)
+	                    .then(function (resp)   { return resp.json(); })
+	                    .then(function (data)   { //data bevat hier de lijst met favorieten van deze user
+
+	                    	maakKnoppenRechtsVoorFavorieten(data);		
+	                    	
+	                    })
+	                    .catch(function (error) { console.log(error); });
+				}
+
+				/*Listener for Button "TOON ALLES (1 LC)" */ 
+				var eShowAllHiddenInfo = document.getElementById("showAllHiddenInfo");
+				eShowAllHiddenInfo.addEventListener('click', onShowAllHiddenInfo);
+
+				function onShowAllHiddenInfo(evt){
+					console.log("Clicked on TOON EXTRA INFO");	
+
+					let url = ROOT_URL + '/profiel/read_one.php?id=' + GeefGebruikerID();
+
+					fetch(url)
+						.then(function (resp) { return resp.json(); })
+						.then(function (data) {
+							
+							if (data.lovecoins > 0){
+								
+								data.lovecoins = data.lovecoins - 1;
+
+								let urlUpdate=ROOT_URL+'/profiel/update.php?id=' + GeefGebruikerID();
+				            	var request = new Request(urlUpdate, {
+				                	method: 'PUT',
+				                	body: JSON.stringify(data),
+				                	headers: new Headers({
+				                		'Content-Type': 'application/json'
+				                	})
+				            	});
+
+				            	fetch(request)
+				                	.then(function (resp)   { return resp.json(); })
+				                	.then(function (data)   { 
+				                		console.log(data);
+				                		fillUpProfile(data, true);
+				                	})
+				                	.catch(function (error) { console.log(error); });   
+								
+								/* functie schrijven die alles toont */
+
+									//fixme als je op toon alles klikt bij één van je favorieten, wordt deze fav niet volledig getoond maar wel zijn profiel zoals het was + volledig userprofiel en staat er dus teveel op het scherm oplosssing: data bevat hier de user*/
+
+							} else {
+								alert('U heeft onvoldoende lovecoins');
+							}
+
+						})
+						.catch(function (error) { console.log("ERROR " + error); });
+
+				}
+
+				/* Show/hide buttons */
+				if(GeefGebruikerID() === profielId) {
+					/* We are looking at our own profile, hide button "INVADE PRIVACY (1 LC)" and hide button "I LIKE (1 LC)" */
+					$("#addToFavorites").css("display", "none");
+					$("#showAllHiddenInfo").css("display", "none");				
+				} else {
+					/* Then we are looking at somebody else' profile, hide button "Toon mijn favorieten" */
+					$("#showAllMyFavorites").css("display", "none");
+				}
+
+			}
+
+			function maakKnoppenRechtsVoorFavorieten(data) {
+				console.log("entered maakKnoppenRechtsVoorFavorieten");
+				$("#showAllMyFavorites").css("display", "none");
+
+				/* data contains list of all your favorites, create a button for every one of them */
+				for(let i=0;i<data.length;i++){
+
+					console.log(data[i]);
+
+					let url = ROOT_URL + '/profiel/read_one.php?id=' + data[i].anderId;
+
+					//console.log(url)
+
+					fetch(url)
+						.then(function (resp) { return resp.json(); })
+						.then(function (data) {
+							var favorietId=0;
+							var naam="";
+							console.log(data.id + " " + data.familienaam + " " + data.voornaam);
+							for (var key in data) {
+								if (key === "id") { favorietId=data[key]; continue; }
+								if (key === "familienaam") { naam+=data[key]; continue; }
+								if (key === "voornaam") { naam=naam+" "+data[key]; continue; }						
+							}
+							/* Create button */
+							var btn = document.createElement("BUTTON");
+							btn.innerHTML = naam + "<br>";
+							btn.setAttribute("class","btn btn-primary mt-2");
+							btn.setAttribute("style","width:100%");
+ 							btn.setAttribute("id","favBtnId"+favorietId);
+							btn.addEventListener('click', function(){
+								$('#displayElement').empty();//Clear any existing li elements from ul because they are going to be generated again
+								fillUpProfile(data, false);
+								$("#showAllHiddenInfo").css("display", "block");//show button TOON EXTRA INFO again
+							});
+							/* Attach button to panel */
+							$('#rightPanel').append(btn);
+							console.log("BUTTON ATTACHED");
+
+						})
+						.catch(function (error) { console.log("ERROR " + error); });
+				}
+
+			}		
+
+			function fillUpProfile(profile, unlockedByLoveCoin) {
+
+				for (var key in profile) {
+					/* Don't show Id */
+					if (key === "id") { continue; }
+					
+					/* Fetch image from server and display it in the left-side panel */
+					if (key === "foto" && typeof profile.foto != 'undefined') {
+						var imgLocationOnServer = ROOT_URL.substring(0, ROOT_URL.length-3) + "img/" + profile[key];
+						//console.log(imgLocationOnServer);
+						let eImageToLoad = document.getElementById("profileImageToLoad");
+						eImageToLoad.src = imgLocationOnServer;
+						eImageToLoad.onerror = function(){
+							imgLocationOnServer = ROOT_URL.substring(0, ROOT_URL.length-3) + "img/no_image.png"
+							eImageToLoad.src = imgLocationOnServer;
+						}
+						continue;
+					}
+
+					/* Display or hide remaining items */
+					if((GeefGebruikerID() === profile.id) || unlockedByLoveCoin) {
+						/* Op eigen profiel toon je alles */
+						$('#displayElement').append("<li><p><span> " + key + ": " + profile[key] + "</span></p></li>");
+					} else {
+						/* Op een ander profiel mag je enkel de niet-private velden bekijken */
+						if (PRIVATE_ELEMENTS[key] === true) { //defined AND true 							
+							console.log(key + " NIET tonen " + PRIVATE_ELEMENTS[key]);
+							$('#displayElement').append("<li style='display:none'> " + key + ": " + profile[key] + "</li>")
+						} else { //not defined   OR   defined but not true
+							console.log(key + " WEL tonen " + PRIVATE_ELEMENTS[key]);
+							$('#displayElement').append("<li><p><span'> " + key + ": " + profile[key] + "</span></p></li>");
+						}
+					}
+
+				}
+				
+				/* We berekenen het Sterrenbeeld obv geboortedatum */
+				if (typeof profile.geboortedatum != 'undefined') {
+					let day = profile.geboortedatum.substring(profile.geboortedatum.lastIndexOf('-') + 1, profile.geboortedatum.length)
+					let month = profile.geboortedatum.substring(profile.geboortedatum.indexOf('-', 2) + 1, profile.geboortedatum.lastIndexOf('-'))
+					$('#displayElement').append("<li><p><span'> " + "Sterrenbeeld" + ": " + GeefSterrenBeeld(day, month) + "</span></p></li>");
+				}
+
+			}
+
+
+		</script>	
 </head>
 
-<body>
-
 	<body>
+
 		<!-- Navigation -->
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
 			<div class="container">
@@ -38,382 +272,42 @@
 				</div>
 			</div>
 		</nav>
-
-		<script type="text/javascript">
-			window.onload = function () {
-			let rooturl = "https://scrumserver.tenobe.org/scrum/api";
-			
-			
-			
-				// Gebruiker is ingelogd, naar profiel
-				if (!IsIngelogd()) {
-					Redirect('../index.html')
-					return;
-				}
-				console.log(window.location)
-				// profiel.html?id=2 => 2
-				let profielId = parseInt($_GET('id'))
-				let gebruikerProfielId = GeefGebruikerID();
-				let gebruikerUrl = ROOT_URL + '/profiel/read_one.php?id=' + gebruikerProfielId;
-				console.log("$GET ", profielId, gebruikerProfielId);
-				
-				// Geen ?id dus neem gebruikerprofiel
-				if (isNaN(profielId)) {
-					profielId = GeefGebruikerID();
-					console.log("ID ", profielId)
-				}
-				let url = ROOT_URL + '/profiel/read_one.php?id=' + profielId;
-				console.log(url)
-				fetch(url)
-					.then(function (resp) { return resp.json(); })
-					.then(function (data) {
-						console.log(data)
-						fillUpProfile(data);
-					})
-					.catch(function (error) { console.log("ERROR " + error); });
-
-					if (gebruikerProfielId != profielId){
-					lovecoins (rooturl,gebruikerProfielId,profielId,gebruikerUrl);
-					}
-					}
-			/*einde window.onload*/
-			
-			function lovecoins(rooturl,gebruikerProfielId,profielId,gebruikerUrl){
-					
-					fetch(gebruikerUrl)
-					.then(function (resp) { return resp.json(); })
-					.then(function (data) {
-						console.log(data);
-						var toonKnop = document.getElementById('showAllHiddenInfo');
-						toonKnop.addEventListener('click',function () {
-						var sSaldo = data.lovecoins;
-						console.log(sSaldo);
-						var totaal = parseInt(sSaldo) - 1; 
-						if (sSaldo > 0){
-						let urlUpdate=rooturl+'/profiel/update.php?id=' + gebruikerProfielId;
-						
-						
-                        data.lovecoins = totaal;
-						
-						console.log(data);
-						
-						console.log(totaal);
-
-                        var request = new Request(urlUpdate, {
-                            method: 'PUT',
-                            body: JSON.stringify(data),
-                            headers: new Headers({
-                                'Content-Type': 'application/json'
-                            })
-                        });
-                        fetch(request)
-                            .then(function (resp)   { return resp.json(); })
-                            .then(function (data)   { console.log(data);  
-							
-							
-							
-							})
-                            .catch(function (error) { console.log(error); });   
-							
-							/*functie schrijven die alles toont*/
-							fillUpProfileAangepast(data);
-							}
-							else {
-							alert('U heeft onvoldoende lovecoins');
-							}
-							
-					}); ;})
-					
-					
-					
-					}
-					
-			function fillUpProfile(profile) {
-
-
-				for (var key in profile) {
-					if (key === "id") { continue; }
-					if (key === "foto") { continue; }
-					/* Op eigen profiel toon je alles */
-					if(GeefGebruikerID() === profile.id) {
-						$('#displayElement').append("<li class='list-group-item'><p><span> " + key + ": " + profile[key] + "</span></p></li>");
-					} else {
-						/* Op een ander profiel mag je enkel de niet-private velden bekijken */
-						if (PRIVATE_ELEMENTS[key] === true) { //defined AND true 							
-							console.log(key + " NIET tonen " + PRIVATE_ELEMENTS[key]);
-							$('#displayElement').append("<li style='display:none' class='list-group-item'> " + key + ": " + profile[key] + "</li>")
-						} else { //not defined   OR   defined but not true
-							console.log(key + " WEL tonen " + PRIVATE_ELEMENTS[key]);
-							$('#displayElement').append("<li class='list-group-item'><p><span'> " + key + ": " + profile[key] + "</span></p></li>");
-						}
-					}
-
-				}
-				if (typeof profile.geboortedatum != 'undefined') {
-					// Sterrenbeeld
-					let day = profile.geboortedatum.substring(profile.geboortedatum.lastIndexOf('-') + 1, profile.geboortedatum.length)
-					let month = profile.geboortedatum.substring(profile.geboortedatum.indexOf('-', 2) + 1, profile.geboortedatum.lastIndexOf('-'))
-					//$('#zodic').text("Sterrenbeeld: " + GeefSterrenBeeld(day, month))
-					$('#displayElement').append("<li class='list-group-item'><p><span'> " + "Sterrenbeeld" + ": " + GeefSterrenBeeld(day, month) + "</span></p></li>");
-					//todo fixme correcte afbeelding tonen links onder profielfoto
-
-				}
-				if (typeof profile.foto != 'undefined') {
-					var imgLocationOnServer = ROOT_URL.substring(0, ROOT_URL.length-3) + "img/" + profile[key];
-					console.log(imgLocationOnServer);
-					let eImageToLoad = document.getElementById("profileImageToLoad");
-					eImageToLoad.src = imgLocationOnServer;
-					eImageToLoad.onerror = function(){
-						imgLocationOnServer = ROOT_URL.substring(0, ROOT_URL.length-3) + "img/no_image.png"
-						eImageToLoad.src = imgLocationOnServer;
-					}
-				}
-				/* Jezelf als favoriet toevoegen of gegevens unlocken met LC is niet nodig op je eigen profiel */				
-				if(GeefGebruikerID() === profile.id) {
-					$("#addToFavorites").css("display", "none");
-					$("#showAllHiddenInfo").css("display", "none");
-				} else {
-					var eAddProfileToFavorites = document.getElementById("addToFavorites");	
-					eAddProfileToFavorites.addEventListener('click', onAddToFavoritesClick);
-					function onAddToFavoritesClick(evt) {
-		                let mijnId =  GeefGebruikerID(); 
-		                let anderId =  profile.id;
-		                let url=ROOT_URL+'/favoriet/like.php';
-		                let data = {
-		                    mijnId: mijnId,
-		                    anderId: anderId
-		                }
-		                var request = new Request(url, {
-		                    method: 'POST',
-		                    body: JSON.stringify(data),
-		                    headers: new Headers({
-		                        'Content-Type': 'application/json'
-		                    })
-		                });
-		                
-		                fetch(request)
-		                    .then( function (resp)  { return resp.json(); })
-		                    .then( function (data)  { console.log(data);  })
-		                    .catch(function (error) { console.log(error); });
-					}
-				}
-			
 		
-
-				
-
-				if (typeof profile.foto != 'undefined') {
-					var imgLocationOnServer = ROOT_URL.substring(0, ROOT_URL.length-3) + "img/" + profile[key];
-					console.log(imgLocationOnServer);
-					let eImageToLoad = document.getElementById("profileImageToLoad");
-					eImageToLoad.src = imgLocationOnServer;
-					eImageToLoad.onerror = function(){
-						imgLocationOnServer = ROOT_URL.substring(0, ROOT_URL.length-3) + "img/no_image.png"
-						eImageToLoad.src = imgLocationOnServer;
-					}
-				}
-
-				/* Jezelf als favoriet toevoegen of gegevens unlocken met LC is niet nodig op je eigen profiel */				
-				if(GeefGebruikerID() === profile.id) {
-
-					$("#addToFavorites").css("display", "none");
-					$("#showAllHiddenInfo").css("display", "none");
-
-				} else {
-
-					var eAddProfileToFavorites = document.getElementById("addToFavorites");	
-					eAddProfileToFavorites.addEventListener('click', onAddToFavoritesClick);
-
-					function onAddToFavoritesClick(evt) {
-
-		                let mijnId =  GeefGebruikerID(); 
-		                let anderId =  profile.id;
-
-		                let url=ROOT_URL+'/favoriet/like.php';
-
-		                let data = {
-		                    mijnId: mijnId,
-		                    anderId: anderId
-		                }
-
-		                var request = new Request(url, {
-		                    method: 'POST',
-		                    body: JSON.stringify(data),
-		                    headers: new Headers({
-		                        'Content-Type': 'application/json'
-		                    })
-		                });
-		                
-		                fetch(request)
-		                    .then( function (resp)  { return resp.json(); })
-		                    .then( function (data)  { console.log(data);  })
-		                    .catch(function (error) { console.log(error); });
-					}
-
-				}
-
-			
-		}
-		
-		
-		function fillUpProfileAangepast(profile) {
-
-
-				for (var key in profile) {
-					if (key === "id") { continue; }
-					if (key === "foto") { continue; }
-					console.log(key);
-						/* Op een ander profiel mag je enkel de niet-private velden bekijken */
-						if ((PRIVATE_ELEMENTS[key] === true) && (key != 'wachtwoord') && (key != 'lovecoins')) { //defined AND true 							
-							console.log(key + " NIET tonen " + PRIVATE_ELEMENTS[key]);
-							$('#displayElement').append("<li style='display:block' class='list-group-item'> " + key + ": " + profile[key] + "</li>")
-						} 
-					}
-
-					//todo fixme correcte afbeelding tonen links onder profielfoto
-
-				
-				if (typeof profile.foto != 'undefined') {
-					var imgLocationOnServer = ROOT_URL.substring(0, ROOT_URL.length-3) + "img/" + profile[key];
-					console.log(imgLocationOnServer);
-					let eImageToLoad = document.getElementById("profileImageToLoad");
-					eImageToLoad.src = imgLocationOnServer;
-					eImageToLoad.onerror = function(){
-						imgLocationOnServer = ROOT_URL.substring(0, ROOT_URL.length-3) + "img/no_image.png"
-						eImageToLoad.src = imgLocationOnServer;
-					}
-				}
-				/* Jezelf als favoriet toevoegen of gegevens unlocken met LC is niet nodig op je eigen profiel */				
-				if(GeefGebruikerID() === profile.id) {
-					$("#addToFavorites").css("display", "none");
-					$("#showAllHiddenInfo").css("display", "none");
-				} else {
-					var eAddProfileToFavorites = document.getElementById("addToFavorites");	
-					eAddProfileToFavorites.addEventListener('click', onAddToFavoritesClick);
-					function onAddToFavoritesClick(evt) {
-		                let mijnId =  GeefGebruikerID(); 
-		                let anderId =  profile.id;
-		                let url=ROOT_URL+'/favoriet/like.php';
-		                let data = {
-		                    mijnId: mijnId,
-		                    anderId: anderId
-		                }
-		                var request = new Request(url, {
-		                    method: 'POST',
-		                    body: JSON.stringify(data),
-		                    headers: new Headers({
-		                        'Content-Type': 'application/json'
-		                    })
-		                });
-		                
-		                fetch(request)
-		                    .then( function (resp)  { return resp.json(); })
-		                    .then( function (data)  { console.log(data);  })
-		                    .catch(function (error) { console.log(error); });
-					}
-				}
-			
-		
-
-				
-
-				if (typeof profile.foto != 'undefined') {
-					var imgLocationOnServer = ROOT_URL.substring(0, ROOT_URL.length-3) + "img/" + profile[key];
-					console.log(imgLocationOnServer);
-					let eImageToLoad = document.getElementById("profileImageToLoad");
-					eImageToLoad.src = imgLocationOnServer;
-					eImageToLoad.onerror = function(){
-						imgLocationOnServer = ROOT_URL.substring(0, ROOT_URL.length-3) + "img/no_image.png"
-						eImageToLoad.src = imgLocationOnServer;
-					}
-				}
-
-				/* Jezelf als favoriet toevoegen of gegevens unlocken met LC is niet nodig op je eigen profiel */				
-				if(GeefGebruikerID() === profile.id) {
-
-					$("#addToFavorites").css("display", "none");
-					$("#showAllHiddenInfo").css("display", "none");
-
-				} else {
-
-					var eAddProfileToFavorites = document.getElementById("addToFavorites");	
-					eAddProfileToFavorites.addEventListener('click', onAddToFavoritesClick);
-
-					function onAddToFavoritesClick(evt) {
-
-		                let mijnId =  GeefGebruikerID(); 
-		                let anderId =  profile.id;
-
-		                let url=ROOT_URL+'/favoriet/like.php';
-
-		                let data = {
-		                    mijnId: mijnId,
-		                    anderId: anderId
-		                }
-
-		                var request = new Request(url, {
-		                    method: 'POST',
-		                    body: JSON.stringify(data),
-		                    headers: new Headers({
-		                        'Content-Type': 'application/json'
-		                    })
-		                });
-		                
-		                fetch(request)
-		                    .then( function (resp)  { return resp.json(); })
-		                    .then( function (data)  { console.log(data);  })
-		                    .catch(function (error) { console.log(error); });
-					}
-
-				}
-
-			
-		}
-		
-
-
-
-		</script>
-
-		<body>
-			<div class="container mt-4">
+		<div class="container mt-4">
 
 				<div style="display:flex; flex-direction:row; justify-content:center;">
-					
-					<div style="display:flex; flex-direction:column; justify-content:space-evenly; flex-wrap: wrap; width:35%; align-items:center;">
-						<img src="404image" style="min-width: 80%; max-width:80%; padding:1em;" id="profileImageToLoad">	<!--  -->
-						<img src="../img/horoscopen.jpg" style="min-width: 80%; max-width:80%; padding:1em;">
+					<!-- PvdA panel -->
+					<div style="width:15%; border: 2px solid #73AD21; margin:1em;" id="pvdaPanel">
+						<button style="width:100%;" type="submit" id="addToFavorites" class="btn btn-primary mt-2">MAAK FAVORIET <br>(1 LC)</button>
+						<button style="width:100%;" type="submit" id="showAllHiddenInfo" class="btn btn-primary mt-2">TOON EXTRA INFO <br> (1 LC)</button>
+						<button style="width:100%;" type="submit" id="showAllMyFavorites" class="btn btn-primary mt-2">BEKIJK MIJN FAVORIETEN </button>											
 					</div>
-
-					<div style="width:65%;">
+					<!-- Left panel -->
+					<div style="width:35%; display:flex; flex-direction:column; justify-content:flex-start; flex-wrap: wrap;  align-items:center; border: 2px solid #73AD21; margin:1em;">
+						<img src="" style="min-width: 80%; max-width:90%; padding:1em;" id="profileImageToLoad">
+						<img src="../img/horoscopen.jpg" style="min-width: 90%; max-width:80%; padding:1em;">
+					</div>
+					<!-- Middle panel -->
+					<div style="width:35%; border: 2px solid #73AD21; margin:1em; padding:3em;">
 						<h3>Profiel</h3>
-						<ul class="list-group mt-4" id='displayElement'></ul>
-<!-- fixme deze niet tonen op eigen profiel, tekst veranderen naar verwijder als het profiel dat je bekijkt van iemand is die je reeds hebt toegevoegd als favoriet, en laat ze nog floaten met flex -->
-						<div>
-							<button type="submit" id="showAllHiddenInfo" class="btn btn-primary mt-2">Toon alles (1 LC)</button>
-							<button style="float:right;" type="submit" class="btn btn-primary mt-2" id="addToFavorites">Voeg toe als favoriet (1 LC)</button>					
-						</div>
-<!-- fixme deze niet tonen op eigen profiel, tekst veranderen naar verwijder als het profiel dat je bekijkt van iemand is die je reeds hebt toegevoegd als favoriet, en laat ze nog floaten met flex -->	
+						<ul style='list-style-type: none;' class="list-group mt-4" id='displayElement'></ul>	
+					</div>
+					<!-- Right panel -->
+					<div style="width:15%; border: 2px solid #73AD21; margin:1em;" id="rightPanel">
+<!-- 					<button style="width:100%;" type="submit" id="addToFavorites" class="btn btn-primary mt-2">MAAK FAVORIET <br>(1 LC)</button>
+						<button style="width:100%;" type="submit" id="showAllHiddenInfo" class="btn btn-primary mt-2">TOON EXTRA INFO <br> (1 LC)</button>
+						<button style="width:100%;" type="submit" id="showAllMyFavorites" class="btn btn-primary mt-2">BEKIJK MIJN FAVORIETEN </button>		 -->									
 					</div>
 
 				</div>
 
-			</div>
-		</body>
+
+
+
+		</div>
+
+	</body>
+
+
 
 </html>
-
-    © 2019 GitHub, Inc.
-    Terms
-    Privacy
-    Security
-    Status
-    Help
-
-    Contact GitHub
-    Pricing
-    API
-    Training
-    Blog
-    About
-
