@@ -447,6 +447,7 @@ $('document').ready(function () {
             })
             .catch(function (error) { console.log(error); });
     }
+    
 
     function GetChatOther(a, b) {
         if (a == GeefGebruikerID()) { return b }
