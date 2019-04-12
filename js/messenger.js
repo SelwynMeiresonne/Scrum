@@ -19,15 +19,31 @@ $('document').ready(function () {
     let id = GeefGebruikerID()
     var selectedTarget = isNaN($_GET('id')) ? -1 : parseInt($_GET('id'))
 
-    if (selectedTarget > -1) { }
-    GeefProfielVanID(selectedTarget).then(function (data) {
-        if (typeof data.message !== 'undefined') {
-            $('.inbox_people').width('39%')
-            $('.mesgs').show()
-        } else {
-            $('.talkingto').text("Bericht aan " + data.nickname)
+    if (selectedTarget > -1) { 
+        GeefProfielVanID(selectedTarget).then(function (data) {
+            if (typeof data.message === 'undefined') {
+                $('.inbox_people').width('39%')
+                $('.mesgs').show()
+                $('.talkingto').text("Bericht aan " + data.nickname)
+            } else {
+                // error profiel?
+                Redirect('berichten.html')
+            }
+        })
+    }
+
+    // Create a message
+    function CreateMessagePacket(target, message) {
+        let data = {
+            vanId: '' + GeefGebruikerID(),
+            naarId: '' + target,
+            partnerId: '' + target,
+            bericht: message,
+            berichtId: "error"
         }
-    })
+
+        return data
+    }
 
     // CACHE CACHE CACHE
     let profile_pic = "https://scrumserver.tenobe.org/scrum/img/no_image.png";
@@ -51,7 +67,12 @@ $('document').ready(function () {
             if (selectedTarget != -1) {
                 PopulateUserList(selectedTarget)
 
+                let to_user = selectedTarget
+
+                // Default message
                 messages[to_user] = {}
+                messages[to_user][0] = CreateMessagePacket(to_user, 'Stuur je vriend een bericht!')
+
                 users[to_user] = {}
             }
     }
@@ -208,6 +229,9 @@ $('document').ready(function () {
             AddDeleteButtons(messages[a][b], a, b)
         }
 
+        // Delete the delete lul
+        $('#delete-error').remove()
+
         $('.msg_history').scrollTop($('.msg_history')[0].scrollHeight);;
     }
 
@@ -232,6 +256,9 @@ $('document').ready(function () {
                     </div>
                 </a>`
             )
+
+            // Delete the delete lul
+            $('#delete-error').remove()
 
             // DoClick
             $('#chatuser-' + data.id).click(function () {
@@ -275,6 +302,9 @@ $('document').ready(function () {
 
                     AddDeleteButtons(messages[a][b], a, b)
                 }
+
+                // Delete the delete lul
+                $('#delete-error').remove()
 
                 // Scroll
                 Scroll()
@@ -365,6 +395,7 @@ $('document').ready(function () {
         fetch(request)
             .then(function (resp) { return resp.json(); })
             .then(function (data) {
+
                 if (data.message = "Bericht werd aangemaakt.") {
                     // Into the stack
                     var len = GetMessagesCount(selectedTarget)
