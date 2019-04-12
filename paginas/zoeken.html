@@ -61,21 +61,23 @@
 						tijdelijkeZoekUrl = tijdelijkeZoekUrl + '&sexe=' + geslacht;
 					}
 					let url = rooturl + tijdelijkeZoekUrl;
+					document.getElementsByName('zSexe')[0].checked = false;
+					document.getElementsByName('zSexe')[1].checked = false;
 				}
 				else { }
 				/*zoeken op nickname*/
 				let nickname = document.getElementsByName('zNickname')[0].value;
 				if (nickname != '') {
 					if (tijdelijkeZoekUrl == '/profiel/search.php?') {
-						tijdelijkeZoekUrl = tijdelijkeZoekUrl + 'nickname=' + '%' + nickname + '%';
+						tijdelijkeZoekUrl = tijdelijkeZoekUrl + 'nickname=' + '%' + nickname + '%' ;
 					}
 					else {
-						tijdelijkeZoekUrl = tijdelijkeZoekUrl + '&nickname=' + '%' + nickname + '%';
+						tijdelijkeZoekUrl = tijdelijkeZoekUrl + '&nickname=' + '%' + nickname + '%' ;
 					}
 					let url = rooturl + tijdelijkeZoekUrl;
 					console.log(nickname);
 				}
-				else { }
+				else {}
 
 				/*zoeken op beroep*/
 				let beroep = document.getElementsByName('zBeroep')[0].value;
@@ -131,7 +133,8 @@
 				}
 				else { }
 
-				let url = rooturl + tijdelijkeZoekUrl;
+				let url = rooturl + tijdelijkeZoekUrl+ '&orderBy=nickname' ;
+				console.log(url);
 
 
 				fetch(url)
