@@ -78,6 +78,14 @@
 
 			$('#koop').click(function (e) {
 				e.preventDefault()
+					var amount = $('input[name="i-aantal"]').val()
+
+					// Validate
+					if (amount > 100 || amount < 1) {
+						alert('U hebt een ongeldig aantal ingegeven')
+						return
+					}
+
 				fetch(url)
 					.then(function (resp) { return resp.json(); })
 					.then(function (data) {

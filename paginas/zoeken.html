@@ -29,6 +29,18 @@
 				Redirect('../index.html');
 				return;
 			}
+
+			function GetRandomProfile() {
+				// Default profiles only, meh
+				var rnd = Math.floor((Math.random() * 5000) + 1)
+				return rnd
+			}
+
+			$('#lucky').click(function () {
+				let p = GetRandomProfile()
+				Redirect('profiel.html?id=' + p)
+			})
+
 			var rooturl = "https://scrumserver.tenobe.org/scrum/api";
 			var tijdelijkeZoekUrl = '/profiel/search.php?';
 			document.getElementById('zoekKnop').addEventListener('click', function (e) {
@@ -407,7 +419,8 @@
 				</div>
 
 				<div class="container">
-					<button type="submit" id="zoekKnop" class="btn btn-primary btn-block mt-2">Zoeken</button>
+					<button type="submit" id="zoekKnop" class="btn btn-primary w-75 mt-2">Zoeken</button>
+					<button type="submit" id="lucky" class="btn btn-info w-25 mr-n4 mt-2">I'm feeling lucky</button>
 				</div>
 		</div>
 </body>

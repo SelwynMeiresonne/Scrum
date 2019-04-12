@@ -28,39 +28,85 @@ function GetBasePath() {
 // Maak de navigatie als je ingelogd bent
 $('navigationElements').ready(function () {
     var isRoot = window.location.href.endsWith('index.html');
+    // Altijd update eerst want standaard is het 0 (of 1)
+    var lastcoins = -1
 
     if (IsIngelogd()) {
-        // Toon amount
-        GeefProfielVanID(GeefGebruikerID()).then(function (data) {
-            for (let i in NAVIGATION) {
-                var url = NAVIGATION[i].Pagina
+        for (let i in NAVIGATION) {
+            var url = NAVIGATION[i].Pagina
 
-                if (!isRoot) {
-                    if (NAVIGATION[i].Naam != "Logout") {
-                        url = url.substring(url.lastIndexOf('/') + 1, url.length)
-                    } else {
-                        url = "../" + url
-                    }
-                }
-
-                if (NAVIGATION[i].Naam == "Love Coins") {
-                    // Modify
-                    if (data.lovecoins > 0) {
-                        NAVIGATION[i].Naam += ' <span style="color:#ffbf00">(' + data.lovecoins + ')</span>'
-                    }
-                }
-            
-                var btn = $('<li class="nav-item pl-3"><a class="nav-link" href="' + url + '">' + NAVIGATION[i].Naam + '</a></li>').appendTo('#navigationElements')
-
-                if (NAVIGATION[i].Naam == "Logout") {
-                    btn.click(function () {
-                        Logout()
-                        Redirect('index.html')
-                    })
+            if (!isRoot) {
+                if (NAVIGATION[i].Naam != "Logout") {
+                    url = url.substring(url.lastIndexOf('/') + 1, url.length)
+                } else {
+                    url = "../" + url
                 }
             }
-        })
+
+            var naam = NAVIGATION[i].Naam
+            var btn = $('<li class="nav-item pl-3"><a class="nav-link" href="' + url + '">' + naam + '</a></li>').appendTo('#navigationElements')
+
+            if (NAVIGATION[i].Naam == "Logout") {
+                btn.click(function () {
+                    Logout()
+                    Redirect('index.html')
+                })
+            }
+        }
     }
+
+    $('#nav').css('background-color', 'blue')
+
+    // Update
+    function UpdateNav() {
+        if (IsIngelogd()) {
+            // Toon amount
+            GeefProfielVanID(GeefGebruikerID()).then(function (data) {
+                if (parseInt(data.lovecoins) !== parseInt(lastcoins)) {
+
+                    console.log("SHOULD UPDATE")
+                    $('#navigationElements').empty()
+
+                    // yet
+                    lastcoins = data.lovecoins
+
+                    for (let i in NAVIGATION) {
+                        var url = NAVIGATION[i].Pagina
+
+                        if (!isRoot) {
+                            if (NAVIGATION[i].Naam != "Logout") {
+                                url = url.substring(url.lastIndexOf('/') + 1, url.length)
+                            } else {
+                                url = "../" + url
+                            }
+                        }
+
+                        var naam = NAVIGATION[i].Naam
+
+                        if (NAVIGATION[i].Naam == "Love Coins") {
+                            // Modify
+                            if (data.lovecoins > 0) {
+                                naam = NAVIGATION[i].Naam + ' <span style="color:#ffbf00">(' + data.lovecoins + ')</span>'
+                            }
+                        }
+                    
+                        var btn = $('<li class="nav-item pl-3"><a class="nav-link" href="' + url + '">' + naam + '</a></li>').appendTo('#navigationElements')
+
+                        if (NAVIGATION[i].Naam == "Logout") {
+                            btn.click(function () {
+                                Logout()
+                                Redirect('index.html')
+                            })
+                        }
+                    }
+                }
+            })
+        }
+
+        setTimeout(UpdateNav, 1000 * 1)
+    }
+
+    UpdateNav()
 })
 
 
