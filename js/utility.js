@@ -31,12 +31,36 @@ $('navigationElements').ready(function () {
     // Altijd update eerst want standaard is het 0 (of 1)
     var lastcoins = -1
 
+    for (let i in NAVIGATION) {
+        var url = NAVIGATION[i].Pagina
+
+        if (!isRoot) {
+            if (NAVIGATION[i].Naam != "Logout") {
+                url = url.substring(url.lastIndexOf('/') + 1, url.length)
+            } else {
+                url = "../" + url
+            }
+        }
+
+        var naam = NAVIGATION[i].Naam
+        var btn = $('<li class="nav-item pl-3"><a class="nav-link" href="' + url + '">' + naam + '</a></li>').appendTo('#navigationElements')
+
+        if (NAVIGATION[i].Naam == "Logout") {
+            btn.click(function () {
+                Logout()
+                Redirect('index.html')
+            })
+        }
+    }
+
     // Update
     function UpdateNav() {
         if (IsIngelogd()) {
             // Toon amount
             GeefProfielVanID(GeefGebruikerID()).then(function (data) {
-                if (parseInt(data.lovecoins) != parseInt(lastcoins)) {
+                if (parseInt(data.lovecoins) !== parseInt(lastcoins)) {
+
+                    console.log("SHOULD UPDATE")
                     $('#navigationElements').empty()
 
                     // yet
@@ -53,14 +77,16 @@ $('navigationElements').ready(function () {
                             }
                         }
 
+                        var naam = NAVIGATION[i].Naam
+
                         if (NAVIGATION[i].Naam == "Love Coins") {
                             // Modify
                             if (data.lovecoins > 0) {
-                                NAVIGATION[i].Naam += ' <span style="color:#ffbf00">(' + data.lovecoins + ')</span>'
+                                naam = NAVIGATION[i].Naam + ' <span style="color:#ffbf00">(' + data.lovecoins + ')</span>'
                             }
                         }
                     
-                        var btn = $('<li class="nav-item pl-3"><a class="nav-link" href="' + url + '">' + NAVIGATION[i].Naam + '</a></li>').appendTo('#navigationElements')
+                        var btn = $('<li class="nav-item pl-3"><a class="nav-link" href="' + url + '">' + naam + '</a></li>').appendTo('#navigationElements')
 
                         if (NAVIGATION[i].Naam == "Logout") {
                             btn.click(function () {
