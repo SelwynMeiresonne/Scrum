@@ -24,6 +24,7 @@
 	<script type="text/javascript">
 
 			var profielId;//ID of profile we are looking at
+			var lastClickedFavoriteProfileId;
 
 			window.onload = function () {
 
@@ -58,13 +59,52 @@
 				function onAddToFavoritesClick(evt) {
 					console.log("Clicked on MAAK FAVORIET");
 
-//fixme je moet eerst nog saldo checken en betalen om dit te kunnen, haal dat uit onShowAllHiddenInfo, ook nog loveconsaldo in navbar aanpassen
+					let url = ROOT_URL + '/profiel/read_one.php?id=' + GeefGebruikerID();
+
+					fetch(url)
+						.then(function (resp) { return resp.json(); })
+						.then(function (userData) {
+
+							if (userData.lovecoins > 0){
+								
+								userData.lovecoins = userData.lovecoins - 1;
+
+								let urlUpdate=ROOT_URL+'/profiel/update.php?id=' + GeefGebruikerID();
+				            	var request = new Request(urlUpdate, {
+				                	method: 'PUT',
+				                	body: JSON.stringify(userData),
+				                	headers: new Headers({
+				                		'Content-Type': 'application/json'
+				                	})
+				            	});
+
+								fetch(request)
+				                	.then(function (resp)   { return resp.json(); })
+				                	.then(function (updateData)   {
+				                		alert('Toegevoegd als favoriet');
+				                		$('#addToFavorites').css("display", "none");
+				                		//fixme ook nog lovecoinsaldo in navbar aanpassen
+				                })
+				                .catch(function (error) { 
+				                	console.log(error);
+				                	alert('Toegevoegen als favoriet niet gelukt'); //todo omdat er iets niet is gelukt, OF omdat je deze reeds hebt als favoriet
+				                }); 
+
+							} else {
+								alert('U heeft onvoldoende lovecoins');
+							}
+
+
+						})
+						.catch(function (error) { console.log("ERROR " + error); });
+
+//fixme ook nog lovecoinsaldo in navbar aanpassen
 
 	                let mijnId =  GeefGebruikerID(); 
 	                let anderId =  profielId; //profile.id;//fixme get this from somewhere
 						console.log("Mijn Id: " + mijnId);
 						console.log("Ander profiel Id: " + anderId);
-	                let url=ROOT_URL+'/favoriet/like.php';
+	                url=ROOT_URL+'/favoriet/like.php';
 
 	                let data = {
 	                    mijnId: mijnId,
@@ -114,32 +154,59 @@
 
 					fetch(url)
 						.then(function (resp) { return resp.json(); })
-						.then(function (data) {
+						.then(function (userData) {
 							
-							if (data.lovecoins > 0){
+							if (userData.lovecoins > 0){
 								
-								data.lovecoins = data.lovecoins - 1;
+								userData.lovecoins = userData.lovecoins - 1;
 
 								let urlUpdate=ROOT_URL+'/profiel/update.php?id=' + GeefGebruikerID();
 				            	var request = new Request(urlUpdate, {
 				                	method: 'PUT',
-				                	body: JSON.stringify(data),
+				                	body: JSON.stringify(userData),
 				                	headers: new Headers({
 				                		'Content-Type': 'application/json'
 				                	})
 				            	});
 
+
 				            	fetch(request)
 				                	.then(function (resp)   { return resp.json(); })
-				                	.then(function (data)   { 
-				                		console.log(data);
-				                		fillUpProfile(data, true);
+				                	.then(function (updateData)   { 
+
+//newww									
+										/* Gebruiker zoekt een profiel, bekijkt dit profiel, liked het, en wil dan extra info kopen, 
+										   er is in deze situatie echter nog geen lastClickedFavoriteProfileId, neem in dat geval het id vd persoon wiens profiel je ah bekijken bent */
+										var favProfileId;
+
+										if(typeof lastClickedFavoriteProfileId === 'undefined'){
+											console.log("lastClickedFavoriteProfileId === 'undefined', we nemen profielId in de plaats [" + profielId + "]");
+											favProfileId = profielId;
+										} else {
+											console.log("lastClickedFavoriteProfileId === [" + lastClickedFavoriteProfileId + "]");
+											favProfileId = lastClickedFavoriteProfileId.substring(8, lastClickedFavoriteProfileId.length); //generated profile buttons start with "favBtnId"
+										}
+
+										let url = ROOT_URL + '/profiel/read_one.php?id=' + favProfileId;	
+										
+										fetch(url)
+											.then(function (resp) { return resp.json(); })
+											.then(function (favData) {
+												//console.log("FAV PROFILE FILL " + favData.voornaam + " " + favData.familienaam + " " + favData.id);	//profiel werd geupdate
+												$('#displayElement').empty();
+												fillUpProfile(favData, true);//this data is current profile info
+												//console.log("FAV PROFILE FILL POST " + favData.voornaam + " " + favData.familienaam + " " + favData.id);	//profiel werd geupdate
+
+											}).catch(function (error) { console.log("ERROR " + error); });
+
+										//fixme ook nog lovecoinsaldo in navbar aanpassen
+//newww
+
+				                		
 				                	})
 				                	.catch(function (error) { console.log(error); });   
 								
-								/* functie schrijven die alles toont */
 
-									//fixme als je op toon alles klikt bij één van je favorieten, wordt deze fav niet volledig getoond maar wel zijn profiel zoals het was + volledig userprofiel en staat er dus teveel op het scherm oplosssing: data bevat hier de user*/
 
 							} else {
 								alert('U heeft onvoldoende lovecoins');
@@ -150,11 +217,22 @@
 
 				}
 
+				/* Listener for Button "STUUR BERICHT" */
+				var eSendMessageToFavorite = document.getElementById("sendMessageToFavorite");
+				eSendMessageToFavorite.addEventListener('click', onSendMessageToFavorite);
+
+				function onSendMessageToFavorite(evt){
+
+					Redirect("berichten.html?id=" + profielId);	
+				}
+
+
 				/* Show/hide buttons */
 				if(GeefGebruikerID() === profielId) {
 					/* We are looking at our own profile, hide button "INVADE PRIVACY (1 LC)" and hide button "I LIKE (1 LC)" */
 					$("#addToFavorites").css("display", "none");
-					$("#showAllHiddenInfo").css("display", "none");				
+					$("#showAllHiddenInfo").css("display", "none");
+					$("#sendMessageToFavorite").css("display", "none");
 				} else {
 					/* Then we are looking at somebody else' profile, hide button "Toon mijn favorieten" */
 					$("#showAllMyFavorites").css("display", "none");
@@ -193,9 +271,14 @@
 							btn.setAttribute("style","width:100%");
  							btn.setAttribute("id","favBtnId"+favorietId);
 							btn.addEventListener('click', function(){
+//new
+								lastClickedFavoriteProfileId = btn.id;
+								console.log("Id of button just clicked: " + btn.id);
+
+//new								
 								$('#displayElement').empty();//Clear any existing li elements from ul because they are going to be generated again
-								fillUpProfile(data, false);
-								$("#showAllHiddenInfo").css("display", "block");//show button TOON EXTRA INFO again
+								fillUpProfile(data, false);//data contains my and not fav user
+								$("#showAllHiddenInfo").css("display", "block");
 							});
 							/* Attach button to panel */
 							$('#rightPanel').append(btn);
@@ -233,10 +316,10 @@
 					} else {
 						/* Op een ander profiel mag je enkel de niet-private velden bekijken */
 						if (PRIVATE_ELEMENTS[key] === true) { //defined AND true 							
-							console.log(key + " NIET tonen " + PRIVATE_ELEMENTS[key]);
+							//console.log(key + " NIET tonen " + PRIVATE_ELEMENTS[key]);
 							$('#displayElement').append("<li style='display:none'> " + key + ": " + profile[key] + "</li>")
 						} else { //not defined   OR   defined but not true
-							console.log(key + " WEL tonen " + PRIVATE_ELEMENTS[key]);
+							//console.log(key + " WEL tonen " + PRIVATE_ELEMENTS[key]);
 							$('#displayElement').append("<li><p><span'> " + key + ": " + profile[key] + "</span></p></li>");
 						}
 					}
@@ -280,7 +363,8 @@
 					<div style="width:15%; border: 2px solid #73AD21; margin:1em;" id="pvdaPanel">
 						<button style="width:100%;" type="submit" id="addToFavorites" class="btn btn-primary mt-2">MAAK FAVORIET <br>(1 LC)</button>
 						<button style="width:100%;" type="submit" id="showAllHiddenInfo" class="btn btn-primary mt-2">TOON EXTRA INFO <br> (1 LC)</button>
-						<button style="width:100%;" type="submit" id="showAllMyFavorites" class="btn btn-primary mt-2">BEKIJK MIJN FAVORIETEN </button>											
+						<button style="width:100%;" type="submit" id="showAllMyFavorites" class="btn btn-primary mt-2">BEKIJK MIJN FAVORIETEN </button>	
+						<button style="width:100%;" type="submit" id="sendMessageToFavorite" class="btn btn-primary mt-2">STUUR &nbsp;&nbsp;&nbsp;BERICHT </button>
 					</div>
 					<!-- Left panel -->
 					<div style="width:35%; display:flex; flex-direction:column; justify-content:flex-start; flex-wrap: wrap;  align-items:center; border: 2px solid #73AD21; margin:1em;">
@@ -294,9 +378,6 @@
 					</div>
 					<!-- Right panel -->
 					<div style="width:15%; border: 2px solid #73AD21; margin:1em;" id="rightPanel">
-<!-- 					<button style="width:100%;" type="submit" id="addToFavorites" class="btn btn-primary mt-2">MAAK FAVORIET <br>(1 LC)</button>
-						<button style="width:100%;" type="submit" id="showAllHiddenInfo" class="btn btn-primary mt-2">TOON EXTRA INFO <br> (1 LC)</button>
-						<button style="width:100%;" type="submit" id="showAllMyFavorites" class="btn btn-primary mt-2">BEKIJK MIJN FAVORIETEN </button>		 -->									
 					</div>
 
 				</div>
