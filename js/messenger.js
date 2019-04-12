@@ -360,8 +360,8 @@ $('document').ready(function () {
         // Reset
         $('input[name="bericht"]').val('')
 
+        // Anti-spam
         canSend = false;
-
         setTimeout(function() {
             canSend = true;
         }, 600)
@@ -428,6 +428,8 @@ $('document').ready(function () {
 
                     // Create delete buttons
                     AddDeleteButtons(messages[selectedTarget][len], selectedTarget, len)
+                } else {
+                    
                 }
             })
             .catch(function (error) { console.log(error); });
